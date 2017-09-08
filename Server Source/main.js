@@ -7,6 +7,16 @@ const url = require('url');
 
 let mainWindow;
 
+var server = require('http').createServer();
+var io = require('socket.io')(server);
+
+io.on('connection', function(client){
+	client.on('event', function(data){});
+	client.on('disconnect', function(){});
+});
+
+server.listen(3000);
+
 function createWindow () {
 	mainWindow = new BrowserWindow({width: 800, height: 600});
 
