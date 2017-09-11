@@ -1,5 +1,12 @@
+#include <Keyboard.h>
 #include <SoftwareSerial.h>
 #include <Servo.h>
+
+/**
+*
+*@author Kevin Haan
+*
+*/
 
 /************************/
 /*** USER KEYBINDINGS ***/
@@ -33,14 +40,10 @@ int SERVO = 10;
 
 char InByte;
 int speed; 
-Servo servo;
-int posCamX;
- 
 void setup()
 {
- servo.attach(10);
- posCamX = 90;
- servo.write(posCamX);
+ Serial.begin(9600);
+
  pinMode(DIR_A, OUTPUT);
  pinMode(BRAKE_A, OUTPUT);
  pinMode(PWM_A, OUTPUT);   
@@ -57,11 +60,8 @@ void setup()
 
 void loop()                     // run over and over again
 {
-  if(BT.available() > 0){
-    InByte = Serial.read()
-
-    check_CamX
-
+  if(Serial.available() > 0){
+    InByte = Serial.read();
     check_Movement(InByte);
     speed_Adjust();
     
@@ -84,27 +84,6 @@ void stop_B(){
   digitalWrite(DIR_B, LOW);
   digitalWrite(BRAKE_B, LOW);
   analogWrite(PWM_B, 0);
-}
-
-void check_CamX(char InByte){
-  if(InByte == '9'){
-      if(posCamX == 0 ){
-        posCamX = 90;
-      }
-      else if(posCamX == 90){
-        posCamX = 180;
-      }
-      servo.write(posCamX);
-    }
-    else if(InByte == '8'){
-      if(posCamX == 180 ){
-        posCamX = 90;
-      }
-      else if(posCamX == 90){
-        posCamX = 0;
-      }
-      servo.write(posCamX);
-    }
 }
 
 void check_Movement(char InByte){
