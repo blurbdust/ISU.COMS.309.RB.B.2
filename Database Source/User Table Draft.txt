@@ -1,7 +1,7 @@
 CREATE TABLE users (
 	ID MEDIUMINT NOT NULL AUTO_INCREMENT, # The user ID.  Starts at 1 and increments from there.
-	Username char(15) NOT NULL,
-	Password char(25) NOT NULL,
+	Username VARCHAR(15) NOT NULL,
+	Password VARCHAR(25) NOT NULL,
 	UserRole [int] NOT NULL, # Integer representing user role. 1 = admin, 2 = Driver, 3 = Camera, 4 = Shooter
 	PRIMARY KEY (ID)
 );
