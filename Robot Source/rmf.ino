@@ -1,10 +1,9 @@
-#include <Keyboard.h>
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
 /**
 *
-*@author Kevin Haan
+*@author Kevin Haan and Ryan Pals
 *
 */
 
@@ -51,7 +50,7 @@ void setup()
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
 
- speed = 125;
+ speed = 100;
  
  stop_A();
  stop_B();
@@ -65,11 +64,13 @@ void loop()                     // run over and over again
     check_Movement(InByte);
     speed_Adjust();
     
- } 
+ }
+ /* 
  else if(!Serial.available()){
   stop_A();
   stop_B();
  }
+ */
  delay(150);
 }
 
@@ -119,6 +120,42 @@ void check_Movement(char InByte){
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
   }
+  if(InByte == 'q'){
+    digitalWrite(DIR_A, LOW);
+    digitalWrite(DIR_B, LOW);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed/2);
+    analogWrite(PWM_B, speed);
+  }
+  if(InByte == 'e'){
+    digitalWrite(DIR_A, LOW);
+    digitalWrite(DIR_B, LOW);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed/2);
+  }
+  if(InByte == 'z'){
+    digitalWrite(DIR_A, HIGH);
+    digitalWrite(DIR_B, HIGH);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed/2);
+    analogWrite(PWM_B, speed);
+  }
+  if(InByte == 'c'){
+    digitalWrite(DIR_A, HIGH);
+    digitalWrite(DIR_B, HIGH);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed/2);
+  }
+  if(InByte == 'X'){
+    stop_A();
+    stop_B();
+  }
 }
 void speed_Adjust(){
   if(InByte == '+'){
@@ -128,7 +165,7 @@ void speed_Adjust(){
     speed = 50;
   }  
   else if(InByte == '0'){
-    speed = 125;
+    speed = 100;
   }
 }
 
