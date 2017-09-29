@@ -7,18 +7,19 @@ const path = require('path');
 const url = require('url');
 let mainWindow;
 
-var server = require('http').createServer();
+var web_app = require('express')();
+var server = require('http').Server(web_app);
 var io = require('socket.io')(server);
 
-io.on('connection', function(client){
-	console.log("Server recieved connection!");
-	client.on('event', function(data){
-		client.broadcast.emit('new message', {
+io.on('connection', function(socket){
+	console.log("io server recieved connection!");
+	socket.on('event', function(data){
+		socket.broadcast.emit('new message', {
 			username: client.username,
 			message: data
 		});
 	});
-	client.on('disconnect', function(){
+	socket.on('disconnect', function(){
 		console.log("Server recieved disconnect!");
 	});
 });
@@ -26,8 +27,21 @@ io.on('connection', function(client){
 console.log("Starting Server...");
 
 server.listen(3000);
-
 console.log("Server Started!");
+
+web_app.get('/', function(req, res){
+	console.log("Recieved Browser connection");
+	res.sendFile(path.resolve(__dirname + '/../UI/index.html'));
+});
+
+web_app.post('/', function(req, res){
+	console.log("Recieved Browser Login");
+	res.sendFile(path.resolve(__dirname + '/../UI/operator_page.html'));
+});
+
+
+
+
 function createWindow () {
 	mainWindow = new BrowserWindow({width: 1024, height: 720});
 

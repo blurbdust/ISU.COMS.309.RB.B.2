@@ -11,5 +11,8 @@
 		"socket.io": "^2.0.3",
 		"sql": "latest"
 	},
-	"private": "true"
+	"private": "true",
+	"dependencies": {
+		"express": "^4.16.0"
+	}
 }
