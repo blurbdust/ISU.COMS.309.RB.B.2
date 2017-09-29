@@ -1,0 +1,15 @@
+<h3>
+Hello World! Nic, this isn't how you do it. Remember NodeJS is the server. Think about how separated server.js and the ui.js were.
+</h3>
+
+<form method="POST" action="/">
+	<button type="submit" id="login_button">Login!</button>
+</form>
+
+<script type="text/javascript">
+	var ipcRenderer = require('electron').ipcRenderer;
+	var login_button = document.getElementById('login_button');
+	login_button.addEventListener('click', function(){
+    	ipcRenderer.send('test', 'Hello?');
+	});
+</script>
