@@ -1,3 +1,4 @@
-NOTE: Must install MySQL module for Node.js to successfully connect.  Use the following command:
+NOTE: mysql and Express modules required:
 
-C:\Users\Your Name>npm install mysql 
+npm install mysql 
+npm install express
