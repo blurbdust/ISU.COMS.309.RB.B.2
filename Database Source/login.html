@@ -95,11 +95,11 @@
 			  
 				<!--Username-->
 				<label><b>Username</b></label>
-				<input type="text" placeholder="Enter Username" name="uname" id="uname"	required>
+				<input type="text" placeholder="Enter Username" name="uname" id="uname" onkeydown="checkForEnter(event)" required>
 
 				<!--Password-->
 				<label><b>Password</b></label>
-				<input type="password" placeholder="Enter Password" name="psw" id="psw" required>
+				<input type="password" placeholder="Enter Password" name="psw" id="psw" onkeydown="checkForEnter(event)" required>
 				
 				<!--Buttons-->
 				<div id=buttonContainer>
@@ -125,17 +125,12 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script>
 			
-			$("#uname").keyup(function(event){ 
-				 if(event.keyCode == 13){ 
-					 $("#loginButton").click(); 
-				}	 
-			}); 
-			
-			$("#psw").keyup(function(event){ 
-				 if(event.keyCode == 13){ 
-					 $("#loginButton").click(); 
-				}	 
-			}); 
+			function checkForEnter(event) {
+				if (event.keyCode == 13) {
+					event.preventDefault();
+					document.getElementById("loginButton").click();
+				}
+			}
 			
 			function buttonClick() {
 				document.getElementById("log").innerHTML = "Button Clicked";
