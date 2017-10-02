@@ -84,7 +84,7 @@
 	<body>
 
 		<div id="wrapper">
-			<h2>Login</h2>
+			<h2>Create An Account</h2>
 
 			<form action="/myAction" method="post">
 			  <div class="imgcontainer">
@@ -101,10 +101,14 @@
 				<label><b>Password</b></label>
 				<input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 				
+				<!--Password-->
+				<label><b>Confirm Password</b></label>
+				<input type="password" placeholder="Confirm Password" name="confirmPsw" id="confirmPsw" required>
+				
 				<!--Buttons-->
 				<div id=buttonContainer>
-					<button type="submit" id="loginButton" onclick="buttonClick()">Login</button>
-					<button type="button" id="createButton" onclick = "location.href = '/create_account';" >Create An Account</button>
+					<button type="submit" id="loginButton" onclick="location.href = '/login';">Login</button>
+					<button type="button" id="createButton" onclick = buttonClick()>Create An Account</button>
 				</div>
 
 				<!--<input type="checkbox" checked="checked"> Remember me -->
@@ -137,6 +141,11 @@
 				}	 
 			}); 
 			
+			$("#confirmPsw").keyup(function(event){ 
+				 if(event.keyCode == 13){ 
+					 $("#loginButton").click(); 
+				}	 
+			}); 
 			function buttonClick() {
 				document.getElementById("log").innerHTML = "Button Clicked";
 			}
