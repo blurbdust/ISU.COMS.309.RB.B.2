@@ -1,10 +1,13 @@
 {
-	"name": "CyBots",
-	"version": "1.0.0",
-	"description": "Cybots App",
-	"main": "connect.js",
-	"devDependencies": {
-		"mysql": "^2.14.1"
-	},
-	"private": "true"
+  "name": "CyBots",
+  "version": "1.0.0",
+  "description": "Cybots App",
+  "main": "connect.js",
+  "devDependencies": {
+    "mysql": "^2.14.1"
+  },
+  "private": "true",
+  "dependencies": {
+    "express": "^4.16.1"
+  }
 }
