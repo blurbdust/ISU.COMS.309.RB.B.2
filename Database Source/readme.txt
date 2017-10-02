@@ -1,4 +1,5 @@
-NOTE: mysql and Express modules required:
+NOTE: these modules are required for database functions:
 
-npm install mysql 
-npm install express
+	-mysql 
+	-express
+	-body-parser
