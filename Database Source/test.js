@@ -28,17 +28,6 @@ app.listen(port, () => {
  console.log("Server listening on port " + port);
 });
 
-var con = mysql.createConnection({
-  host: "mysql.cs.iastate.edu",
-  user: "dbu309rbb2",
-  password: "Ze3xcZG5",
-  database: "db309rbb2"
-});
-
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
 
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
@@ -55,9 +44,22 @@ app.post('/create_account', function(req, res) {
 	var password = req.body.psw;
 	var confirmPassword = req.body.confirmPsw;
 	
-	console.log("Username: " + username);
-	console.log("Password: " + password);
-	console.log("Confirm Password: " + confirmPassword);
+	var con = mysql.createConnection({
+		host: "mysql.cs.iastate.edu",
+		user: "dbu309rbb2",
+		password: "Ze3xcZG5",
+		database: "db309rbb2"
+	});
+
+	con.connect(function(err) {
+		if (err) throw err;
+		console.log("Connected!");
+		var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
+		con.query(sql, function (err, result) {
+			if (err) throw err;
+			console.log("1 record inserted");
+		});
+	});
 	
 	
 });
