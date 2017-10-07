@@ -103,7 +103,7 @@
 				
 				<!--Buttons-->
 				<div id=buttonContainer>
-					<button type="submit" id="loginButton" onclick="buttonClick()">Login</button>
+					<button type="submit" id="loginButton" onclick="return validateForm()">Login</button>
 					<button type="button" id="createButton" onclick = "location.href = '/create_account';" >Create An Account</button>
 				</div>
 
@@ -117,28 +117,15 @@
 			</form>
 			
 			
-			<p id="log">Test</p> <!--Log, to delete later-->
+			<!--Log-->
+			<!--<p id="log">Test</p>--> 
 		</div>
 	</body>
 	
 	<footer>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-		<script>
-			
-			function checkForEnter(event) {
-				if (event.keyCode == 13) {
-					event.preventDefault();
-					document.getElementById("loginButton").click();
-				}
-			}
-			
-			function buttonClick() {
-				document.getElementById("log").innerHTML = "Button Clicked";
-			}
-
-
-
-		</script>
+		<script type="text/javascript" src="http://localhost:3000/login.js"></script>
+		
 	</footer>
 	
 </html>

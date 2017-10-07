@@ -9,10 +9,9 @@ var mysql = require('mysql');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
  
- 
 //Send login page 
 app.get("/login", (req, res) => {
- res.sendFile(__dirname + "/login.html");
+ res.sendFile(__dirname + "/login.html");;
 }); 
 
 //Send Create User page
@@ -33,9 +32,25 @@ app.post('/login', function(req, res) {
 	var username = req.body.uname;
 	var password = req.body.psw;
 	
-	console.log("Username: " + username);
-	console.log("Password: " + password);
+	var con = mysql.createConnection({
+		host: "mysql.cs.iastate.edu",
+		user: "dbu309rbb2",
+		password: "Ze3xcZG5",
+		database: "db309rbb2"
+	});
 	
+	con.connect(function(err) {
+	  if (err) throw err;
+	  con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
+		if (err) throw err
+		else if (result.length == 0)
+			res.send("User does not exist in the database.");
+		else if (result[0].Password != password)
+			res.send("Incorrect password.");
+		else
+			res.send("Success");
+	  });
+	});
 	
 });
 
@@ -56,8 +71,14 @@ app.post('/create_account', function(req, res) {
 		console.log("Connected!");
 		var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
 		con.query(sql, function (err, result) {
-			if (err) throw err;
-			console.log("1 record inserted");
+			if (err && err.code == "ER_DUP_ENTRY") 
+				res.send("Username already taken.");
+			else if (err)
+				throw err;
+			else {
+				console.log("1 record inserted");
+				res.send("User created!");
+			}
 		});
 	});
 	
