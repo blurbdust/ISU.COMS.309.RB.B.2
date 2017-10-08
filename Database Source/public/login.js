@@ -6,6 +6,9 @@ function checkForEnter(event) {
 }
 			
 function validateForm() {
+	var uname = document.getElementById("uname").value;
+	var psw = document.getElementById("psw").value;
+	
 	re = /^\w+$/; 
 	if (!re.test(uname)) {
 		alert("Username must only contain letters, numbers, and underscores.");
