@@ -36,7 +36,7 @@ web_app.get('/', function(req, res){
 
 web_app.post('/', function(req, res){
 	console.log("Recieved Browser Login");
-	res.sendFile(path.resolve(__dirname + '/../UI/operator_page.html'));
+	res.sendFile(path.resolve(__dirname + '/../UI/operator.html'));
 });
 
 
