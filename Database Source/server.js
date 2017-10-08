@@ -3,6 +3,8 @@ var app = express();
 var port = 3000;
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
+const path = require('path');
+const url = require('url');
 
 
 //Initialize bodyParser
@@ -20,7 +22,7 @@ app.get("/create_account", (req, res) => {
 }); 
 
 //Public folder to serve files
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.resolve(__dirname + '/public')));
  
 //Listen on port
 app.listen(port, () => {
@@ -78,6 +80,7 @@ app.post('/create_account', function(req, res) {
 			else {
 				console.log("1 record inserted");
 				res.send("User created!");
+				res.sendFile(path.resolve(__dirname + '/login.html'));
 			}
 		});
 	});
