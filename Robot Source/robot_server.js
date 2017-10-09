@@ -1,4 +1,4 @@
-var io_RPI = require("socket.io").listen(521); //Operators connect to this
+var io_RPI = require("socket.io").listen(5210); //Operators connect to this
 var io = require("socket.io-client");	//Central Server connection
 var sleep = require('system-sleep');
 const LiveCam = require('livecam');
