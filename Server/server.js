@@ -3,12 +3,12 @@ var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
 var userIO = require('socket.io')(userServer);
-var robotIO = require('socket').listen(3001);
+var robotIO = require('socket.io').listen(3001);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
 var robots = [];
-var robotIP = "";
+var robotIPList = [];
 
 const path = require('path');
 const url = require('url');
@@ -110,6 +110,6 @@ userIO.on('connection', function(socket){
 robotIO.on('connection',function(socket) {
 	console.log("Robot connected");
 	robots.push(socket);
-	robotIP = socket.request.connection.remoteAddress;
-	console.log(robotIP);
+	robotIPList.push(socket.request.connection.remoteAddress);
+	console.log(robotIP[0]);
 });
