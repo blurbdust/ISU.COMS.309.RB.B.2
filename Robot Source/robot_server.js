@@ -51,6 +51,8 @@ io_RPI.on('connection', function(socket){
 
 	socket.on('Serial Movement', function(data){
 		serialPort.write(data.dir);
+
+		console.log("Writing: " + data.dir);
 	});
 
 	socket.on('disconnect', function () {
