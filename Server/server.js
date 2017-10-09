@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var port = 4287;
+var port = 3000;
 var userServer = require('http').createServer(app);
 
 var robotListen = require('http').createServer(app);
@@ -47,7 +47,7 @@ var userIO = require('socket.io')(userServer);
 
 
 app.get('/', function(req, res){
-	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:4287/' + 'login');
+	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
 app.get('/socket.io/socket.io.js', function(req, res){
