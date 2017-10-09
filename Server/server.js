@@ -5,7 +5,6 @@ var userServer = require('http').createServer(app);
 
 var robotListen = require('http').createServer(app);
 
-
 var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
@@ -39,8 +38,8 @@ userServer.listen(port, () => {
  console.log("User server listening on port " + port);
 });
 
-robotListen.listen(port, () => {
- console.log("Robot server listening on port " + port);
+robotListen.listen(3001, () => {
+ console.log("Robot server listening on port " + 3001);
 });
 
 var userIO = require('socket.io')(userServer);
