@@ -59,4 +59,21 @@ window.addEventListener("load", function(){
       socket.emit('Serial Movement', { dir: 'x'});
   });
   
+    var webcam_addr = "192.168.1.145";
+	var webcam_port = "12000";
+	var webcam_host = $(".feed img");
+	var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
+
+
+	cam_socket.on("connection", function(socket){
+		console.log("Connected");
+	});
+
+	cam_socket.on('image', function (data) {
+		webcam_host.attr("src", "data:image/jpeg;base64," + data );
+	});
+
+  
+  
+  
 });

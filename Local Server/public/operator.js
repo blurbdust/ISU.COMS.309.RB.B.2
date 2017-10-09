@@ -21,6 +21,7 @@ window.addEventListener("load", function(){
   
   buttonLeft.addEventListener('mousedown', function() {
       console.log("a");
+	  alert("Button Left");
       socket.emit('Serial Movement', { dir: 'a'});
   });
   buttonLeft.addEventListener('mouseup', function() {
