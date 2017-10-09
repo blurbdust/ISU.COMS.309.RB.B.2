@@ -127,7 +127,7 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	console.log("User connected");
 	users.push(socket);
-	socket.emit('user', users);
+	socket.emit('user', users[0].id);
 	socket.on('disconnect', function() {
 		console.log("User disconnected");
 		var i = users.indexOf(socket);
