@@ -20,6 +20,9 @@ const webcam_server = new LiveCam({
 });
 var io_RPI = require("socket.io").listen(5210); //Operators connect to this
 
+
+
+
 var io_CS = io.connect('proj-309-rb-b-2.cs.iastate.edu:3001');
 var operator;
 
@@ -43,6 +46,8 @@ io_CS.on('connect', function(){
 });
 
 io_RPI.on('connection', function(socket){
+
+	console.log("User connected");
 
 	socket.on('Serial Movement', function(data){
 		serialPort.write(data.dir);
