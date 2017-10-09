@@ -1,9 +1,15 @@
 var express = require("express");
 var app = express();
 var port = 3000;
-var userServer = require('http').createServer(app).listen(3000);
+var userServer = require('http').createServer(app);
+
 var robotListen = require('http').createServer();
-robotListen.listen(3001);
+
+robotListen.listen(3001, function(){
+	console.log("robot is listening on 3001");
+});
+
+
 var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
@@ -33,11 +39,14 @@ app.get("/create_account", (req, res) => {
 app.use(express.static(__dirname + '/public'));
  
 //Listen on port
-app.listen(port, () => {
+userServer.listen(port, () => {
  console.log("Server listening on port " + port);
 });
 
 var userIO = require('socket.io')(userServer);
+
+
+
 app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
 });
