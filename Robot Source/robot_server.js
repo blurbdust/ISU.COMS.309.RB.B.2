@@ -48,7 +48,6 @@ io_CS.on('connect', function(){
 io_RPI.on('connection', function(socket){
 
 	console.log("User connected");
-
 	socket.on('Serial Movement', function(data){
 		serialPort.write(data.dir);
 
