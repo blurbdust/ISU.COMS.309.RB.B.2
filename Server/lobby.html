@@ -21,7 +21,12 @@
 			var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
 
 			socket.on('user', function(user) {
-				document.getElementById("users").innerHTML = user;
+				
+				var result = "";
+				for (i = 0; i < user.length; i++) {
+					result += user[i].id + <br>;
+				}
+				document.getElementById("users").innerHTML = result;
 			});
 		
 		
