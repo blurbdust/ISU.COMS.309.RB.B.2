@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var port = 3000;
-var userServer = require('http').createServer(app);
+var userServer = require('http').createServer(app).listen(3000);
 var robotListen = require('http').createServer();
 robotListen.listen(3001);
 var robotIO = require('socket.io')(robotListen);
