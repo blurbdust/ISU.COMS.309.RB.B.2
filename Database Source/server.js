@@ -13,12 +13,12 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
  
 //Send login page 
 app.get("/login", (req, res) => {
- res.sendFile(__dirname + "/login.html");;
+	res.sendFile(path.resolve(__dirname + "/login.html"));
 }); 
 
 //Send Create User page
 app.get("/create_account", (req, res) => {
- res.sendFile(__dirname + "/create_account.html");
+	res.sendFile(path.resolve(__dirname + "/create_account.html"));
 }); 
 
 //Public folder to serve files
@@ -26,9 +26,8 @@ app.use(express.static(path.resolve(__dirname + '/public')));
  
 //Listen on port
 app.listen(port, () => {
- console.log("Server listening on port " + port);
+	console.log("Server listening on port " + port);
 });
-
 
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
