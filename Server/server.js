@@ -109,6 +109,11 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	console.log("User connected");
 	users.push(socket);
+	socket.on('disconnect', function() {
+		console.log("User disconnected");
+		var i = users.indexOf(socket);
+		users.splice(i, 1);
+	});
 	socket.emit('Robot Address', { ip: robotIP[0]});
 });
 
