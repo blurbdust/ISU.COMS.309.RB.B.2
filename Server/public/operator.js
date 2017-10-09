@@ -4,7 +4,7 @@ socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
 
-var socket_robot = io('http://192.168.1.145:5210');
+var socket_robot = io(robot_ip + ':5210');
 
 window.addEventListener("load", function(){
 	
@@ -54,7 +54,7 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
-    var webcam_addr = "192.168.1.145";
+    var webcam_addr = robot_ip;
 	var webcam_port = "12000";
 	var webcam_host = $(".feed img");
 	var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);

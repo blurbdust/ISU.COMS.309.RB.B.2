@@ -2,9 +2,9 @@ var io = require("socket.io-client");	//Central Server connection
 var sleep = require('system-sleep');
 const LiveCam = require('livecam');
 const webcam_server = new LiveCam({
-	'ui_addr' : '192.168.1.145',
+	'ui_addr' : '0.0.0.0',
 	'ui_port' : 11000,
-	'broadcast_addr' : '192.168.1.145',
+	'broadcast_addr' : '0.0.0.0',
 	'broadcast_port' : 12000,
 	'gst_tcp_addr' : '0.0.0.0',
 	'gst_tcp_port' : 10000,
