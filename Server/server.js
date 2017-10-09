@@ -79,7 +79,7 @@ app.post('/login', function(req, res) {
 		}
 		else{
 			console.log(path.resolve(__dirname));
-			res.sendFile(path.resolve(__dirname + '/operator.html'));
+			res.sendFile(path.resolve(__dirname + '/lobby.html'));
 		}
 	  });
 	});
