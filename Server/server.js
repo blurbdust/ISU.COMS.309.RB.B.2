@@ -3,7 +3,7 @@ var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
 var robotListen = require('http').createServer();
-var userIO = require('socket.io')(userServer);
+robotListen.listen(3001);
 var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
@@ -37,6 +37,7 @@ app.listen(port, () => {
  console.log("Server listening on port " + port);
 });
 
+var userIO = require('socket.io')(userServer);
 app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
 });
