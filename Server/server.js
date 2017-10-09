@@ -95,7 +95,13 @@ app.post('/create_account', function(req, res) {
 				res.sendFile(path.resolve(__dirname + '/login.html'));
 			}
 		});
-	});
-	
-	
+	});	
 });
+
+var robotSocket = "";
+var robotIP = "";
+robotserver.sockets.on("connection",function(socket) {
+	robotSocket = socket;
+	robotIP = socket.request.connection.remoteAddress;
+	console.log(robotIP);
+}
