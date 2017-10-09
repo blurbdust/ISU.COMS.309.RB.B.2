@@ -4,11 +4,6 @@ socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
 
-var vid = document.getElementById("videoPlayer");
-vid.onloadstart = function() {
-	document.getElementById("robotVidSrc").src = robot_ip + ":11000";
-}
-
 var socket_robot = io(robot_ip + ':5210');
 
 window.addEventListener("load", function(){
