@@ -15,43 +15,43 @@ window.addEventListener("load", function(){
 
   buttonUp.addEventListener('mousedown', function() {
       console.log("w");
-      socket_server.emit('Serial Movement', { dir: 'w'});
+      socket_robot.emit('Serial Movement', { dir: 'w'});
   });
   buttonUp.addEventListener('mouseup', function() {
       console.log("x");
-      socket_server.emit('Serial Movement', { dir: 'x'});
+      socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
   
   
   buttonLeft.addEventListener('mousedown', function() {
       console.log("a");
-      socket_server.emit('Serial Movement', { dir: 'a'});
+      socket_robot.emit('Serial Movement', { dir: 'a'});
   });
   buttonLeft.addEventListener('mouseup', function() {
       console.log("x");
-      socket_server.emit('Serial Movement', { dir: 'x'});
+      socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
   
   
   buttonRight.addEventListener('mousedown', function() {
       console.log("d");
-      socket_server.emit('Serial Movement', { dir: 'd'});
+      socket_robot.emit('Serial Movement', { dir: 'd'});
   });
   buttonRight.addEventListener('mouseup', function() {
       console.log("x");
-      socket_server.emit('Serial Movement', { dir: 'x'});
+      socket_robot.emit('Serial Movement', { dir: 'x'});
   });  
   
   
   buttonDown.addEventListener('mousedown', function() {
       console.log("s");
-      socket_server.emit('Serial Movement', { dir: 's'});
+      socket_robot.emit('Serial Movement', { dir: 's'});
   });
   buttonDown.addEventListener('mouseup', function() {
       console.log("x");
-      socket_server.emit('Serial Movement', { dir: 'x'});
+      socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
     var webcam_addr = "192.168.1.145";
