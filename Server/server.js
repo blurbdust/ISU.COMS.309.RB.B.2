@@ -1,10 +1,14 @@
 var express = require("express");
 var app = express();
 var port = 3000;
-var userServer = require('socket.io')(app);
-var robotServer = require('socket').listen(3001);
+var userServer = require('http').createServer(app);
+var userIO = require('socket.io')(userServer);
+var robotIO = require('socket').listen(3001);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
+var users = [];
+var robots = [];
+var robotIP = "";
 
 const path = require('path');
 const url = require('url');
@@ -98,10 +102,14 @@ app.post('/create_account', function(req, res) {
 	});	
 });
 
-var robotSocket = "";
-var robotIP = "";
-robotserver.sockets.on("connection",function(socket) {
-	robotSocket = socket;
+userIO.on('connection', function(socket){
+	console.log("User connected");
+	users.push(socket);
+});
+
+robotIO.on('connection',function(socket) {
+	console.log("Robot connected");
+	robots.push(socket);
 	robotIP = socket.request.connection.remoteAddress;
 	console.log(robotIP);
 });
