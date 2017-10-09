@@ -7,9 +7,9 @@
 		"start": "electron ."
 	},
 	"devDependencies": {
-		"electron": "^1.7.6",
 		"socket.io": "^2.0.3",
-		"sql": "latest"
+		"sql": "latest",
+		"livecam": "latest"
 	},
 	"private": "true",
 	"dependencies": {
