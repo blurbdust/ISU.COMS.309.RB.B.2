@@ -4,7 +4,7 @@ socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
 
-var vid = document.getElementByID("videoPlayer");
+var vid = document.getElementById("videoPlayer");
 vid.onloadstart = function() {
 	document.getElementById("robotVidSrc").src = robot_ip + ":11000";
 }
