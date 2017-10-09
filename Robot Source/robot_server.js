@@ -1,14 +1,22 @@
 var io_RPI = require("socket.io").listen(521); //Operators connect to this
 var io = require("socket.io-client");	//Central Server connection
 var sleep = require('system-sleep');
-/*
-var RaspiCam = require("raspicam");
-var camera = new RaspiCam({ opts });
-*/
+const LiveCam = require('livecam');
+const webcam_server = new LiveCam({
+	'start' : function(){
+		console.log('WebCam server started!');
+	}
+	'ui_addr' : '127.0.0.1',
+    'ui_port' : 11000,
+ 
+    'broadcast_addr' : '127.0.0.1',
+    'broadcast_port' : 12000,
+ 
+    'gst_tcp_addr' : '127.0.0.1',
+    'gst_tcp_port' : 10000,
+});
 
-
-
-var io_CS = io.connect('proj-309-rb-b-4.cs.iastate.edu:80');
+var io_CS = io.connect('proj-309-rb-b-4.cs.iastate.edu:3001');
 var operator;
 
 var SerialPort = require('serialport');
@@ -32,13 +40,11 @@ io_CS.on('connect', function(){
 });
 
 io_RPI.on('connection', function(socket){
-	console.log("Client Connected");
-	console.log(socket.handshake.address);
 	
 	socket.on('Serial Movement', function(data){
 		serialPort.write(data.dir);
 	});
-	start
+
 	socket.on('disconnect', function () {
       console.log('A user disconnected');
 	});

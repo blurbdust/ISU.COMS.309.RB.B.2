@@ -1,6 +1,8 @@
 var express = require("express");
 var app = express();
 var port = 3000;
+var userServer = require('socket.io')(app);
+var robotServer = require('socket').listen(3001);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 
