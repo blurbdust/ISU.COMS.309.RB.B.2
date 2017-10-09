@@ -31,7 +31,7 @@ app.listen(port, () => {
 });
 
 app.get('/', function(req, res){
-	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000' + 'login');
+	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
 });
 
 app.post('/login', function(req, res) {
