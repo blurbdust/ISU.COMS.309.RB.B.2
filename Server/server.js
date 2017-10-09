@@ -114,12 +114,12 @@ userIO.on('connection', function(socket){
 		var i = users.indexOf(socket);
 		users.splice(i, 1);
 	});
-	socket.emit('Robot Address', { ip: robotIP[0]});
+	socket.emit('Robot Address', { ip: robotIPList[0]});
 });
 
 robotIO.on('connection',function(socket) {
 	console.log("Robot connected");
 	robots.push(socket);
 	robotIPList.push(socket.request.connection.remoteAddress);
-	console.log(robotIP[0]);
+	console.log(robotIPList[0]);
 });

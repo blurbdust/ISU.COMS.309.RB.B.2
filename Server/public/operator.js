@@ -4,7 +4,7 @@ socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
 
-var socket_robot = io(robot_ip + ':5210');
+var socket_robot = io('http://192.168.1.145:5210');
 
 window.addEventListener("load", function(){
 	
