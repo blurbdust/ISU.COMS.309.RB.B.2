@@ -1,4 +1,4 @@
-var socket_server = io('http://proj-309-rb-b-2.cs.iastate.edu:3000');
+var socket_server = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
 var robot_ip = "";
 socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;

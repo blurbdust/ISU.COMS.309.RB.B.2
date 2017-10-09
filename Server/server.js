@@ -40,6 +40,10 @@ app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
 });
 
+app.get('/socket.io/socket.io.js', function(req, res){
+	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
+});
+
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
 	var password = req.body.psw;
