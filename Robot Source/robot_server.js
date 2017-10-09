@@ -1,32 +1,36 @@
-var io_RPI = require("socket.io").listen(5210); //Operators connect to this
 var io = require("socket.io-client");	//Central Server connection
 var sleep = require('system-sleep');
 const LiveCam = require('livecam');
 const webcam_server = new LiveCam({
+	'ui_addr' : '192.168.1.145',
+	'ui_port' : 11000,
+	'broadcast_addr' : '192.168.1.145',
+	'broadcast_port' : 12000,
+	'gst_tcp_addr' : '0.0.0.0',
+	'gst_tcp_port' : 10000,
 	'start' : function(){
 		console.log('WebCam server started!');
+	},
+	'webcam': {
+		'width': 320,
+		'height': 240,
+		'framerate': 5
 	}
-	'ui_addr' : '127.0.0.1',
-    'ui_port' : 11000,
- 
-    'broadcast_addr' : '127.0.0.1',
-    'broadcast_port' : 12000,
- 
-    'gst_tcp_addr' : '127.0.0.1',
-    'gst_tcp_port' : 10000,
-});
 
-var io_CS = io.connect('proj-309-rb-b-4.cs.iastate.edu:3001');
+});
+var io_RPI = require("socket.io").listen(5210); //Operators connect to this
+
+var io_CS = io.connect('proj-309-rb-b-2.cs.iastate.edu:3001');
 var operator;
 
 var SerialPort = require('serialport');
-var serialPort = new SerialPort("/dev/ttyACM0",{ 
+var serialPort = new SerialPort("/dev/ttyACM0",{
 	baudrate: 9600,
-	dataBits: 8, 
-    parity: 'none', 
-    stopBits: 1, 
-    flowControl: false
-	});
+	dataBits: 8,
+	parity: 'none',
+	stopBits: 1,
+	flowControl: false
+});
 
 serialPort.on('open', function(){
 	let dir = 'w';
@@ -36,18 +40,18 @@ serialPort.on('open', function(){
 
 io_CS.on('connect', function(){
 	console.log("Connected to Central Server");
-	
 });
 
 io_RPI.on('connection', function(socket){
-	
+
 	socket.on('Serial Movement', function(data){
 		serialPort.write(data.dir);
 	});
 
 	socket.on('disconnect', function () {
-      console.log('A user disconnected');
+		console.log('A user disconnected');
 	});
 });
 
 
+webcam_server.broadcast();

@@ -2,8 +2,12 @@ var socket_server = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
 var robot_ip = "";
 socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
-	document.getElementById("robotVidSrc").src = robot_ip + ":11000";
 });
+
+var vid = document.getElementByID("videoPlayer");
+vid.onloadstart = function() {
+	document.getElementById("robotVidSrc").src = robot_ip + ":11000";
+}
 
 var socket_robot = io(robot_ip + ':5210');
 
