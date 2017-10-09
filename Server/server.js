@@ -105,7 +105,7 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	console.log("User connected");
 	users.push(socket);
-	socket.emit('Robot Address', { ip: robotIP[0]);
+	socket.emit('Robot Address', { ip: robotIP[0]});
 });
 
 robotIO.on('connection',function(socket) {
