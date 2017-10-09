@@ -152,7 +152,7 @@ void check_Movement(char InByte){
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed/2);
   }
-  if(InByte == 'X'){
+  if(InByte == 'x'){
     stop_A();
     stop_B();
   }
