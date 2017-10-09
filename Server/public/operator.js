@@ -55,7 +55,7 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
-    var webcam_addr = robot_ip;
+    var webcam_addr = "monmodenic.student.iastate.edu";
 	var webcam_port = "12000";
 	var webcam_host = $(".feed img");
 	var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
