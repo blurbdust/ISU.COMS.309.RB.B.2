@@ -4,6 +4,9 @@ var port = 3000;
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 
+const path = require('path');
+const url = require('url');
+
 
 //Initialize bodyParser
 app.use(bodyParser.json()); // support json encoded bodies
@@ -27,6 +30,9 @@ app.listen(port, () => {
  console.log("Server listening on port " + port);
 });
 
+app.get('/', function(req, res){
+	res.redirect('http://localhost:3000/' + 'login');
+});
 
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
@@ -42,13 +48,19 @@ app.post('/login', function(req, res) {
 	con.connect(function(err) {
 	  if (err) throw err;
 	  con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
-		if (err) throw err
-		else if (result.length == 0)
+		if (err){
+			throw err;
+		}
+		else if (result.length == 0){
 			res.send("User does not exist in the database.");
-		else if (result[0].Password != password)
+		}
+		else if (result[0].Password != password){
 			res.send("Incorrect password.");
-		else
-			res.send("Success");
+		}
+		else{
+			console.log(path.resolve(__dirname));
+			res.sendFile(path.resolve(__dirname + '/operator.html'));
+		}
 	  });
 	});
 	
@@ -78,6 +90,7 @@ app.post('/create_account', function(req, res) {
 			else {
 				console.log("1 record inserted");
 				res.send("User created!");
+				res.sendFile(path.resolve(__dirname + '/login.html'));
 			}
 		});
 	});

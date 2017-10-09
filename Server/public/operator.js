@@ -1,5 +1,5 @@
 
-var socket = io('http://localhost:521');
+var socket = io('http://192.168.1.86:521');
 
 window.addEventListener("load", function(){
 	
