@@ -47,7 +47,7 @@ var userIO = require('socket.io')(userServer);
 
 
 app.get('/', function(req, res){
-	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
+	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:4287/' + 'login');
 });
 
 app.get('/socket.io/socket.io.js', function(req, res){
