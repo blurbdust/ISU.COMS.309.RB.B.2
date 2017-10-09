@@ -1,9 +1,10 @@
 var socket_server = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
-var robot_ip = "";
+var robot_ip = "monmode.student.iastate.edu";
+/*
 socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
-
+*/
 var socket_robot = io(robot_ip + ':5210');
 
 window.addEventListener("load", function(){
