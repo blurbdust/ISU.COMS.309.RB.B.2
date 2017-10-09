@@ -104,4 +104,4 @@ robotserver.sockets.on("connection",function(socket) {
 	robotSocket = socket;
 	robotIP = socket.request.connection.remoteAddress;
 	console.log(robotIP);
-}
+});
