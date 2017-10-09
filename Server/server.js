@@ -3,11 +3,7 @@ var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
 
-var robotListen = require('http').createServer();
-
-robotListen.listen(3001, function(){
-	console.log("robot is listening on 3001");
-});
+var robotListen = require('http').createServer(app);
 
 
 var robotIO = require('socket.io')(robotListen);
@@ -40,7 +36,11 @@ app.use(express.static(__dirname + '/public'));
  
 //Listen on port
 userServer.listen(port, () => {
- console.log("Server listening on port " + port);
+ console.log("User server listening on port " + port);
+});
+
+robotListen.listen(port, () => {
+ console.log("Robot server listening on port " + port);
 });
 
 var userIO = require('socket.io')(userServer);
