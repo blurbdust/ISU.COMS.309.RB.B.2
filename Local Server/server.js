@@ -37,7 +37,7 @@ app.listen(port, () => {
 });
 
 app.get('/', function(req, res){
-	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
+	res.redirect('http://localhost:3000/' + 'login');
 });
 
 app.post('/login', function(req, res) {
@@ -105,7 +105,6 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	console.log("User connected");
 	users.push(socket);
-	socket.emit('Robot Address', { ip: robotIP[0]});
 });
 
 robotIO.on('connection',function(socket) {
