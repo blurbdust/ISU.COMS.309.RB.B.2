@@ -77,6 +77,10 @@ app.post('/login', function(req, res) {
 		else if (result[0].Password != password){
 			res.send("Incorrect password.");
 		}
+		else if (result[0].UserRole == "Admin"){
+			console.log(path.resolve(__dirname));
+			res.sendFile(path.resolve(__dirname + '/admin.html'));
+		}
 		else{
 			console.log(path.resolve(__dirname));
 			res.sendFile(path.resolve(__dirname + '/operator.html'));
@@ -101,7 +105,12 @@ app.post('/create_account', function(req, res) {
 	con.connect(function(err) {
 		if (err) throw err;
 		console.log("Connected!");
-		var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
+		if(password.equals("admin"){
+			var sql = "INSERT INTO users (Username, Password, UserRole) VALUES ('" + username + "', '" + password + "', '" + 1 +"')";
+		}
+		else{
+			var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
+		}
 		con.query(sql, function (err, result) {
 			if (err && err.code == "ER_DUP_ENTRY") 
 				res.send("Username already taken.");
