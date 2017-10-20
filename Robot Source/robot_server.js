@@ -35,6 +35,7 @@ var serialPort = new SerialPort("/dev/ttyACM0",{
 	flowControl: false
 });
 
+
 serialPort.on('open', function(){
 	let dir = 'w';
 	console.log('Serial Port Opened');
@@ -56,8 +57,9 @@ io_RPI.on('connection', function(socket){
 
 	socket.on('disconnect', function () {
 		console.log('A user disconnected');
+
 	});
 });
 
-
 webcam_server.broadcast();
+
