@@ -7,7 +7,7 @@
 	<body>
 		<h1>Lobby</h1>
 		<h3>Users</h3>
-		<p><span id="users"></span></p>
+		<div id="users"></div>
 		
 		<button type="button" id="loginButton" onclick="location.href = '/operator';">Go to Operator</button>
 		<button type="button" id="loginButton" onclick="test();';">Test</button>
@@ -19,13 +19,17 @@
 		<script>
 		
 			var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
-
-			socket.on('user', function(user) {
-	
-				document.getElementById("users").innerHTML = user;
-			);
 		
+			socket.emit('new user', 'test123'); 
 		
+			socket.on('usernames', function(data) {
+			
+				var html = ' ';
+				for (i = 0; i < data.length; i++) {
+					html += data[i] + '<br/>';
+				}
+				document.getElementById("users").innerHTML = html;
+			});
 		
 		
 		</script>

@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
+var userIO = require('socket.io')(userServer);
 
 var robotListen = require('http').createServer(app);
 
@@ -9,6 +10,7 @@ var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
+var usernames = [];
 var robots = [];
 var robotIPList = [];
 
@@ -30,14 +32,6 @@ app.get("/create_account", (req, res) => {
  res.sendFile(__dirname + "/create_account.html");
 }); 
 
-app.get("/lobby", (req, res) => {
- res.sendFile(__dirname + "/lobby.html");;
-}); 
-
-app.get("/operator", (req, res) => {
- res.sendFile(__dirname + "/operator.html");;
-}); 
-
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
@@ -49,8 +43,6 @@ userServer.listen(port, () => {
 robotListen.listen(3001, () => {
  console.log("Robot server listening on port " + 3001);
 });
-
-var userIO = require('socket.io')(userServer);
 
 
 
@@ -126,12 +118,20 @@ app.post('/create_account', function(req, res) {
 
 userIO.on('connection', function(socket){
 	console.log("User connected");
-	users.push(socket);
-	socket.emit('user', users[0].id);
+	
+	socket.on('new user', function(data) {
+		socket.username = data;
+		usernames.push(socket.username);
+		users.push(socket);
+		userIO.sockets.emit('usernames', usernames);
+			
+	});
 	socket.on('disconnect', function() {
 		console.log("User disconnected");
-		var i = users.indexOf(socket);
-		users.splice(i, 1);
+		users.splice(users.indexOf(socket), 1);
+		if (socket.username)
+			usernames.splice(usernames.indexOf(socket.username), 1);
+		userIO.sockets.emit('usernames', usernames);
 	});
 	socket.emit('Robot Address', { ip: robotIPList[0]});
 });
