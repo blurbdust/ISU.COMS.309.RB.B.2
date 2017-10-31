@@ -77,11 +77,14 @@ app.post('/login', function(req, res) {
 		else if (result[0].Password != password){
 			res.send("Incorrect password.");
 		}
-		else if (result[0].UserRole == "Admin"){
-			console.log(path.resolve(__dirname));
-			res.sendFile(path.resolve(__dirname + '/admin.html'));
-		}
 		else{
+			
+			if (result[0].UserRole == "Admin"){
+				console.log(path.resolve(__dirname));
+				res.sendFile(path.resolve(__dirname + '/admin.html'));
+			
+			}
+			
 			console.log(path.resolve(__dirname));
 			res.sendFile(path.resolve(__dirname + '/operator.html'));
 		}
@@ -128,12 +131,15 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	console.log("User connected");
 	users.push(socket);
+	
+	socket.on(
+	
 	socket.on('disconnect', function() {
 		console.log("User disconnected");
 		var i = users.indexOf(socket);
 		users.splice(i, 1);
 	});
-	socket.emit('Robot Address', { ip: robotIPList[0]});
+	//socket.emit('Robot Address', { ip: robotIPList[0]});
 });
 
 robotIO.on('connection',function(socket) {

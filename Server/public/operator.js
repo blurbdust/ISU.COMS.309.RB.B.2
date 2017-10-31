@@ -69,7 +69,4 @@ window.addEventListener("load", function(){
 		webcam_host.attr("src", "data:image/jpeg;base64," + data );
 	});
 
-  
-  
-  
 });

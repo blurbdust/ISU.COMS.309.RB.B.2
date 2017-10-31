@@ -1,3 +1,4 @@
+var socket_server = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
 
 var bodySelect = d3.select("body").select("div");
 var svgSelect = bodySelect.append("svg")	//Creates SVG element in body of HTML
@@ -10,10 +11,6 @@ var logoGroup = svgSelect.append('g');
 var menuGroup = svgSelect.append('g');
 var bannerGroup =  svgSelect.append('g');
 var mainGroup = svgSelect.append('g');
-var robotGroup = mainGroup.append('g');
-var userGroup = mainGroup.append('g');
-var dbGroup = mainGroup.append('g');
-
 
 var logoBack = logoGroup
 	.append('rect')
@@ -86,3 +83,4 @@ var dbBox = mainGroup.append('rect')
 	.attr('width','27%')
 	.attr('height','100%')
 	.style('fill', '#f0f0f0');
+	

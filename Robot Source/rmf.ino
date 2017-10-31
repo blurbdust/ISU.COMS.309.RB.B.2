@@ -35,10 +35,13 @@ int BRAKE_A = 9;
 int BRAKE_B = 8;
 int PWM_A = 3;
 int PWM_B = 11;
-int SERVO = 10;
+int SERVO_PIN_A = 6;
+int SERVO_PIN_B = 5
 
 char InByte;
 int speed; 
+Servo servo_A;
+Servo servo_B;
 void setup()
 {
  Serial.begin(9600);
@@ -49,7 +52,8 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
-
+ servo_A.attach(6);
+ servo_B.attach(5);
  speed = 100;
  
  stop_A();
@@ -88,69 +92,82 @@ void stop_B(){
 }
 
 void check_Movement(char InByte){
-  if(InByte == 'w'){
-    digitalWrite(DIR_A, LOW);
-    digitalWrite(DIR_B, LOW);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed);
-    analogWrite(PWM_B, speed);
-  }  
-  if(InByte == 's'){
-    digitalWrite(DIR_A, HIGH);
-    digitalWrite(DIR_B, HIGH);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed);
-    analogWrite(PWM_B, speed);
-  }  
-  if(InByte == 'd'){
-    digitalWrite(DIR_A, LOW);
-    digitalWrite(DIR_B, HIGH);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed);
-    analogWrite(PWM_B, speed);
+	
+  if(InByte == 'i'){
+    servo_B.write(180);
   }
-  if(InByte == 'a'){
-    digitalWrite(DIR_A, HIGH);
-    digitalWrite(DIR_B, LOW);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed);
-    analogWrite(PWM_B, speed);
+  if(InByte == 'm'){
+    servo_B.write(0);
   }
-  if(InByte == 'q'){
-    digitalWrite(DIR_A, LOW);
-    digitalWrite(DIR_B, LOW);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed/2);
-    analogWrite(PWM_B, speed);
+  if(InByte == 'l'){
+    servo_B.write(180);
   }
-  if(InByte == 'e'){
-    digitalWrite(DIR_A, LOW);
-    digitalWrite(DIR_B, LOW);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed);
-    analogWrite(PWM_B, speed/2);
+  if(InByte == 'j'){
+    servo_B.write(0);
   }
-  if(InByte == 'z'){
-    digitalWrite(DIR_A, HIGH);
-    digitalWrite(DIR_B, HIGH);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed/2);
-    analogWrite(PWM_B, speed);
-  }
-  if(InByte == 'c'){
-    digitalWrite(DIR_A, HIGH);
-    digitalWrite(DIR_B, HIGH);
-    digitalWrite(BRAKE_A, LOW);
-    digitalWrite(BRAKE_B, LOW);
-    analogWrite(PWM_A, speed);
-    analogWrite(PWM_B, speed/2);
+	if(InByte == 'w'){
+		digitalWrite(DIR_A, LOW);
+		digitalWrite(DIR_B, LOW);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed);
+		analogWrite(PWM_B, speed);
+	}  
+	if(InByte == 's'){
+		digitalWrite(DIR_A, HIGH);
+		digitalWrite(DIR_B, HIGH);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed);
+		analogWrite(PWM_B, speed);
+	}  
+	if(InByte == 'd'){
+		digitalWrite(DIR_A, LOW);
+		digitalWrite(DIR_B, HIGH);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed);
+		analogWrite(PWM_B, speed);
+	}
+	if(InByte == 'a'){
+		digitalWrite(DIR_A, HIGH);
+		digitalWrite(DIR_B, LOW);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed);
+		analogWrite(PWM_B, speed);
+	}
+	if(InByte == 'q'){
+		digitalWrite(DIR_A, LOW);
+		digitalWrite(DIR_B, LOW);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed/2);
+		analogWrite(PWM_B, speed);
+	}
+	if(InByte == 'e'){
+		digitalWrite(DIR_A, LOW);
+		digitalWrite(DIR_B, LOW);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed);
+		analogWrite(PWM_B, speed/2);
+	}
+	if(InByte == 'z'){
+		digitalWrite(DIR_A, HIGH);
+		digitalWrite(DIR_B, HIGH);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed/2);
+		analogWrite(PWM_B, speed);
+	}
+	if(InByte == 'c'){
+		digitalWrite(DIR_A, HIGH);
+		digitalWrite(DIR_B, HIGH);
+		digitalWrite(BRAKE_A, LOW);
+		digitalWrite(BRAKE_B, LOW);
+		analogWrite(PWM_A, speed);
+		analogWrite(PWM_B, speed/2);
   }
   if(InByte == 'x'){
     stop_A();
