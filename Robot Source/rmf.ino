@@ -1,5 +1,6 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
+#include <SuperServo.h>
 
 /**
 *
@@ -7,23 +8,67 @@
 *
 */
 
+class SuperServo{
+      Servo servo;              // the servo
+      int pos;              // current servo position 
+      int increment;        // increment to move for each interval
+      int  updateInterval;      // interval between updates
+      unsigned long lastUpdate; // last update of position
+     
+    public: 
+      SuperServo(int interval)
+      {
+        updateInterval = interval;
+        increment = 0;
+      }
+      
+      void Attach(int pin)
+      {
+        servo.attach(pin);
+      }
+      
+      void Detach()
+      {
+        servo.detach();
+      }
+      void setInc(int inc){
+        increment = inc;
+      }
+      int getInc(){
+        return increment;
+      }
+      void Update()
+      {
+        if((millis() - lastUpdate) > updateInterval)  // time to update
+        {
+          lastUpdate = millis();
+          if ((pos < 180 && increment == 1) || (pos>0 && increment == -1)){
+            pos += increment;
+          }
+          servo.write(pos);
+          Serial.println(pos);
+
+        }
+      }
+};
+
 /************************/
 /*** USER KEYBINDINGS ***/
 /************************/
-#define LEGS_UP			0x00000001
-#define LEGS_DOWN		0x00000002
-#define LEGS_LEFT		0x00000004
-#define LEGS_RIGHT	0x00000008
+#define LEGS_UP      0x00000001
+#define LEGS_DOWN   0x00000002
+#define LEGS_LEFT   0x00000004
+#define LEGS_RIGHT  0x00000008
 
-#define EYES_UP			0x00000010
-#define EYES_DOWN		0x00000020
-#define EYES_LEFT		0x00000040
-#define EYES_RIGHT	0x00000080
+#define EYES_UP     0x00000010
+#define EYES_DOWN   0x00000020
+#define EYES_LEFT   0x00000040
+#define EYES_RIGHT  0x00000080
 
-#define ARMS_UP			0x00000100
-#define ARMS_DOWN		0x00000200
-#define ARMS_LEFT		0x00000400
-#define ARMS_RIGHT	0x00000800
+#define ARMS_UP     0x00000100
+#define ARMS_DOWN   0x00000200
+#define ARMS_LEFT   0x00000400
+#define ARMS_RIGHT  0x00000800
 
 
 /************************/
@@ -36,12 +81,12 @@ int BRAKE_B = 8;
 int PWM_A = 3;
 int PWM_B = 11;
 int SERVO_PIN_A = 6;
-int SERVO_PIN_B = 5
+int SERVO_PIN_B = 5;
 
 char InByte;
 int speed; 
-Servo servo_A;
-Servo servo_B;
+SuperServo servo_A(15);
+SuperServo servo_B(15);
 void setup()
 {
  Serial.begin(9600);
@@ -52,13 +97,13 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
- servo_A.attach(6);
- servo_B.attach(5);
+ servo_A.Attach(6);
+ servo_B.Attach(5);
  speed = 100;
  
  stop_A();
  stop_B();
- delay(500);
+// delay(500);
 }
 
 void loop()                     // run over and over again
@@ -66,16 +111,16 @@ void loop()                     // run over and over again
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
+    check_Servo(InByte);
     speed_Adjust();
     
- }
- /* 
- else if(!Serial.available()){
-  stop_A();
-  stop_B();
- }
- */
- delay(150);
+  }
+  if(servo_A.getInc() != 0){
+     servo_A.Update();
+  }
+  if(servo_B.getInc() != 0){
+     servo_B.Update();
+  }
 }
 
 
@@ -91,83 +136,98 @@ void stop_B(){
   analogWrite(PWM_B, 0);
 }
 
+void check_Servo(char InByte){
+  switch(InByte){
+    case 'L':
+        servo_A.setInc(-1);
+      break;
+    case 'l':
+        servo_A.setInc(0);
+      break;
+    case 'J':
+        servo_A.setInc(1);
+      break;
+    case 'j':
+        servo_A.setInc(0);
+      break;
+    case 'M':
+        servo_B.setInc(1);
+      break;
+    case 'm':
+        servo_B.setInc(0);
+      break;
+    case 'I':
+        servo_B.setInc(-1);
+      break;
+    case 'i':
+        servo_B.setInc(0);
+  }  
+}
 void check_Movement(char InByte){
-	
-  if(InByte == 'i'){
-    servo_B.write(180);
+
+  if(InByte == 'w'){
+    digitalWrite(DIR_A, LOW);
+    digitalWrite(DIR_B, LOW);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed);
+  }  
+  if(InByte == 's'){
+    digitalWrite(DIR_A, HIGH);
+    digitalWrite(DIR_B, HIGH);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed);
+  }  
+  if(InByte == 'd'){
+    digitalWrite(DIR_A, LOW);
+    digitalWrite(DIR_B, HIGH);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed);
   }
-  if(InByte == 'm'){
-    servo_B.write(0);
+  if(InByte == 'a'){
+    digitalWrite(DIR_A, HIGH);
+    digitalWrite(DIR_B, LOW);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed);
   }
-  if(InByte == 'l'){
-    servo_B.write(180);
+  if(InByte == 'q'){
+    digitalWrite(DIR_A, LOW);
+    digitalWrite(DIR_B, LOW);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed/2);
+    analogWrite(PWM_B, speed);
   }
-  if(InByte == 'j'){
-    servo_B.write(0);
+  if(InByte == 'e'){
+    digitalWrite(DIR_A, LOW);
+    digitalWrite(DIR_B, LOW);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed/2);
   }
-	if(InByte == 'w'){
-		digitalWrite(DIR_A, LOW);
-		digitalWrite(DIR_B, LOW);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed);
-		analogWrite(PWM_B, speed);
-	}  
-	if(InByte == 's'){
-		digitalWrite(DIR_A, HIGH);
-		digitalWrite(DIR_B, HIGH);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed);
-		analogWrite(PWM_B, speed);
-	}  
-	if(InByte == 'd'){
-		digitalWrite(DIR_A, LOW);
-		digitalWrite(DIR_B, HIGH);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed);
-		analogWrite(PWM_B, speed);
-	}
-	if(InByte == 'a'){
-		digitalWrite(DIR_A, HIGH);
-		digitalWrite(DIR_B, LOW);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed);
-		analogWrite(PWM_B, speed);
-	}
-	if(InByte == 'q'){
-		digitalWrite(DIR_A, LOW);
-		digitalWrite(DIR_B, LOW);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed/2);
-		analogWrite(PWM_B, speed);
-	}
-	if(InByte == 'e'){
-		digitalWrite(DIR_A, LOW);
-		digitalWrite(DIR_B, LOW);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed);
-		analogWrite(PWM_B, speed/2);
-	}
-	if(InByte == 'z'){
-		digitalWrite(DIR_A, HIGH);
-		digitalWrite(DIR_B, HIGH);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed/2);
-		analogWrite(PWM_B, speed);
-	}
-	if(InByte == 'c'){
-		digitalWrite(DIR_A, HIGH);
-		digitalWrite(DIR_B, HIGH);
-		digitalWrite(BRAKE_A, LOW);
-		digitalWrite(BRAKE_B, LOW);
-		analogWrite(PWM_A, speed);
-		analogWrite(PWM_B, speed/2);
+  if(InByte == 'z'){
+    digitalWrite(DIR_A, HIGH);
+    digitalWrite(DIR_B, HIGH);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed/2);
+    analogWrite(PWM_B, speed);
+  }
+  if(InByte == 'c'){
+    digitalWrite(DIR_A, HIGH);
+    digitalWrite(DIR_B, HIGH);
+    digitalWrite(BRAKE_A, LOW);
+    digitalWrite(BRAKE_B, LOW);
+    analogWrite(PWM_A, speed);
+    analogWrite(PWM_B, speed/2);
   }
   if(InByte == 'x'){
     stop_A();
@@ -185,4 +245,3 @@ void speed_Adjust(){
     speed = 100;
   }
 }
-
