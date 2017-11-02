@@ -7,7 +7,7 @@ socket_server.on('Robot Address', function(data){
 */
 
 //Redirect user as instructed by server
-socket.on('redirect', function(destination) {
+socket_server.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 

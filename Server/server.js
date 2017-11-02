@@ -134,12 +134,18 @@ userIO.on('connection', function(socket){
 		if (data == "")
 			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 		else {
-			console.log(data + " connected");
 			socket.username = data;
+			console.log(socket.username + " connected");
 			usernames.push(socket.username);
 			users.push(socket);
 			userIO.sockets.emit('usernames', usernames);
 		}
+	});
+	
+	socket.on('chat message', function(msg){
+		console.log ("Got here");
+		userIO.emit('chat message', {message: msg, username: socket.username});
+		console.log('username: ' + socket.username + ' message: ' + msg);
 	});
 	
 	socket.on('disconnect', function() {
