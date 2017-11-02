@@ -82,7 +82,6 @@ app.post('/login', function(req, res) {
 			res.send("Incorrect password.");
 		}
 		else{
-			console.log(path.resolve(__dirname));
 			res.sendFile(path.resolve(__dirname + '/lobby.html'));
 		}
 	  });
@@ -121,17 +120,17 @@ app.post('/create_account', function(req, res) {
 });
 
 userIO.on('connection', function(socket){
-	console.log("User connected");
 	
 	socket.on('new user', function(data) {
+		console.log(data + " connected");
 		socket.username = data;
 		usernames.push(socket.username);
 		users.push(socket);
-		userIO.sockets.emit('usernames', usernames);
-			
+		userIO.sockets.emit('usernames', usernames);	
 	});
+	
 	socket.on('disconnect', function() {
-		console.log("User disconnected");
+		console.log(socket.username + " disconnected");
 		users.splice(users.indexOf(socket), 1);
 		if (socket.username)
 			usernames.splice(usernames.indexOf(socket.username), 1);
