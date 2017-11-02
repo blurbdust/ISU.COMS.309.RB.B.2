@@ -36,6 +36,14 @@ app.get("/operator", (req, res) => {
  res.sendFile(__dirname + "/operator.html");
 }); 
 
+app.get("/lobby", (req, res) => {
+ res.sendFile(__dirname + "/lobby.html");
+}); 
+
+app.get("/admin", (req, res) => {
+ res.sendFile(__dirname + "/admin.html");
+}); 
+
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
@@ -82,7 +90,7 @@ app.post('/login', function(req, res) {
 			res.send("Incorrect password.");
 		}
 		else{
-			res.sendFile(path.resolve(__dirname + '/lobby.html'));
+			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 		}
 	  });
 	});
@@ -122,11 +130,16 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	
 	socket.on('new user', function(data) {
-		console.log(data + " connected");
-		socket.username = data;
-		usernames.push(socket.username);
-		users.push(socket);
-		userIO.sockets.emit('usernames', usernames);	
+		
+		if (data == "")
+			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+		else {
+			console.log(data + " connected");
+			socket.username = data;
+			usernames.push(socket.username);
+			users.push(socket);
+			userIO.sockets.emit('usernames', usernames);
+		}
 	});
 	
 	socket.on('disconnect', function() {

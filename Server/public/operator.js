@@ -5,6 +5,12 @@ socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
 */
+
+//Redirect user as instructed by server
+socket.on('redirect', function(destination) {
+	window.location.href = destination;
+});
+
 var socket_robot = io(robot_ip + ':5210');
 
 window.addEventListener("load", function(){

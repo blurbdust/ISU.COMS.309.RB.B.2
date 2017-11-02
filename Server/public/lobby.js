@@ -10,3 +10,8 @@ socket.on('usernames', function(data) {
 	}
 	document.getElementById("users").innerHTML = html;
 });
+
+//Redirect user as instructed by server
+socket.on('redirect', function(destination) {
+	window.location.href = destination;
+});
