@@ -16,11 +16,14 @@
 	
 	<footer>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/getUsername.js"></script>
 		<script>
 		
 			var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
 		
-			socket.emit('new user', 'test123'); 
+			var username = getUsername();
+
+			socket.emit('new user', username); 
 		
 			socket.on('usernames', function(data) {
 			

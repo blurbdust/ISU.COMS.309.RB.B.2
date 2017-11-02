@@ -32,6 +32,10 @@ app.get("/create_account", (req, res) => {
  res.sendFile(__dirname + "/create_account.html");
 }); 
 
+app.get("/operator", (req, res) => {
+ res.sendFile(__dirname + "/operator.html");
+}); 
+
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
