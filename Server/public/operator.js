@@ -1,5 +1,5 @@
 var socket_server = connectToUserSocket();
-var robot_ip = "http://monmodenic.student.iastate.edu";
+var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
 /*
 socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
@@ -78,7 +78,7 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
-    var webcam_addr = "monmodenic.student.iastate.edu";
+    var webcam_addr = "raspberrypi3-a.student.iastate.edu";
 	var webcam_port = "12000";
 	var webcam_host = $(".feed img");
 	var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);

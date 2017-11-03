@@ -160,7 +160,10 @@ userIO.on('connection', function(socket){
 
 robotIO.on('connection',function(socket) {
 	console.log("Robot connected");
+	socket.name = "";
+	socket.gunner = "";
+	socket.driver = "";
+	socket.IP = socket.request.connection.remoteAddress;
 	robots.push(socket);
-	robotIPList.push(socket.request.connection.remoteAddress);
-	console.log(robotIPList[0]);
+	console.log(socket.IP);
 });

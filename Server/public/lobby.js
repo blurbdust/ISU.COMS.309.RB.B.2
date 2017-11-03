@@ -4,7 +4,7 @@ var socket = connectToUserSocket();
 //Display connected users
 socket.on('usernames', function(data) {
 
-	var html = ' ';
+	var html = '';
 	for (i = 0; i < data.length; i++) {
 		html += data[i] + '<br/>';
 	}
