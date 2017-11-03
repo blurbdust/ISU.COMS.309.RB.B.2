@@ -13,6 +13,23 @@ socket_server.on('redirect', function(destination) {
 
 var socket_robot = io(robot_ip + ':5210');
 
+
+//Chat Box
+console.log($);
+$(function () {
+	$('#msgform').submit(function(){
+	  socket_server.emit('chat message', $('#m').val());
+	  $('#m').val('');
+	  return false;
+	});
+	socket_server.on('chat message', function(msg){
+	  $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
+	  window.scrollTo(0, document.body.scrollHeight);
+	});
+});
+
+
+
 window.addEventListener("load", function(){
 	
   var buttonUp = document.getElementById('buttonUp');

@@ -23,35 +23,18 @@
 	<img id="video" src="" style="width:auto;height:70%">
 </div>
 
-<div id="bottom-wrapper" align="center" style="width: 100%;border:5px solid green; overflow: hidden;">
+<div id="bottom-wrapper" align="center" style="width: 100%; overflow: hidden;">
 	
+	<!--Chat Box-->
 	<div id="chat-box" style="width:33%;height:230px;float: left;border:5px solid black">
 		<ul id="messages" style="text-align: left"></ul>
 		<form id="msgform" action="">
 		  <input id="m" autocomplete="off" /><button>Send</button>
 		</form>
-		<!--
-		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-		-->
-		<script>
-		  console.log($);
-		  $(function () {
-			var socket = io();
-			$('#msgform').submit(function(){
-			  socket.emit('chat message', $('#m').val());
-			  $('#m').val('');
-			  return false;
-			});
-			socket.on('chat message', function(msg){
-			  $('#messages').append($('<li>').text(msg.username + ": " + msg.message));
-			  window.scrollTo(0, document.body.scrollHeight);
-			});
-		  });
-		</script>
-
 	</div>
 
-	<div id='button-wrapper' align="center" style="width:33%;height:230px;border:5px solid blue">
+	<!--Buttons-->
+	<div id='button-wrapper' align="center" style="width:33%;height:230px;">
 		<button id="buttonUp" type="button" style="width:75px;height:75px;font-size:30px">↑</button><br>
 		<button id="buttonLeft" type="button" style="width:75px;height:75px;font-size:30px">←</button>
 		<button id="buttonRight" type="button" style="width:75px;height:75px;font-size:30px">→</button><br>

@@ -127,8 +127,10 @@ app.post('/create_account', function(req, res) {
 	});	
 });
 
+
 userIO.on('connection', function(socket){
 	
+
 	socket.on('new user', function(data) {
 		
 		if (data == "")
@@ -143,9 +145,7 @@ userIO.on('connection', function(socket){
 	});
 	
 	socket.on('chat message', function(msg){
-		console.log ("Got here");
 		userIO.emit('chat message', {message: msg, username: socket.username});
-		console.log('username: ' + socket.username + ' message: ' + msg);
 	});
 	
 	socket.on('disconnect', function() {
