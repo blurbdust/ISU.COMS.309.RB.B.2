@@ -90,12 +90,6 @@ var dbBox = mainGroup.append('rect')
 	.attr('height','100%')
 	.style('fill', '#f0f0f0');
 	
-userTextGroup.append('text')
-	.attr('x', '47%')
-	.attr('y', '24%')
-	.attr('font-family', 'sans-serif')
-	.text('Active Users');
-	
 mainGroup.append('text')
 	.attr('x', '53%')
 	.attr('y', '24%')
@@ -106,10 +100,6 @@ mainGroup.append('text')
 	
 	
 socket.on('usernames', function(data) {
-	listUsers(data);
-});
-
-function listUsers(data){
 	var y = 26;
 	
 	userTextGroup.selectAll('text').remove();
@@ -125,4 +115,4 @@ function listUsers(data){
 			return y+"%";})
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
-}
+});
