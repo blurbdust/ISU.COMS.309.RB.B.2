@@ -112,12 +112,7 @@ app.post('/create_account', function(req, res) {
 	con.connect(function(err) {
 		if (err) throw err;
 		console.log("Connected!");
-		if(password.equals("admin"){
-			var sql = "INSERT INTO users (Username, Password, UserRole) VALUES ('" + username + "', '" + password + "', '" + 1 +"')";
-		}
-		else{
-			var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
-		}
+		var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
 		con.query(sql, function (err, result) {
 			if (err && err.code == "ER_DUP_ENTRY") 
 				res.send("Username already taken.");
