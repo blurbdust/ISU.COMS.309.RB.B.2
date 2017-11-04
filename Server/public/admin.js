@@ -108,9 +108,10 @@ socket.on('usernames', function(data) {
 		.enter()
 		.append('text')
 		.attr('x', '44.5%')
-		.attr('y', function(){
+		.attr('y', function(d){
 			y = y+=2; 
 			console.log(y+"%");
+			console.log(d);
 			return y+"%";})
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
