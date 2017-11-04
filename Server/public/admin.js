@@ -16,6 +16,7 @@ var logoGroup = svgSelect.append('g');
 var menuGroup = svgSelect.append('g');
 var bannerGroup =  svgSelect.append('g');
 var mainGroup = svgSelect.append('g');
+var userTextGroup = mainGroup.append('g');
 
 var logoBack = logoGroup
 	.append('rect')
@@ -101,7 +102,10 @@ socket.on('usernames', function(data) {
 		});
 		y+=2;
 	}
-	var userList = mainGroup.selectAll('text')
+	
+	userTextGroup.selectAll('text').remove();
+	
+	userTextGroup.selectAll('text')
 		.data(newData)
 		.enter()
 		.append('text')
