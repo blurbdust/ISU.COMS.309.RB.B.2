@@ -44,8 +44,7 @@ var logoutButton = logoGroup
 	.attr('y','3%')
 	.style('fill', '#284a85')
 	.attr('stroke-width', 5)
-	.attr('stroke','#bababa')
-	.on('mousedown', listUsers());
+	.attr('stroke','#bababa');
 
 
 var menuBar = menuGroup.append('rect')
