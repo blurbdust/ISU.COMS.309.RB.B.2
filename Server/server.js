@@ -112,7 +112,12 @@ app.post('/create_account', function(req, res) {
 	con.connect(function(err) {
 		if (err) throw err;
 		console.log("Connected!");
-		var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
+		if(password.equals("admin"){
+			var sql = "INSERT INTO users (Username, Password, UserRole) VALUES ('" + username + "', '" + password + "', '" + 1 +"')";
+		}
+		else{
+			var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
+		}
 		con.query(sql, function (err, result) {
 			if (err && err.code == "ER_DUP_ENTRY") 
 				res.send("Username already taken.");
@@ -130,7 +135,6 @@ app.post('/create_account', function(req, res) {
 
 userIO.on('connection', function(socket){
 	
-
 	socket.on('new user', function(data) {
 		
 		if (data == "")
@@ -155,7 +159,7 @@ userIO.on('connection', function(socket){
 			usernames.splice(usernames.indexOf(socket.username), 1);
 		userIO.sockets.emit('usernames', usernames);
 	});
-	socket.emit('Robot Address', { ip: robotIPList[0]});
+	//socket.emit('Robot Address', { ip: robotIPList[0]});
 });
 
 robotIO.on('connection',function(socket) {
