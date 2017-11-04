@@ -89,7 +89,10 @@ app.post('/login', function(req, res) {
 		else if (result[0].Password != password){
 			res.send("Incorrect password.");
 		}
-		else{
+		else if (result[0].UserRole != null && result[0].UserRole == 1) {
+			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin')
+		}
+		else {
 			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 		}
 	  });
