@@ -100,11 +100,15 @@ mainGroup.append('text')
 	
 socket.on('usernames', function(data) {
 	var y = 26;
+	var newData = [];
+	for(var i=0; i<data.length; i++){
+		newData.push(data[i]);
+	}
 	
 	userTextGroup.selectAll('text').remove();
 	
 	userTextGroup.selectAll('text')
-		.data(data)
+		.data(newData)
 		.enter()
 		.append('text')
 		.attr('x', '44.5%')
