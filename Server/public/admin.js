@@ -106,10 +106,10 @@ mainGroup.append('text')
 	
 	
 socket.on('usernames', function(data) {
-	listUsers();
+	listUsers(data);
 });
 
-function listUsers(){
+function listUsers(data){
 	var y = 26;
 	
 	userTextGroup.selectAll('text').remove();
