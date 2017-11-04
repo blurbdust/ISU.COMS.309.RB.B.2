@@ -11,6 +11,16 @@ socket.on('usernames', function(data) {
 	document.getElementById("users").innerHTML = html;
 });
 
+//Display connected users
+socket.on('robotNames', function(data) {
+
+	var html = '';
+	for (i = 0; i < data.length; i++) {
+		html += data[i] + '<br/>';
+	}
+	document.getElementById("robots").innerHTML = html;
+});
+
 //Redirect user as instructed by server
 socket.on('redirect', function(destination) {
 	window.location.href = destination;

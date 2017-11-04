@@ -19,7 +19,7 @@ const webcam_server = new LiveCam({
 
 });
 var io_RPI = require("socket.io").listen(5210); //Operators connect to this
-
+io_RPI.emit('new robot', 'Robot 1');	//Placeholder robot name
 
 
 
@@ -42,9 +42,9 @@ serialPort.on('open', function(){
 	sleep(1000);
 });*/
 
-io_CS.on('connect', function(){
+/*io_CS.on('connect', function(){
 	console.log("Connected to Central Server");
-});
+});*/
 
 io_RPI.on('connection', function(socket){
 

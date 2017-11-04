@@ -12,6 +12,7 @@ var mysql = require('mysql');
 var users = [];
 var usernames = [];
 var robots = [];
+var robotNames = [];
 var robotIPList = [];
 
 const path = require('path');
@@ -160,24 +161,26 @@ userIO.on('connection', function(socket){
 });
 
 robotIO.on('connection',function(socket) {
+	
 	console.log("Robot connected");
 	socket.on('new robot', function(data) {
-		socket.name = "";
+		socket.name = data;
+		robotNames.push(socket.name);
 		socket.gunner = "";
 		socket.driver = "";
 		socket.IP = socket.request.connection.remoteAddress;
 		robots.push(socket);
 		console.log(socket.IP);
-		robotIO.sockets.emit('robots', robots);
+		robotIO.sockets.emit('robotNames', robotNames);
 	});
 	
 	
-	socket.on('robot disconnect', function(data) {
+	socket.on('disconnect', function(data) {
 		console.log(socket.name + " disconnected");
 		robots.splice(robots.indexOf(socket), 1);
-		
-		
-		robotIO.sockets.emit('robots', robots);
+		if (socket.name)
+			robotNames.splice(robotNames.indexOf(socket.name), 1);
+		robotIO.sockets.emit('robotNames', robotNames);
 	});
 	
 	
