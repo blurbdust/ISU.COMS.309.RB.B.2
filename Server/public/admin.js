@@ -110,8 +110,8 @@ socket.on('usernames', function(data) {
 		.enter()
 		.append('text')
 		.attr('x', '44%')
-		.attr('y', data['pos'])
-		.text(data['name']);
+		.attr('y', function (d) {return d.pos; })
+		.text(function (d) { return d.name;});
 
 });
 	
