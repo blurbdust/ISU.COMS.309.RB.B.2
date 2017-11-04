@@ -1,4 +1,10 @@
-var socket_server = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
+//Connect to socket
+var socket = connectToUserSocket();
+
+//Redirect user as instructed by server
+socket.on('redirect', function(destination) {
+	window.location.href = destination;
+});
 
 var bodySelect = d3.select("body").select("div");
 var svgSelect = bodySelect.append("svg")	//Creates SVG element in body of HTML
@@ -84,3 +90,14 @@ var dbBox = mainGroup.append('rect')
 	.attr('height','100%')
 	.style('fill', '#f0f0f0');
 	
+//Display connected users
+socket.on('usernames', function(data) {
+	var y = 22;
+	var userList = mainGroup.data(data)
+		.enter()
+		.append('text')
+		.attr('x', '44%')
+		.attr('y', (y = y+1+'%'))
+		.text(data);
+
+});
