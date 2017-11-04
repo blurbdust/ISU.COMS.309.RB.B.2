@@ -23,7 +23,7 @@ var io_RPI = require("socket.io").listen(5210); //Operators connect to this
 
 
 
-var io_CS = io.connect('proj-309-rb-b-2.cs.iastate.edu:3001');
+var io_CS = io.connect('proj-309-rb-b-2.cs.iastate.edu:3001', {reconnect: true});
 var operator;
 
 /*var SerialPort = require('serialport');
