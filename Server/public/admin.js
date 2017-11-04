@@ -96,7 +96,7 @@ socket.on('usernames', function(data) {
 		.enter()
 		.append('text')
 		.attr('x', '44%')
-		.attr('y', '22%'))
+		.attr('y', '22%')
 		.text(data);
 
 });
