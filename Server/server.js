@@ -157,15 +157,28 @@ userIO.on('connection', function(socket){
 			usernames.splice(usernames.indexOf(socket.username), 1);
 		userIO.sockets.emit('usernames', usernames);
 	});
-	/*socket.emit('Robot Address', { ip: robotIPList[0]}); */
 });
 
 robotIO.on('connection',function(socket) {
 	console.log("Robot connected");
-	socket.name = "";
-	socket.gunner = "";
-	socket.driver = "";
-	socket.IP = socket.request.connection.remoteAddress;
-	robots.push(socket);
-	console.log(socket.IP);
+	socket.on('new robot', function(data) {
+		socket.name = "";
+		socket.gunner = "";
+		socket.driver = "";
+		socket.IP = socket.request.connection.remoteAddress;
+		robots.push(socket);
+		console.log(socket.IP);
+		robotIO.sockets.emit('robots', robots);
+	});
+	
+	
+	socket.on('robot disconnect', function(data) {
+		console.log(socket.name + " disconnected");
+		robots.splice(robots.indexOf(socket), 1);
+		
+		
+		robotIO.sockets.emit('robots', robots);
+	});
+	
+	
 });
