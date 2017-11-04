@@ -90,32 +90,39 @@ var dbBox = mainGroup.append('rect')
 	.attr('height','100%')
 	.style('fill', '#f0f0f0');
 	
-
+userTextGroup.append('text')
+	.attr('x', '47%')
+	.attr('y', '24%')
+	.attr('font-family', 'sans-serif')
+	.text('Active Users');
+	
+mainGroup.append('text')
+	.attr('x', '53%')
+	.attr('y', '24%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '20px')
+	.attr('font-weight', '700') 
+	.text('Active Users');	
+	
+	
 socket.on('usernames', function(data) {
 	listUsers();
 });
 
 function listUsers(){
-	var y = 24;
-	var newData = [];
-	for(var i=0; i<data.length; i++){
-		newData.push(
-		{
-			'pos' : y + "%",
-			'name' : data[i]
-		});
-		y+=2;
-	}
+	var y = 26;
 	
 	userTextGroup.selectAll('text').remove();
 	
 	userTextGroup.selectAll('text')
-		.data(newData)
+		.data(data)
 		.enter()
 		.append('text')
 		.attr('x', '44.5%')
-		.attr('y', function(d){return d['pos'];})
+		.attr('y', function(){
+			y = y+=2; 
+			console.log(y+"%");
+			return y+"%";})
 		.attr('font-family', 'sans-serif')
-		.text(function(d) { return d['name'];});
+		.text(function(d) { return d;});
 }
-	
