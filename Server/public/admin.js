@@ -91,16 +91,23 @@ var dbBox = mainGroup.append('rect')
 	
 
 socket.on('usernames', function(data) {
-	var y = 24;
-	
-	
+	var y = 23;
+	var newData = [];
+	for(var i=0; i<data.length; i++){
+		newData.push(
+		{
+			pos : y + "%",
+			name : data[i]
+		});
+		y+=2;
+	}
 	var userList = mainGroup.selectAll('text')
-		.data(data)
+		.data(newData)
 		.enter()
 		.append('text')
 		.attr('x', '44%')
-		.attr('y', (y = y+2) + "%")
-		.text(data);
+		.attr('y', data['pos'])
+		.text(data['name']);
 
 });
 	
