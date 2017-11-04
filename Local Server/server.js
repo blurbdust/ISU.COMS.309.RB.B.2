@@ -3,7 +3,10 @@ var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
 var userIO = require('socket.io')(userServer);
-var robotIO = require('socket.io').listen(3001);
+
+var robotListen = require('http').createServer;
+
+var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
@@ -23,6 +26,11 @@ app.get("/login", (req, res) => {
  res.sendFile(__dirname + "/login.html");;
 }); 
 
+//Send lobby page 
+app.get("/lobby", (req, res) => {
+ res.sendFile(__dirname + "/lobby.html");;
+}); 
+
 //Send Create User page
 app.get("/create_account", (req, res) => {
  res.sendFile(__dirname + "/create_account.html");
@@ -32,12 +40,21 @@ app.get("/create_account", (req, res) => {
 app.use(express.static(__dirname + '/public'));
  
 //Listen on port
-app.listen(port, () => {
- console.log("Server listening on port " + port);
+userServer.listen(port, () => {
+ console.log("User server listening on port " + port);
 });
+
+robotListen.listen(3001, () => {
+ console.log("Robot server listening on port " + 3001);
+});
+
 
 app.get('/', function(req, res){
 	res.redirect('http://localhost:3000/' + 'login');
+});
+
+app.get('/socket.io/socket.io.js', function(req, res){
+	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
 });
 
 app.post('/login', function(req, res) {
@@ -65,7 +82,7 @@ app.post('/login', function(req, res) {
 		}
 		else{
 			console.log(path.resolve(__dirname));
-			res.sendFile(path.resolve(__dirname + '/operator.html'));
+			res.sendFile(path.resolve(__dirname + '/lobby.html'));
 		}
 	  });
 	});
@@ -105,11 +122,18 @@ app.post('/create_account', function(req, res) {
 userIO.on('connection', function(socket){
 	console.log("User connected");
 	users.push(socket);
+	socket.emit('user', users);
+	socket.on('disconnect', function() {
+		console.log("User disconnected");
+		var i = users.indexOf(socket);
+		users.splice(i, 1);
+	});
+	socket.emit('Robot Address', { ip: robotIPList[0]});
 });
 
 robotIO.on('connection',function(socket) {
 	console.log("Robot connected");
 	robots.push(socket);
 	robotIPList.push(socket.request.connection.remoteAddress);
-	console.log(robotIP[0]);
+	console.log(robotIPList[0]);
 });

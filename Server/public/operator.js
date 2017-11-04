@@ -1,11 +1,34 @@
-var socket_server = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000');
-var robot_ip = "http://monmodenic.student.iastate.edu";
+var socket_server = connectToUserSocket();
+var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
 /*
 socket_server.on('Robot Address', function(data){
 	robot_ip = data.ip;
 });
 */
+
+//Redirect user as instructed by server
+socket_server.on('redirect', function(destination) {
+	window.location.href = destination;
+});
+
 var socket_robot = io(robot_ip + ':5210');
+
+
+//Chat Box
+$(function () {
+	$('#msgform').submit(function(){
+	  socket_server.emit('chat message', $('#m').val());
+	  $('#m').val('');
+	  return false;
+	});
+	socket_server.on('chat message', function(msg){
+	  $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
+	  var chatDiv = document.getElementById("chat-box");
+	  chatDiv.scrollTop = chatDiv.scrollHeight;
+	});
+});
+
+
 
 window.addEventListener("load", function(){
 	
@@ -55,7 +78,7 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
-    var webcam_addr = "monmodenic.student.iastate.edu";
+    var webcam_addr = "raspberrypi3-a.student.iastate.edu";
 	var webcam_port = "12000";
 	var webcam_host = $(".feed img");
 	var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);

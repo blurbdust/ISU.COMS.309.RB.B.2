@@ -26,7 +26,7 @@ var io_RPI = require("socket.io").listen(5210); //Operators connect to this
 var io_CS = io.connect('proj-309-rb-b-2.cs.iastate.edu:3001');
 var operator;
 
-var SerialPort = require('serialport');
+/*var SerialPort = require('serialport');
 var serialPort = new SerialPort("/dev/ttyACM0",{
 	baudrate: 9600,
 	dataBits: 8,
@@ -40,7 +40,7 @@ serialPort.on('open', function(){
 	let dir = 'w';
 	console.log('Serial Port Opened');
 	sleep(1000);
-});
+});*/
 
 io_CS.on('connect', function(){
 	console.log("Connected to Central Server");

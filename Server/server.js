@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
+var userIO = require('socket.io')(userServer);
 
 var robotListen = require('http').createServer(app);
 
@@ -9,6 +10,7 @@ var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
+var usernames = [];
 var robots = [];
 var robotIPList = [];
 
@@ -30,6 +32,18 @@ app.get("/create_account", (req, res) => {
  res.sendFile(__dirname + "/create_account.html");
 }); 
 
+app.get("/operator", (req, res) => {
+ res.sendFile(__dirname + "/operator.html");
+}); 
+
+app.get("/lobby", (req, res) => {
+ res.sendFile(__dirname + "/lobby.html");
+}); 
+
+app.get("/admin", (req, res) => {
+ res.sendFile(__dirname + "/admin.html");
+}); 
+
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
@@ -42,12 +56,10 @@ robotListen.listen(3001, () => {
  console.log("Robot server listening on port " + 3001);
 });
 
-var userIO = require('socket.io')(userServer);
-
 
 
 app.get('/', function(req, res){
-	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:3000/' + 'login');
+	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
 app.get('/socket.io/socket.io.js', function(req, res){
@@ -78,8 +90,7 @@ app.post('/login', function(req, res) {
 			res.send("Incorrect password.");
 		}
 		else{
-			console.log(path.resolve(__dirname));
-			res.sendFile(path.resolve(__dirname + '/operator.html'));
+			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 		}
 	  });
 	});
@@ -116,20 +127,43 @@ app.post('/create_account', function(req, res) {
 	});	
 });
 
+
 userIO.on('connection', function(socket){
-	console.log("User connected");
-	users.push(socket);
+	
+
+	socket.on('new user', function(data) {
+		
+		if (data == "")
+			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+		else {
+			socket.username = data;
+			console.log(socket.username + " connected");
+			usernames.push(socket.username);
+			users.push(socket);
+			userIO.sockets.emit('usernames', usernames);
+		}
+	});
+	
+	socket.on('chat message', function(msg){
+		userIO.emit('chat message', {message: msg, username: socket.username});
+	});
+	
 	socket.on('disconnect', function() {
-		console.log("User disconnected");
-		var i = users.indexOf(socket);
-		users.splice(i, 1);
+		console.log(socket.username + " disconnected");
+		users.splice(users.indexOf(socket), 1);
+		if (socket.username)
+			usernames.splice(usernames.indexOf(socket.username), 1);
+		userIO.sockets.emit('usernames', usernames);
 	});
 	socket.emit('Robot Address', { ip: robotIPList[0]});
 });
 
 robotIO.on('connection',function(socket) {
 	console.log("Robot connected");
+	socket.name = "";
+	socket.gunner = "";
+	socket.driver = "";
+	socket.IP = socket.request.connection.remoteAddress;
 	robots.push(socket);
-	robotIPList.push(socket.request.connection.remoteAddress);
-	console.log(robotIPList[0]);
+	console.log(socket.IP);
 });

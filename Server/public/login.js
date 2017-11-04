@@ -30,6 +30,7 @@ function validateForm() {
 		return false;
 	}
 	
+	document.cookie = "username=" + uname + "; path=/"
 	return true;
 
 }
