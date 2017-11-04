@@ -1,12 +1,11 @@
 var socket= connectToUserSocket();
 
-//Redirect user as instructed by server
 socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
 var bodySelect = d3.select("body").select("div");
-var svgSelect = bodySelect.append("svg")	//Creates SVG element in body of HTML
+var svgSelect = bodySelect.append("svg")
 				.attr("preserveAspectRatio", "xMinYMin meet")
 				.attr("viewBox", "0 0 1200 800")
 				.classed("svg-content-responsive", true); 
@@ -45,7 +44,8 @@ var logoutButton = logoGroup
 	.attr('y','3%')
 	.style('fill', '#284a85')
 	.attr('stroke-width', 5)
-	.attr('stroke','#bababa');
+	.attr('stroke','#bababa')
+	.on('mousedown', listUsers());
 
 
 var menuBar = menuGroup.append('rect')
@@ -92,13 +92,17 @@ var dbBox = mainGroup.append('rect')
 	
 
 socket.on('usernames', function(data) {
-	var y = 23;
+	listUsers();
+});
+
+function listUsers(){
+	var y = 24;
 	var newData = [];
 	for(var i=0; i<data.length; i++){
 		newData.push(
 		{
-			pos : y + "%",
-			name : data[i]
+			'pos' : y + "%",
+			'name' : data[i]
 		});
 		y+=2;
 	}
@@ -109,9 +113,9 @@ socket.on('usernames', function(data) {
 		.data(newData)
 		.enter()
 		.append('text')
-		.attr('x', '44%')
-		.attr('y', function (d) {return d.pos; })
-		.text(function (d) { return d.name;});
-
-});
+		.attr('x', '44.5%')
+		.attr('y', function(d){return d['pos'];})
+		.attr('font-family', 'sans-serif')
+		.text(function(d) { return d['name'];});
+}
 	
