@@ -159,7 +159,7 @@ userIO.on('connection', function(socket){
 			usernames.splice(usernames.indexOf(socket.username), 1);
 		userIO.sockets.emit('usernames', usernames);
 	});
-	//socket.emit('Robot Address', { ip: robotIPList[0]});
+	/*socket.emit('Robot Address', { ip: robotIPList[0]}); */
 });
 
 robotIO.on('connection',function(socket) {
