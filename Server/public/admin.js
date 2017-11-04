@@ -1,4 +1,4 @@
-var socket_server = connectToUserSocket();
+var socket= connectToUserSocket();
 
 //Redirect user as instructed by server
 socket.on('redirect', function(destination) {
@@ -88,4 +88,15 @@ var dbBox = mainGroup.append('rect')
 	.attr('width','27%')
 	.attr('height','100%')
 	.style('fill', '#f0f0f0');
+	
+socket.on('usernames', function(data) {
+	var y = 22;
+	var userList = mainGroup.data(data)
+		.enter()
+		.append('text')
+		.attr('x', '44%')
+		.attr('y', (y = y+1+'%'))
+		.text(data);
+
+});
 	
