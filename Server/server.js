@@ -14,6 +14,7 @@ var usernames = [];
 var dblist = [];
 var robots = [];
 var robotNames = [];
+var robotInfo = [];
 var robotIPList = [];
 
 const path = require('path');
@@ -168,8 +169,7 @@ userIO.on('connection', function(socket){
 			});
 			setTimeout(function() {
 				userIO.sockets.emit('dblist', dblist);	
-			}, 200);
-						
+			}, 200);			
 		}
 	});
 	
@@ -192,23 +192,33 @@ robotIO.on('connection',function(socket) {
 	
 	console.log("Robot connected");
 	socket.on('new robot', function(data) {
+		
+		//Set robot name, users, and IP in socket
 		socket.name = data;
-		robotNames.push(socket.name);
 		socket.gunner = "";
 		socket.driver = "";
 		socket.IP = socket.request.connection.remoteAddress;
 		robots.push(socket);
 		console.log(socket.IP);
-		robotIO.sockets.emit('robotNames', robotNames);
+		
+		//Emit robot info to client
+		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
+		robotInfo.push(robot);
+		robotIO.sockets.emit('robotInfo', robotInfo);
 	});
 	
 	
 	socket.on('disconnect', function(data) {
 		console.log(socket.name + " disconnected");
 		robots.splice(robots.indexOf(socket), 1);
-		if (socket.name)
-			robotNames.splice(robotNames.indexOf(socket.name), 1);
-		robotIO.sockets.emit('robotNames', robotNames);
+		if (socket.name) {
+			var index = robotInfo.findIndex(function(item, i) {
+				return item.name === socket.name;
+			});
+			robotInfo.splice(index, 1);
+			
+		}
+		robotIO.sockets.emit('robotInfo', robotInfo);
 	});
 	
 	
