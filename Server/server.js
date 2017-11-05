@@ -159,14 +159,18 @@ userIO.on('connection', function(socket){
 			con.connect(function(err) {
 				if (err) throw err;
 				var sql = "SELECT * FROM users";
-				con.query(sql, function(err, result)  {
+				con.query(sql, function(err, result, fields)  {
 					if (err) throw err;
 					for (i = 0; i < result.length; i++) {
-						dblist.push(result[i].username);
+						console.log(result[i].Username);
+						dblist.push(result[i].Username);
 					}
 				});
 			});
-			userIO.sockets.emit('dblist', dblist);			
+			setTimeout(function() {
+				userIO.sockets.emit('dblist', dblist);	
+			}, 200);
+						
 		}
 	});
 	
