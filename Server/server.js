@@ -176,7 +176,39 @@ userIO.on('connection', function(socket){
 		}
 	});
 	
+	socket.on('kick user', function(data){
+		/******************************
+		/
+		/	Kick user from robot and return them to lobby
+		/
+		/
+		*******************************/
+	});
 	
+	socket.on('ban user', function(data){
+		/******************************
+		/
+		/	Set 'banned' field in database to true, and redirect user to login page
+		/
+		/
+		*******************************/
+	});
+	socket.on('delete account', function(data){
+		/******************************
+		/
+		/	Delete account from database
+		/
+		/
+		*******************************/
+	});
+	socket.on('logout', function(data){
+		/******************************
+		/
+		/	Redirect user to login page
+		/
+		/
+		*******************************/
+	});
 	
 	socket.on('chat message', function(msg){
 		userIO.emit('chat message', {message: msg, username: socket.username});
