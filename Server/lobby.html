@@ -2,11 +2,38 @@
 <html>
 	<head>
 		<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/socket.io.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<style>
+		  #chat-box * { margin: 0; padding: 0; box-sizing: border-box; }
+		  #chat-box { font: 13px Helvetica, Arial; }
+		  #chat-box form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+		  #chat-box form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+		  #chat-box form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+		  #messages { list-style-type: none; margin: 0; padding: 0; }
+		  #messages li { padding: 5px 10px; }
+		  #messages li:nth-child(odd) { background: #eee; }
+		  #messages { margin-bottom: 40px }
+		</style>
 	</head>
 	
 	<body>
-		<h1>Lobby</h1>
 		
+		<!--D3 Layout-->
+		<div id='layout'></div>
+		
+		<!--Chat Box-->
+		<div id="chat-box" style="width:33%;height:230px;float: left;border:5px solid black; overflow: auto">
+			<ul id="messages" style="text-align: left"></ul>
+			<form id="msgform" action="">
+			  <input id="m" autocomplete="off" /><button>Send</button>
+			</form>
+		</div>
+		
+		
+		
+		
+		
+		<!--
 		<h3>Users</h3>
 		<div id="users"></div><br />
 		
@@ -14,6 +41,9 @@
 		<div id="robots"></div><br />
 		
 		<button type="button" id="loginButton" onclick="location.href = '/operator';">Go to Operator</button>
+		-->
+		
+		
 	</body>
 	
 	<footer>
