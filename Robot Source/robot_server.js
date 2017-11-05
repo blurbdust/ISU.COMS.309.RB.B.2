@@ -1,7 +1,9 @@
-var io = require("socket.io-client");	//Central Server connection
+var io = require("socket.io");	//Central Server connection
+var http = require('http');
+var app = express();
 var sleep = require('system-sleep');
-const LiveCam = require('livecam');
-const webcam_server = new LiveCam({
+//const LiveCam = require('livecam');
+/*const webcam_server = new LiveCam({
 	'ui_addr' : '0.0.0.0',
 	'ui_port' : 11000,
 	'broadcast_addr' : '0.0.0.0',
@@ -17,13 +19,19 @@ const webcam_server = new LiveCam({
 		'framerate': 5
 	}
 
-});
-var io_RPI = require("socket.io").listen(5210); //Operators connect to this
+});*/
+var server = app.listen(5210);
+var io_RPI = require("socket.io").listen(server); //Operators connect to this
 io_RPI.emit('new robot', 'Robot 1');	//Placeholder robot name
 
 
 
-var io_CS = io.connect('proj-309-rb-b-2.cs.iastate.edu:3001', {reconnect: true});
+var io_CS = io('http://proj-309-rb-b-2.cs.iastate.edu:3001');
+
+io_CS.emit('Hello', function(){
+	console.log("Emitted Hello");
+}); 
+
 var operator;
 
 /*var SerialPort = require('serialport');
@@ -42,9 +50,9 @@ serialPort.on('open', function(){
 	sleep(1000);
 });*/
 
-/*io_CS.on('connect', function(){
+io_CS.on('connect', function(){
 	console.log("Connected to Central Server");
-});*/
+});
 
 io_RPI.on('connection', function(socket){
 
@@ -61,5 +69,5 @@ io_RPI.on('connection', function(socket){
 	});
 });
 
-webcam_server.broadcast();
+//webcam_server.broadcast();
 
