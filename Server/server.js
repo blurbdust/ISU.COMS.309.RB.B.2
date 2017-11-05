@@ -150,7 +150,7 @@ userIO.on('connection', function(socket){
 			console.log(socket.username + " connected");
 			usernames.push(socket.username);
 			users.push(socket);
-			userIO.sockets.emit('usernames', usernames);
+			socket.emit('usernames', usernames);
 			
 			//Emit all database users
 			var con = mysql.createConnection({
@@ -171,7 +171,7 @@ userIO.on('connection', function(socket){
 				});
 			});
 			setTimeout(function() {
-				userIO.sockets.emit('dblist', dblist);	
+				socket.emit('dblist', dblist);	
 			}, 200);			
 		}
 	});
