@@ -25,12 +25,12 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
  
 //Send login page 
 app.get("/login", (req, res) => {
- res.sendFile(__dirname + "/login.html");;
+	res.sendFile(__dirname + "/login.html");;
 }); 
 
 //Send Create User page
 app.get("/create_account", (req, res) => {
- res.sendFile(__dirname + "/create_account.html");
+	res.sendFile(__dirname + "/create_account.html");
 }); 
 
 app.get("/operator", (req, res) => {
@@ -38,11 +38,19 @@ app.get("/operator", (req, res) => {
 }); 
 
 app.get("/lobby", (req, res) => {
- res.sendFile(__dirname + "/lobby.html");
+	res.sendFile(__dirname + "/lobby.html");
 }); 
 
 app.get("/admin", (req, res) => {
- res.sendFile(__dirname + "/admin.html");
+	res.sendFile(__dirname + "/admin.html");
+});
+
+app.get("/gunner", (req, res) => {
+	res.sendFile(__dirname + "/gunner.html");
+});
+
+app.get("/driver", (req, res) => {
+	res.sendFile(__dirname + "/driver.html");
 }); 
 
 //Public folder to serve files
@@ -50,14 +58,12 @@ app.use(express.static(__dirname + '/public'));
  
 //Listen on port
 userServer.listen(port, () => {
- console.log("User server listening on port " + port);
+	console.log("User server listening on port " + port);
 });
 
 robotListen.listen(3001, () => {
- console.log("Robot server listening on port " + 3001);
+	console.log("Robot server listening on port " + 3001);
 });
-
-
 
 app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
