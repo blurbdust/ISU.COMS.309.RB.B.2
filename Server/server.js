@@ -149,12 +149,12 @@ userIO.on('connection', function(socket){
 			userIO.sockets.emit('usernames', usernames);
 			
 			//Emit all database users
-				var con = mysql.createConnection({
-					host: "mysql.cs.iastate.edu",
-					user: "dbu309rbb2",
-					password: "Ze3xcZG5",
-					database: "db309rbb2"
-				});
+			var con = mysql.createConnection({
+				host: "mysql.cs.iastate.edu",
+				user: "dbu309rbb2",
+				password: "Ze3xcZG5",
+				database: "db309rbb2"
+			});
 			dblist = [];
 			con.connect(function(err) {
 				if (err) throw err;
