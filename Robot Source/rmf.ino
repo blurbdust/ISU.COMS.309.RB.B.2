@@ -122,12 +122,6 @@ void setup()
 
 void loop()                     // run over and over again
 {
-  //if the ir sensor goes off, increase damage
-  if(digitalRead(PIN_DETECT) == HIGH) {
-    damage++;
-	Serial.write(damage);
-  }
-  
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
@@ -143,6 +137,12 @@ void loop()                     // run over and over again
   }
   //IR Stuff
   digitalWrite(PIN_STATUS, !digitalRead(PIN_DETECT));
+  
+  //if the ir sensor goes off, increase damage
+  if(digitalRead(PIN_DETECT) == HIGH) {
+    damage++;
+	Serial.write(damage);
+  }
 }
 
 
