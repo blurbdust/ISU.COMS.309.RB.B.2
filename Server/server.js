@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
 var usernames = [];
+var dblist = [];
 var robots = [];
 var robotNames = [];
 var robotIPList = [];
@@ -145,13 +146,41 @@ userIO.on('connection', function(socket){
 		if (data == "")
 			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 		else {
+			
+			//Associate username with socket
 			socket.username = data;
 			console.log(socket.username + " connected");
 			usernames.push(socket.username);
 			users.push(socket);
 			userIO.sockets.emit('usernames', usernames);
+			
+			//Emit all database users
+			var con = mysql.createConnection({
+				host: "mysql.cs.iastate.edu",
+				user: "dbu309rbb2",
+				password: "Ze3xcZG5",
+				database: "db309rbb2"
+			});
+			dblist = [];
+			con.connect(function(err) {
+				if (err) throw err;
+				var sql = "SELECT * FROM users";
+				con.query(sql, function(err, result, fields)  {
+					if (err) throw err;
+					for (i = 0; i < result.length; i++) {
+						console.log(result[i].Username);
+						dblist.push(result[i].Username);
+					}
+				});
+			});
+			setTimeout(function() {
+				userIO.sockets.emit('dblist', dblist);	
+			}, 200);
+						
 		}
 	});
+	
+	
 	
 	socket.on('chat message', function(msg){
 		userIO.emit('chat message', {message: msg, username: socket.username});
