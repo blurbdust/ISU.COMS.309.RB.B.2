@@ -21,9 +21,9 @@ var gunnerTextGroup = svgSelect.append('g');
 var userTextGroup = svgSelect.append('g');
 var dbTextGroup = svgSelect.append('g');
 var adminToolsGroup = svgSelect.append('g');
+var logoutGroup = svgSelect.append('g');
 
-var logoBack = logoGroup
-	.append('rect')
+var logoBack = logoGroup.append('rect')
 	.attr('height', '13%')
 	.attr('width', '100%')
 	.attr('x','15%')
@@ -32,25 +32,13 @@ var logoBack = logoGroup
 	.attr('stroke-width', 10)
 	.attr('stroke','#bababa');
 	
-var logoImage = logoGroup
-	.append('image')
+var logoImage = logoGroup.append('image')
 	.attr('href', 'logo.png')
 	.attr('alt', 'logo')
 	.attr('height', '12%')
 	.attr('width', '85%')
 	.attr('x','0')
 	.attr('y','5');
-	
-var logoutButton = logoGroup
-	.append('rect')
-	.attr('height', '4%')
-	.attr('width', '7%')
-	.attr('x','90%')
-	.attr('y','3%')
-	.style('fill', '#284a85')
-	.attr('stroke-width', 5)
-	.attr('stroke','#bababa');
-
 
 var menuBar = menuGroup.append('rect')
 	.attr('x','0')
@@ -75,9 +63,9 @@ var bannerBar = bannerGroup.append('rect')
 	.attr('height','7%')
 	.style('fill', '#284a85');
 	
-adminToolsGroup.append('text')
+var adminToolsLabel = adminToolsGroup.append('text')
 	.attr('x', '1.25%')
-	.attr('y', '17%')
+	.attr('y', '18%')
 	.attr('font-family', 'sans-serif')
 	.attr('font-size' , '24px')
 	.attr('font-weight', '700') 
@@ -85,16 +73,141 @@ adminToolsGroup.append('text')
 	.style('text-decoration', 'underline')
 	.text('Admin Tools');
 	
-var kickUser = adminToolsGroup.append('text')
-	.attr('x', '1.25%')
-	.attr('y', '30%')
-	.attr('font-size' , '18px')
+var robotsLabel = mainGroup.append('text')
+	.attr('x', '23%')
+	.attr('y', '18%')
 	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '24px')
+	.attr('font-weight', '700') 
 	.attr('fill', 'white')
-	.attr('background-color', 'red')
-	.text('Kick user off bot')
+	.style('text-decoration', 'underline')
+	.text('Active Robots');
+	
+var usersLabel = mainGroup.append('text')
+	.attr('x', '51%')
+	.attr('y', '18%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '24px')
+	.attr('font-weight', '700') 
+	.attr('fill', 'white')
+	.style('text-decoration', 'underline')
+	.text('Active Users');
+
+var dbLabel = mainGroup.append('text')
+	.attr('x', '79%')
+	.attr('y', '18%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '24px')
+	.attr('font-weight', '700') 
+	.attr('fill', 'white')
+	.style('text-decoration', 'underline')
+	.text('User Database');	
+
+var kickUserBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '27.35%')
+	.attr('width', '9%')
+	.attr('height', '4%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
 	.on('click', function(){
-		alert('ALERT');
+		kickUser();
+	});;
+	
+var kickUserText = adminToolsGroup.append('text')
+	.attr('x', '2.25%')
+	.attr('y', '30%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#284a85')
+	.style('cursor','pointer')
+	.text('Kick User')
+	.on('click', function(){
+		kickUser();
+	});
+	
+var banUserBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '34.35%')
+	.attr('width', '9%')
+	.attr('height', '4%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
+	.on('click', function(){
+		banUser();
+	});;
+	
+var banUserText = adminToolsGroup.append('text')
+	.attr('x', '2.25%')
+	.attr('y', '37%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#284a85')
+	.style('cursor','pointer')
+	.text('Ban User')
+	.on('click', function(){
+		banUser();
+	});
+	
+var deleteAccountBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '41.35%')
+	.attr('width', '9%')
+	.attr('height', '6%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
+	.on('click', function(){
+		deleteAccount();
+	});;
+	
+var deleteAccountText = adminToolsGroup.append('text')
+	.attr('x', '2.25%')
+	.attr('y', '44%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#284a85')
+	.style('cursor','pointer')
+	.text('Delete')
+	.on('click', function(){
+			deleteAccount();
+		})
+	.append('tspan')
+		.attr('dy', '1.1em')
+		.attr('dx', '-2.5em')
+		.text('Account');
+		
+var logoutBtn = logoutGroup.append('rect')
+	.attr('height', '4%')
+	.attr('width', '8%')
+	.attr('x','1.5%')
+	.attr('y','75%')
+	.style('cursor','pointer')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke','black')
+	.on('click', function(){
+		logout();
+	});
+var logoutText = logoutGroup.append('text')
+	.attr('x', '2.25%')
+	.attr('y', '77.75%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '18px')
+	.attr('font-weight', '900') 
+	.attr('fill', '#284a85')
+	.style('cursor','pointer')
+	.text('Logout')
+	.on('click', function(){
+		logout();
 	});
 	
 var mainBox = mainGroup.append('rect')
@@ -124,39 +237,12 @@ var dbBox = mainGroup.append('rect')
 	.attr('width','27%')
 	.attr('height','100%')
 	.style('fill', '#f0f0f0');
-	
-mainGroup.append('text')
-	.attr('x', '25%')
-	.attr('y', '24%')
-	.attr('font-family', 'sans-serif')
-	.attr('font-size' , '20px')
-	.attr('font-weight', '700') 
-	.text('Active Robots');
-	
-mainGroup.append('text')
-	.attr('x', '53%')
-	.attr('y', '24%')
-	.attr('font-family', 'sans-serif')
-	.attr('font-size' , '20px')
-	.attr('font-weight', '700') 
-	.text('Active Users');
 
-mainGroup.append('text')
-	.attr('x', '81%')
-	.attr('y', '24%')
-	.attr('font-family', 'sans-serif')
-	.attr('font-size' , '20px')
-	.attr('font-weight', '700') 
-	.text('User Database');	
-	
-menuGroup.append('text')
-	.attr('x', '2%')
-	.attr('y', '28%')
 	
 socket.on('robotInfo', function(data){
-	var y = 20;
-	var y2 = 22;
-	var y3 = 24
+	var y = 17;
+	var y2 = 19;
+	var y3 = 21;
 	
 	robotTextGroup.selectAll('text').remove();
 	
@@ -202,7 +288,7 @@ socket.on('robotInfo', function(data){
 	
 	
 socket.on('usernames', function(data) {
-	var y = 26;
+	var y = 23;
 
 	userTextGroup.selectAll('text').remove();
 	
@@ -219,7 +305,7 @@ socket.on('usernames', function(data) {
 });
 
 socket.on('dblist', function(data) {
-	var y = 26;
+	var y = 23;
 
 	dbTextGroup.selectAll('text').remove();
 	
@@ -234,3 +320,35 @@ socket.on('dblist', function(data) {
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
 });
+
+function kickUser(){
+	var username = prompt("Enter the name of the user to remove from a robot \n ");
+	
+	if(username != ""){
+		socket.emit("Kick user from robot", username);
+	}
+}
+
+function banUser(){
+	var username = prompt("Enter the name of the user you would like to ban \n\n   (*Note - This user will no longer be able to log on)\n ");
+	
+	if(username != ""){
+		socket.emit("Ban user from server", username);
+	}
+}
+
+function deleteAccount(){
+	var username = prompt("Enter the name of the account you would like to delete \n ");
+	
+	if(username != ""){
+		socket.emit("Delete account", username);
+	}
+}
+
+function logout(){
+	var check = confirm("Are you sure you want to log out?");
+	
+	if(check){
+		socket.emit("Logout");
+	}
+}
