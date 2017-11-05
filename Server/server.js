@@ -63,8 +63,8 @@ userServer.listen(port, () => {
 	console.log("User server listening on port " + port);
 });
 
-robotListen.listen(3001, () => {
-	console.log("Robot server listening on port " + 3001);
+robotListen.listen(3002, () => {
+	console.log("Robot server listening on port " + 3002);
 });
 
 app.get('/', function(req, res){
