@@ -162,7 +162,6 @@ userIO.on('connection', function(socket){
 				con.query(sql, function(err, result, fields)  {
 					if (err) throw err;
 					for (i = 0; i < result.length; i++) {
-						console.log(result[i].Username);
 						dblist.push(result[i].Username);
 					}
 				});
