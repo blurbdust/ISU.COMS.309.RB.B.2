@@ -11,7 +11,6 @@ var dblist = [];
 var robots = [];
 var robotNames = [];
 var robotInfo = [];
-var robotIPList = [];
 
 const path = require('path');
 const url = require('url');
@@ -57,10 +56,6 @@ app.use(express.static(__dirname + '/public'));
 //Listen on port
 userServer.listen(port, () => {
 	console.log("User server listening on port " + port);
-});
-
-robotListen.listen(3002, () => {
-	console.log("Robot server listening on port " + 3002);
 });
 
 app.get('/', function(req, res){
@@ -244,9 +239,10 @@ userIO.on('connection', function(socket){
 		socket.type = "Robot";
 		socket.gunner = "";
 		socket.driver = "";
+		socket.spectators = [];
 		socket.IP = socket.request.connection.remoteAddress;
 		robots.push(socket);
-		console.log(socket.IP);
+		console.log('Robot Name: ' + socket.name + ' Robot IP: ' + socket.IP);
 		
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
