@@ -16,13 +16,6 @@ var robots = [];
 var robotNames = [];
 var robotIPList = [];
 
-var con = mysql.createConnection({
-	host: "mysql.cs.iastate.edu",
-	user: "dbu309rbb2",
-	password: "Ze3xcZG5",
-	database: "db309rbb2"
-});
-
 const path = require('path');
 const url = require('url');
 
@@ -79,6 +72,13 @@ app.post('/login', function(req, res) {
 	var username = req.body.uname;
 	var password = req.body.psw;
 	
+	var con = mysql.createConnection({
+		host: "mysql.cs.iastate.edu",
+		user: "dbu309rbb2",
+		password: "Ze3xcZG5",
+		database: "db309rbb2"
+	});
+	
 	con.connect(function(err) {
 	  if (err) throw err;
 	  con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
@@ -106,6 +106,13 @@ app.post('/create_account', function(req, res) {
 	var username = req.body.uname;
 	var password = req.body.psw;
 	var confirmPassword = req.body.confirmPsw;
+	
+	var con = mysql.createConnection({
+		host: "mysql.cs.iastate.edu",
+		user: "dbu309rbb2",
+		password: "Ze3xcZG5",
+		database: "db309rbb2"
+	});
 
 	con.connect(function(err) {
 		if (err) throw err;
@@ -142,6 +149,12 @@ userIO.on('connection', function(socket){
 			userIO.sockets.emit('usernames', usernames);
 			
 			//Emit all database users
+				var con = mysql.createConnection({
+					host: "mysql.cs.iastate.edu",
+					user: "dbu309rbb2",
+					password: "Ze3xcZG5",
+					database: "db309rbb2"
+				});
 			dblist = [];
 			con.connect(function(err) {
 				if (err) throw err;
