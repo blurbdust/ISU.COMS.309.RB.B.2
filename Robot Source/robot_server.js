@@ -1,7 +1,7 @@
-var io = require("socket.io");	//Central Server connection
-var http = require('http');
-var express = require('express');
-var app = express();
+var io_CS = require("socket.io-client")('http://proj-309-rb-b-2.cs.iastate.edu:3001');	//Central Server connection
+//var http = require('http');
+//var express = require('express');
+//var app = express();
 var sleep = require('system-sleep');
 //const LiveCam = require('livecam');
 /*const webcam_server = new LiveCam({
@@ -21,17 +21,9 @@ var sleep = require('system-sleep');
 	}
 
 });*/
-var server = app.listen(5210);
-var io_RPI = require("socket.io").listen(server); //Operators connect to this
-io_RPI.emit('new robot', 'Robot 1');	//Placeholder robot name
-
-
-
-var io_CS = io('http://proj-309-rb-b-2.cs.iastate.edu:3001');
-
-io_CS.emit('Hello', function(){
-	console.log("Emitted Hello");
-}); 
+//var server = app.listen(5210);
+//var io_RPI = require("socket.io").listen(server); //Operators connect to this
+//io_RPI.emit('new robot', 'Robot 1');	//Placeholder robot name
 
 var operator;
 
@@ -55,6 +47,19 @@ io_CS.on('connect', function(){
 	console.log("Connected to Central Server");
 });
 
+io_CS.on('disconnect', function(){
+	console.log("disconnected to Central Server");
+});
+
+io_CS.on('event', function(data){
+	console.log("Central Server Event" + data);
+});
+
+io_CS.emit('Hello', function(){
+	console.log("Emitted Hello");
+}); 
+
+/*
 io_RPI.on('connection', function(socket){
 
 	console.log("User connected");
@@ -69,6 +74,6 @@ io_RPI.on('connection', function(socket){
 
 	});
 });
-
+*/
 //webcam_server.broadcast();
 
