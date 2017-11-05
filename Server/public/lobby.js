@@ -7,7 +7,7 @@ socket.on('redirect', function(destination) {
 });
 
 
-var bodySelect = d3.select("body").select("#layout");
+/*var bodySelect = d3.select("body").select("#layout");
 var svgSelect = bodySelect.append("svg")
 				.attr("preserveAspectRatio", "xMinYMin meet")
 				.attr("viewBox", "0 0 1200 800")
@@ -244,7 +244,7 @@ $(function () {
 
 
 
-/*//Display connected users
+//Display connected users
 socket.on('usernames', function(data) {
 
 	var html = '';
@@ -262,4 +262,4 @@ socket.on('robotNames', function(data) {
 		html += data[i] + '<br/>';
 	}
 	document.getElementById("robots").innerHTML = html;
-});*/
+});
