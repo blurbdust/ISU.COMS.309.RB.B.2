@@ -57,25 +57,6 @@ class SuperServo{
 };
 
 /************************/
-/*** USER KEYBINDINGS ***/
-/************************/
-#define LEGS_UP     0x00000001
-#define LEGS_DOWN   0x00000002
-#define LEGS_LEFT   0x00000004
-#define LEGS_RIGHT  0x00000008
-
-#define EYES_UP     0x00000010
-#define EYES_DOWN   0x00000020
-#define EYES_LEFT   0x00000040
-#define EYES_RIGHT  0x00000080
-
-#define ARMS_UP     0x00000100
-#define ARMS_DOWN   0x00000200
-#define ARMS_LEFT   0x00000400
-#define ARMS_RIGHT  0x00000800
-
-
-/************************/
 /*** PIN ASSIGNMENTS  ***/
 /************************/
 int DIR_A = 12;
