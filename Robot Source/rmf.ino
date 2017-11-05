@@ -3,9 +3,8 @@
 #include <SuperServo.h>
 #include <IRremote.h>
 
-#define PIN_IR 3
+#define PIN_IR 10
 #define PIN_DETECT 2
-#define PIN_STATUS 13
 
 /**
 *
@@ -58,25 +57,6 @@ class SuperServo{
 };
 
 /************************/
-/*** USER KEYBINDINGS ***/
-/************************/
-#define LEGS_UP      0x00000001
-#define LEGS_DOWN   0x00000002
-#define LEGS_LEFT   0x00000004
-#define LEGS_RIGHT  0x00000008
-
-#define EYES_UP     0x00000010
-#define EYES_DOWN   0x00000020
-#define EYES_LEFT   0x00000040
-#define EYES_RIGHT  0x00000080
-
-#define ARMS_UP     0x00000100
-#define ARMS_DOWN   0x00000200
-#define ARMS_LEFT   0x00000400
-#define ARMS_RIGHT  0x00000800
-
-
-/************************/
 /*** PIN ASSIGNMENTS  ***/
 /************************/
 int DIR_A = 12;
@@ -115,7 +95,6 @@ void setup()
 
 //IR STUFF
   pinMode(PIN_DETECT, INPUT);
-  pinMode(PIN_STATUS, OUTPUT);
   irsend.enableIROut(38);
   irsend.mark(0);
 }
@@ -135,9 +114,7 @@ void loop()                     // run over and over again
   if(servo_B.getInc() != 0){
      servo_B.Update();
   }
-  //IR Stuff
-  digitalWrite(PIN_STATUS, !digitalRead(PIN_DETECT));
-  
+  //IR Stuff  
   //if the ir sensor goes off, increase damage
   if(digitalRead(PIN_DETECT) == HIGH) {
     damage++;
