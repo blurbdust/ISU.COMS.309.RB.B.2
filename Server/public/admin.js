@@ -15,6 +15,7 @@ var logoGroup = svgSelect.append('g');
 var menuGroup = svgSelect.append('g');
 var bannerGroup =  svgSelect.append('g');
 var mainGroup = svgSelect.append('g');
+var robotTextGroup = svgSelect.append('g');
 var userTextGroup = svgSelect.append('g');
 var dbTextGroup = svgSelect.append('g');
 
@@ -91,6 +92,14 @@ var dbBox = mainGroup.append('rect')
 	.style('fill', '#f0f0f0');
 	
 mainGroup.append('text')
+	.attr('x', '25%')
+	.attr('y', '24%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '20px')
+	.attr('font-weight', '700') 
+	.text('Active Robots');
+	
+mainGroup.append('text')
 	.attr('x', '53%')
 	.attr('y', '24%')
 	.attr('font-family', 'sans-serif')
@@ -106,6 +115,53 @@ mainGroup.append('text')
 	.attr('font-weight', '700') 
 	.text('User Database');	
 	
+socket.on('robotInfo', function(data){
+	var y = 20;
+	var y2 = 22;
+	var y3 = 24
+	
+	robotTextGroup.selectAll('text').remove();
+	
+	robotTextGroup.selectAll('text')
+		.data(data)
+		.enter()
+		.append('text')
+			.attr('x', '16.5%')
+			.attr('y', function(d){
+				y+=8; 
+				console.log(d['name']);
+				return y+"%";})
+			.attr('font-family', 'sans-serif')
+			.text(function(d) { return d['name'];});
+			
+	driverTextGroup.selectAll('text').remove();
+			
+	driverTextGroup.selectAll('text')
+		.data(data)
+		.enter()
+		.append('text')
+			.attr('x', '16.5%')
+			.attr('y', function(){
+				y2+=8;
+				return y2 + "%";})
+			.attr('font-family', 'sans-serif')
+			.attr('font-size', '10px')
+			.text(function(d) {return "Driver: " + d['driver'];});
+		
+	gunnerTextGroup.selectAll('text').remove();		
+	gunnerTextGroup.selectAll('text')
+		.data(data)
+		.enter()
+		.append('text')
+			.attr('x', '16.5%')
+			.attr('y', function(){
+				y3+=8;
+				return y3 + "%";})
+			.attr('font-family', 'sans-serif')
+			.attr('font-size', '10px')
+			.text(function(d) {return "Gunner: " + d['gunner'];});
+});
+	
 	
 socket.on('usernames', function(data) {
 	var y = 26;
@@ -119,8 +175,6 @@ socket.on('usernames', function(data) {
 		.attr('x', '44.5%')
 		.attr('y', function(d){
 			y = y+=2; 
-			console.log(y+"%");
-			console.log(d);
 			return y+"%";})
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
@@ -138,8 +192,6 @@ socket.on('dblist', function(data) {
 		.attr('x', '72.5%')
 		.attr('y', function(d){
 			y = y+=2; 
-			console.log(y+"%");
-			console.log(d);
 			return y+"%";})
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
