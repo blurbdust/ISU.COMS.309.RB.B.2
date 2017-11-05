@@ -184,7 +184,33 @@ var deleteAccountText = adminToolsGroup.append('text')
 		.attr('dy', '1.1em')
 		.attr('dx', '-2.5em')
 		.text('Account');
-		
+
+var spectateBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '48.35%')
+	.attr('width', '9%')
+	.attr('height', '4%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
+	.on('click', function(){
+		spectate();
+	});;
+	
+var spectateText = adminToolsGroup.append('text')
+	.attr('x', '2.25%')
+	.attr('y', '51%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#284a85')
+	.style('cursor','pointer')
+	.text('Spectate')
+	.on('click', function(){
+		spectate();
+	});
+	
 var logoutBtn = logoutGroup.append('rect')
 	.attr('height', '4%')
 	.attr('width', '8%')
@@ -325,7 +351,7 @@ function kickUser(){
 	var username = prompt("Enter the name of the user to remove from a robot \n ");
 	
 	if(username != ""){
-		socket.emit("Kick user from robot", username);
+		socket.emit("kick user", username);
 	}
 }
 
@@ -333,7 +359,7 @@ function banUser(){
 	var username = prompt("Enter the name of the user you would like to ban \n\n   (*Note - This user will no longer be able to log on)\n ");
 	
 	if(username != ""){
-		socket.emit("Ban user from server", username);
+		socket.emit("ban user", username);
 	}
 }
 
@@ -341,7 +367,14 @@ function deleteAccount(){
 	var username = prompt("Enter the name of the account you would like to delete \n ");
 	
 	if(username != ""){
-		socket.emit("Delete account", username);
+		socket.emit("delete account", username);
+	}
+}
+function spectate(){
+	var robot = prompt("Enter the name of the robot you would like to spectate \n ");
+	
+	if(robot != ""){
+		socket.emit("spectate", robot);
 	}
 }
 
@@ -349,6 +382,6 @@ function logout(){
 	var check = confirm("Are you sure you want to log out?");
 	
 	if(check){
-		socket.emit("Logout");
+		socket.emit("logout");
 	}
 }
