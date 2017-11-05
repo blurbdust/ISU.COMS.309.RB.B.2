@@ -1,6 +1,11 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 #include <SuperServo.h>
+#include <IRremote.h>
+
+#define PIN_IR 3
+#define PIN_DETECT 2
+#define PIN_STATUS 13
 
 /**
 *
@@ -83,6 +88,9 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
+//number of times the IR thing has been hit
+int damage = 0;
+
 char InByte;
 int speed; 
 SuperServo servo_A(15);
@@ -104,10 +112,22 @@ void setup()
  stop_A();
  stop_B();
 // delay(500);
+
+//IR STUFF
+  pinMode(PIN_DETECT, INPUT);
+  pinMode(PIN_STATUS, OUTPUT);
+  irsend.enableIROut(38);
+  irsend.mark(0);
 }
 
 void loop()                     // run over and over again
 {
+  //if the ir sensor goes off, increase damage
+  if(digitalRead(PIN_DETECT) == HIGH) {
+    damage++;
+	Serial.write(damage);
+  }
+  
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
@@ -121,6 +141,8 @@ void loop()                     // run over and over again
   if(servo_B.getInc() != 0){
      servo_B.Update();
   }
+  //IR Stuff
+  digitalWrite(PIN_STATUS, !digitalRead(PIN_DETECT));
 }
 
 
