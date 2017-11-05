@@ -116,7 +116,26 @@ mainGroup.append('text')
 	.attr('font-family', 'sans-serif')
 	.attr('font-size' , '20px')
 	.attr('font-weight', '700') 
-	.text('User Database');	
+	.text('Chat Box');
+
+var gearImage = menuGroup
+	.append('image')
+	.attr('href', 'gear.png')
+	.attr('alt', 'gear')
+	.attr('height', '10%')
+	.attr('width', '10%')
+	.attr('x', '2.5%')
+	.attr('y', '1.5%');	
+	
+mainGroup.append('text')
+	.attr('x', '4.5%')
+	.attr('y', '17%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '24px')
+	.attr('font-weight', '700') 
+	.attr('fill', 'white')
+	.style('text-decoration', 'underline')
+	.text('Lobby');
 	
 socket.on('robotInfo', function(data){
 	var y = 20;
@@ -183,7 +202,7 @@ socket.on('usernames', function(data) {
 		.text(function(d) { return d;});
 });
 
-socket.on('dblist', function(data) {
+/*socket.on('dblist', function(data) {
 	var y = 26;
 
 	dbTextGroup.selectAll('text').remove();
@@ -198,16 +217,17 @@ socket.on('dblist', function(data) {
 			return y+"%";})
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
-});
+});*/
+
 
 //Chat Box
 $(function () {
 	$('#msgform').submit(function(){
-	  socket_server.emit('chat message', $('#m').val());
+	  socket.emit('chat message', $('#m').val());
 	  $('#m').val('');
 	  return false;
 	});
-	socket_server.on('chat message', function(msg){
+	socket.on('chat message', function(msg){
 	  $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
 	  var chatDiv = document.getElementById("chat-box");
 	  chatDiv.scrollTop = chatDiv.scrollHeight;
