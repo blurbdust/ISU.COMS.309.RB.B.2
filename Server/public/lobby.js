@@ -255,11 +255,11 @@ socket.on('usernames', function(data) {
 });
 
 //Display connected users
-socket.on('robotNames', function(data) {
-
+socket.on('robotInfo', function(data) {
+	alert("Got here");
 	var html = '';
 	for (i = 0; i < data.length; i++) {
-		html += data[i] + '<br/>';
+		html += data[i].name + '<br/>';
 	}
 	document.getElementById("robots").innerHTML = html;
 });

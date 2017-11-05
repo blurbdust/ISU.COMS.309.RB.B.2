@@ -53,7 +53,7 @@ serialPort.on('open', function(){
 
 socket.on('connect', function(){
 	console.log("Connected to Central Server");
-	socket.emit('new robot', function(){
+	socket.emit('new robot', "Robot 1", function(){
 		console.log("Sent I'm a robot");
 	});
 });
@@ -65,14 +65,6 @@ socket.on('error', function(){
 socket.on('disconnect', function(){
 	console.log("Disconnected From Central Server");
 });
-
-socket.on('event', function(data){
-	console.log("Central Server Event" + data);
-});
-
-socket.emit('Hello', function(){
-	console.log("Emitted Hello");
-}); 
 
 
 io_RPI.on('connection', function(socket){
