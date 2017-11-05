@@ -15,7 +15,7 @@ var logoGroup = svgSelect.append('g');
 var menuGroup = svgSelect.append('g');
 var bannerGroup =  svgSelect.append('g');
 var mainGroup = svgSelect.append('g');
-var userTextGroup = mainGroup.append('g');
+var userTextGroup = svgSelect.append('g');
 
 var logoBack = logoGroup
 	.append('rect')
@@ -95,12 +95,20 @@ mainGroup.append('text')
 	.attr('font-family', 'sans-serif')
 	.attr('font-size' , '20px')
 	.attr('font-weight', '700') 
-	.text('Active Users');	
+	.text('Active Users');
+
+mainGroup.append('text')
+	.attr('x', '81%')
+	.attr('y', '24%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '20px')
+	.attr('font-weight', '700') 
+	.text('User Database');	
 	
 	
 socket.on('usernames', function(data) {
 	var y = 26;
-	
+
 	userTextGroup.selectAll('text').remove();
 	
 	userTextGroup.selectAll('text')
@@ -108,6 +116,25 @@ socket.on('usernames', function(data) {
 		.enter()
 		.append('text')
 		.attr('x', '44.5%')
+		.attr('y', function(d){
+			y = y+=2; 
+			console.log(y+"%");
+			console.log(d);
+			return y+"%";})
+		.attr('font-family', 'sans-serif')
+		.text(function(d) { return d;});
+});
+
+socket.on('dblist', function(data) {
+	var y = 26;
+
+	userTextGroup.selectAll('text').remove();
+	
+	userTextGroup.selectAll('text')
+		.data(data)
+		.enter()
+		.append('text')
+		.attr('x', '72.5%')
 		.attr('y', function(d){
 			y = y+=2; 
 			console.log(y+"%");
