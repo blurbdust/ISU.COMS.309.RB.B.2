@@ -3,10 +3,6 @@ var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
 var userIO = require('socket.io')(userServer);
-
-var robotListen = require('http').createServer(app);
-
-var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
@@ -71,7 +67,7 @@ app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
-app.get('/socket.io/socket.io.js', function(req, res){
+app.get('/socket.io/*', function(req, res){
 	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
 });
 
@@ -150,6 +146,7 @@ userIO.on('connection', function(socket){
 			
 			//Associate username with socket
 			socket.username = data;
+			socket.type = "User";
 			console.log(socket.username + " connected");
 			usernames.push(socket.username);
 			users.push(socket);
@@ -186,21 +183,33 @@ userIO.on('connection', function(socket){
 	});
 	
 	socket.on('disconnect', function() {
-		console.log(socket.username + " disconnected");
-		users.splice(users.indexOf(socket), 1);
-		if (socket.username)
-			usernames.splice(usernames.indexOf(socket.username), 1);
-		userIO.sockets.emit('usernames', usernames);
+		if (socket.type == "User"){
+			console.log(socket.username + " disconnected");
+			users.splice(users.indexOf(socket), 1);
+			if (socket.username)
+				usernames.splice(usernames.indexOf(socket.username), 1);
+			userIO.sockets.emit('usernames', usernames);
+		}
+		else if (socket.type == "Robot"){
+			console.log(socket.name + " disconnected");
+			robots.splice(robots.indexOf(socket), 1);
+			if (socket.name) {
+				var index = robotInfo.findIndex(function(item, i) {
+					return item.name === socket.name;
+				});
+				robotInfo.splice(index, 1);
+			}
+			socket.emit('robotInfo', robotInfo);
+		}
 	});
-});
 
-robotIO.on('connection',function(socket) {
-	
-	console.log("Robot connected");
 	socket.on('new robot', function(data) {
+
+		console.log("Got a robot connection");
 		
 		//Set robot name, users, and IP in socket
 		socket.name = data;
+		socket.type = "Robot";
 		socket.gunner = "";
 		socket.driver = "";
 		socket.IP = socket.request.connection.remoteAddress;
@@ -210,22 +219,6 @@ robotIO.on('connection',function(socket) {
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
 		robotInfo.push(robot);
-		robotIO.sockets.emit('robotInfo', robotInfo);
+		socket.emit('robotInfo', robotInfo);
 	});
-	
-	
-	socket.on('disconnect', function(data) {
-		console.log(socket.name + " disconnected");
-		robots.splice(robots.indexOf(socket), 1);
-		if (socket.name) {
-			var index = robotInfo.findIndex(function(item, i) {
-				return item.name === socket.name;
-			});
-			robotInfo.splice(index, 1);
-			
-		}
-		robotIO.sockets.emit('robotInfo', robotInfo);
-	});
-	
-	
 });

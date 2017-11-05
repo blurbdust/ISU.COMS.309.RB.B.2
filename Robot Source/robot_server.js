@@ -1,6 +1,7 @@
 var io = require('socket.io-client');
 
-var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3001', {
+var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000', {
+	transports: ["websockets", "polling"],
 	reconnection: true,
     reconnectionDelay: 1000,
     reconnectionAttempts: 10
@@ -52,6 +53,9 @@ serialPort.on('open', function(){
 
 socket.on('connect', function(){
 	console.log("Connected to Central Server");
+	socket.emit('new robot', function(){
+		console.log("Sent I'm a robot");
+	});
 });
 
 socket.on('error', function(){
@@ -59,7 +63,7 @@ socket.on('error', function(){
 });
 
 socket.on('disconnect', function(){
-	console.log("disconnected to Central Server");
+	console.log("Disconnected From Central Server");
 });
 
 socket.on('event', function(data){
@@ -70,7 +74,7 @@ socket.emit('Hello', function(){
 	console.log("Emitted Hello");
 }); 
 
-/*
+
 io_RPI.on('connection', function(socket){
 
 	console.log("User connected");
@@ -85,6 +89,6 @@ io_RPI.on('connection', function(socket){
 
 	});
 });
-*/
+
 //webcam_server.broadcast();
 
