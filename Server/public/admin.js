@@ -16,8 +16,11 @@ var menuGroup = svgSelect.append('g');
 var bannerGroup =  svgSelect.append('g');
 var mainGroup = svgSelect.append('g');
 var robotTextGroup = svgSelect.append('g');
+var driverTextGroup = svgSelect.append('g');
+var gunnerTextGroup = svgSelect.append('g');
 var userTextGroup = svgSelect.append('g');
 var dbTextGroup = svgSelect.append('g');
+var adminToolsGroup = svgSelect.append('g');
 
 var logoBack = logoGroup
 	.append('rect')
@@ -56,12 +59,43 @@ var menuBar = menuGroup.append('rect')
 	.attr('height','100%')
 	.style('fill', '#284a85');
 	
+var gearImage = menuGroup
+	.append('image')
+	.attr('href', 'gear.png')
+	.attr('alt', 'gear')
+	.attr('height', '10%')
+	.attr('width', '10%')
+	.attr('x', '2.5%')
+	.attr('y', '1.5%');
+	
 var bannerBar = bannerGroup.append('rect')
 	.attr('x','0')
 	.attr('y','13%')
 	.attr('width','100%')
 	.attr('height','7%')
 	.style('fill', '#284a85');
+	
+adminToolsGroup.append('text')
+	.attr('x', '1.25%')
+	.attr('y', '17%')
+	.attr('font-family', 'sans-serif')
+	.attr('font-size' , '24px')
+	.attr('font-weight', '700') 
+	.attr('fill', 'white')
+	.style('text-decoration', 'underline')
+	.text('Admin Tools');
+	
+var kickUser = adminToolsGroup.append('text')
+	.attr('x', '1.25%')
+	.attr('y', '30%')
+	.attr('font-size' , '18px')
+	.attr('font-family', 'sans-serif')
+	.attr('fill', 'white')
+	.attr('background-color', 'red')
+	.text('Kick user off bot')
+	.on('click', function(){
+		alert('ALERT');
+	});
 	
 var mainBox = mainGroup.append('rect')
 	.attr('x','15%')
@@ -114,6 +148,10 @@ mainGroup.append('text')
 	.attr('font-size' , '20px')
 	.attr('font-weight', '700') 
 	.text('User Database');	
+	
+menuGroup.append('text')
+	.attr('x', '2%')
+	.attr('y', '28%')
 	
 socket.on('robotInfo', function(data){
 	var y = 20;
