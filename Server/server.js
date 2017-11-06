@@ -257,6 +257,45 @@ io.on('connection', function(socket){
 			}
 		}
 	});
+	
+	socket.on ('set user operator', function(data) {
+		
+		//Set chosen robot and operator type
+		if (data.operatorType == 'gunner') {
+			robotSocketList[data.robotIndex].gunner = data.username;
+			robotInfoList[data.robotIndex].gunner = data.username;
+		}
+		else {
+			robotSocketList[data.robotIndex].driver = data.username;
+			robotInfoList[data.robotIndex].driver = data.username;
+		}
+		
+		
+		
+		//If user previously chose one, remove it
+		for (i = 0; i < robotSocketList.length; i++) {
+			
+			var gunner = robotSocketList[i].gunner;
+			var driver = robotSocketList[i].driver;
+			
+			if (data.username === gunner && data.robotIndex != i) {
+				robotSocketList[i].gunner = "";
+				robotInfoList[i].gunner = "";
+			}
+			
+			else if (data.username === driver && data.robotIndex != i) {
+				robotSocketList[i].driver = "";
+				robotInfoList[i].driver = "";
+			}
+		}
+
+		console.log("Driver: " + robotSocketList[0].driver + " | Gunner: " + robotSocketList[0].gunner);	
+		io.sockets.emit('robotInfo', robotInfoList);
+	});
+	
+	
+	
+	
 	socket.on('logout', function(data){
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
