@@ -232,7 +232,7 @@ userIO.on('connection', function(socket){
 	
 	socket.on('request robot list', function() {
 		userIO.emit('robotInfo', robotInfo)
-	)};
+	});
 		
 	socket.on('new robot', function(data) {
 
