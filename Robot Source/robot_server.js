@@ -1,4 +1,12 @@
 var io = require('socket.io-client');
+var macAddress;
+require('getmac').getMac(function(err, data){
+    if (err){
+    	throw err;
+    }
+    console.log("Got MAC: " + data);
+    macAddress = data;
+})
 
 var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000', {
 	transports: ["websockets", "polling"],
@@ -53,7 +61,7 @@ serialPort.on('open', function(){
 
 socket.on('connect', function(){
 	console.log("Connected to Central Server");
-	socket.emit('new robot', "Robot 1", function(){
+	socket.emit('new robot', macAddress, function(){
 		console.log("Sent I'm a robot");
 	});
 });
