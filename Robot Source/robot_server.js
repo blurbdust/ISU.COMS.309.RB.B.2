@@ -82,5 +82,5 @@ io_RPI.on('connection', function(socket){
 	});
 });
 
-//webcam_server.broadcast();
+webcam_server.broadcast();
 
