@@ -99,8 +99,8 @@ void setup()
   //IR STUFF
   digitalWrite(PIN_IR, HIGH);
   pinMode(PIN_DETECT, INPUT);
-  irsend.enableIROut(38);
-  irsend.mark(0);
+  //irsend.enableIROut(38);
+  //irsend.mark(0);
 }
 
 void loop()                     // run over and over again

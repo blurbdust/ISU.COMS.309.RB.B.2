@@ -91,8 +91,9 @@ while(true){
 		sleep(0.1);
 	}
 	else {
-		console.log("Read: " + readInput);
-		var damage = readInput.substring(readInput.indexOf(":"), readInput.length);
+		readInput = readInput.toString();
+		//console.log("Read: " + readInput);
+		var damage = readInput.substring(readInput.indexOf(":"), readInput.indexOf(":") + 3);
 		console.log("Damage updated to " + damage);
 	}
 }
