@@ -117,7 +117,7 @@ while(true){
 	else {
 		readInput = readInput.toString();
 		//console.log("Read: " + readInput);
-		var damage = readInput.substring(readInput.indexOf(":"), readInput.indexOf(":") + 3);
+		var damage = readInput.substring(readInput.indexOf(":"));
 		console.log("Damage updated to " + damage);
 		socket.emit("damage", damage);
 	}
