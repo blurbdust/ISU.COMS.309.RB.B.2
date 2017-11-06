@@ -249,8 +249,13 @@ io.on('connection', function(socket){
 		
 	});
 	socket.on('spectate', function(data){
-		//Need to delete row in DB
-		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectator');
+		for(var i=0; i<robotSocketList.length; i++){
+			if(data == robotSocketList[i].name){
+				robotSocketList[i].spectators.push(socket.username);
+				robotInfoList[i]['spectators'].push(socket.username);
+				socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectator');
+			}
+		}
 	});
 	socket.on('logout', function(data){
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
