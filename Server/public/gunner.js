@@ -27,13 +27,7 @@ $(function () {
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });
 });
-
-var bodySelect = d3.select('body').select('#feed');
-var svgSelect = bodySelect.append('svg')
-	.attr('width', '50')
-	.attr('height', '50');
 	
-
 window.addEventListener("load", function(){
   
   var buttonUp = document.getElementById('buttonUp');
@@ -93,20 +87,6 @@ window.addEventListener("load", function(){
 	  svgSelect.selectAll('circle').remove();
       socket_robot.emit('Serial Movement', { dir: 'k'});
   });
-  
-  function fireMahLazer(){
-	  setInterval(function(){
-		  time += 100;
-		  elapsed = Math.floor(time / 100) / 10;
-		  if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
-		  svgSelect.append('circle')
-			.attr('cx', '50%')
-			.attr('cy', '35%')
-			.attr('width', elapsed*5)
-			.attr('height', elapsed*5);
-
-		}, 100);
-  }
   
   var webcam_addr = "raspberrypi3-a.student.iastate.edu";
   var webcam_port = "12000";

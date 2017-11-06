@@ -172,7 +172,31 @@ io.on('connection', function(socket){
 	});
 	
 	socket.on('kick user', function(data){
-		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
+		
+		for(var i=0;i<robotSocketList.length; i++){
+			if(robotSocketList[i].driver == data){
+				robotSocketList[i].driver = "";
+				robotInfoList[i]['driver'] = "";
+			}
+			else if(robotSocketList[i].gunner == data){
+				robotSocketList[i].gunner = "";
+				robotInfoList[i]['gunner'] = "";
+			}
+			else{
+				for(var j=0; j<robotSocketList[i].spectators.length; j++){
+					if(robotSocketList[i].spectators[j] == data){
+						robotSocketList[i].spectators[j] = "";
+						robotInfoList[i]['spectators'] = "";
+					}
+				}
+			}
+		}
+		for(var k=0; k<userNameList.length; k++){
+			if(data == userNameList[k]){
+				userSocketList[k].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
+			}
+		}
+		
 	});
 	
 	socket.on('ban user', function(data){
@@ -261,7 +285,7 @@ io.on('connection', function(socket){
 		console.log('Robot Name: ' + socket.name + ' Robot IP: ' + socket.IP);
 		
 		//Emit robot info to client
-		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
+		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver, 'spectators':socket.spectators};
 		robotInfoList.push(robot);
 		io.sockets.emit('robotInfo', robotInfoList);
 	});
