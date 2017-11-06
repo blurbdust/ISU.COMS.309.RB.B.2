@@ -338,6 +338,7 @@ io.on('connection', function(socket){
 				}
 				
 			}
+			console.log("Gunner: " + robotSocketList[0].gunner);
 		}
 		else if (socket.type == "Robot"){
 			console.log(socket.name + " disconnected");
