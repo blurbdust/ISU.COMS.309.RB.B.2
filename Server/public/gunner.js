@@ -84,7 +84,7 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'K'});
   });
   buttonFire.addEventListener('mouseup', function() {
-      console.log("K");
+      console.log("k");
       socket_robot.emit('Serial Movement', { dir: 'k'});
   });
   

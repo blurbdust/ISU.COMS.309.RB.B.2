@@ -1,6 +1,5 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
-#include <SuperServo.h>
 #include <IRremote.h>
 
 #define PIN_IR 10
@@ -75,6 +74,9 @@ char InByte;
 int speed; 
 SuperServo servo_A(15);
 SuperServo servo_B(15);
+
+IRsend irsend;
+
 void setup()
 {
  Serial.begin(9600);
@@ -85,6 +87,7 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
+ pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
  speed = 100;
@@ -94,7 +97,7 @@ void setup()
 // delay(500);
 
   //IR STUFF
-  digitalWrite(PIN_IR, LOW);
+  digitalWrite(PIN_IR, HIGH);
   pinMode(PIN_DETECT, INPUT);
   irsend.enableIROut(38);
   irsend.mark(0);
@@ -106,6 +109,7 @@ void loop()                     // run over and over again
     InByte = Serial.read();
     check_Movement(InByte);
     check_Servo(InByte);
+    check_Fire(InByte);
     speed_Adjust();
     
   }
@@ -119,7 +123,7 @@ void loop()                     // run over and over again
   //if the ir sensor goes off, increase damage
   if(digitalRead(PIN_DETECT) == HIGH) {
     damage++;
-	Serial.write(damage);
+	  Serial.write(damage);
   }
 }
 
@@ -246,7 +250,7 @@ void speed_Adjust(){
   }
 }
 
-void checkFire(char inByte){
+void check_Fire(char inByte){
   if (inByte == 'K'){
     //Set pin 10 to low.
     digitalWrite(PIN_IR, LOW);
