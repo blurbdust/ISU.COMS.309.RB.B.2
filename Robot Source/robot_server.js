@@ -87,9 +87,11 @@ webcam_server.broadcast();
 while(true){
 	var readInput = serialPort.read(512);
 	if (readInput == null){
-		sleep(1);
+		//console.log("Read is null");
+		sleep(0.1);
 	}
 	else {
+		console.log("Read: " + readInput);
 		var damage = readInput.substring(readInput.indexOf(":"), readInput.length);
 		console.log("Damage updated to " + damage);
 	}
