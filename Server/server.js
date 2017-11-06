@@ -30,10 +30,6 @@ app.get("/create_account", (req, res) => {
 	res.sendFile(__dirname + "/create_account.html");
 }); 
 
-app.get("/operator", (req, res) => {
- res.sendFile(__dirname + "/operator.html");
-}); 
-
 app.get("/lobby", (req, res) => {
 	res.sendFile(__dirname + "/lobby.html");
 }); 
@@ -172,37 +168,19 @@ userIO.on('connection', function(socket){
 	});
 	
 	socket.on('kick user', function(data){
-		/******************************
-		/
-		/	Kick user from robot and return them to lobby
-		/
-		/
-		*******************************/
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 	});
 	
 	socket.on('ban user', function(data){
-		/******************************
-		/
-		/	Set 'banned' field in database to true, and redirect user to login page
-		/
-		/
-		*******************************/
+		//Need to change banned field to true in DB
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
 	socket.on('delete account', function(data){
-		/******************************
-		/
-		/	Delete account from database
-		/
-		/
-		*******************************/
+		//Need to delete row in DB
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
 	socket.on('logout', function(data){
-		/******************************
-		/
-		/	Redirect user to login page
-		/
-		/
-		*******************************/
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
 	
 	socket.on('chat message', function(msg){
