@@ -30,10 +30,6 @@ app.get("/create_account", (req, res) => {
 	res.sendFile(__dirname + "/create_account.html");
 }); 
 
-app.get("/operator", (req, res) => {
- res.sendFile(__dirname + "/operator.html");
-}); 
-
 app.get("/lobby", (req, res) => {
 	res.sendFile(__dirname + "/lobby.html");
 }); 
@@ -48,6 +44,10 @@ app.get("/gunner", (req, res) => {
 
 app.get("/driver", (req, res) => {
 	res.sendFile(__dirname + "/driver.html");
+}); 
+
+app.get("/spectator", (req, res) => {
+	res.sendFile(__dirname + "/spectator.html");
 }); 
 
 //Public folder to serve files
@@ -145,7 +145,7 @@ userIO.on('connection', function(socket){
 			console.log(socket.username + " connected");
 			usernames.push(socket.username);
 			users.push(socket);
-			socket.emit('usernames', usernames);
+			userIO.sockets.emit('usernames', usernames);
 			
 			//Emit all database users
 			var con = mysql.createConnection({
@@ -166,44 +166,31 @@ userIO.on('connection', function(socket){
 				});
 			});
 			setTimeout(function() {
-				socket.emit('dblist', dblist);	
+				userIO.sockets.emit('dblist', dblist);	
 			}, 200);			
 		}
 	});
 	
 	socket.on('kick user', function(data){
-		/******************************
-		/
-		/	Kick user from robot and return them to lobby
-		/
-		/
-		*******************************/
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 	});
 	
 	socket.on('ban user', function(data){
-		/******************************
-		/
-		/	Set 'banned' field in database to true, and redirect user to login page
-		/
-		/
-		*******************************/
+		//Need to change banned field to true in DB
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
 	socket.on('delete account', function(data){
-		/******************************
-		/
-		/	Delete account from database
-		/
-		/
-		*******************************/
+		//Need to delete row in DB
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+	});
+	socket.on('spectate', function(data){
+		//Need to delete row in DB
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectate');
 	});
 	socket.on('logout', function(data){
-		/******************************
-		/
-		/	Redirect user to login page
-		/
-		/
-		*******************************/
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
+	
 	
 	socket.on('chat message', function(msg){
 		userIO.emit('chat message', {message: msg, username: socket.username});
@@ -226,10 +213,14 @@ userIO.on('connection', function(socket){
 				});
 				robotInfo.splice(index, 1);
 			}
-			socket.emit('robotInfo', robotInfo);
+			userIO.sockets.emit('robotInfo', robotInfo);
 		}
 	});
-
+	
+	socket.on('request robot list', function() {
+		userIO.emit('robotInfo', robotInfo)
+	});
+		
 	socket.on('new robot', function(data) {
 
 		console.log("Got a robot connection");
@@ -247,6 +238,6 @@ userIO.on('connection', function(socket){
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
 		robotInfo.push(robot);
-		socket.emit('robotInfo', robotInfo);
+		userIO.sockets.emit('robotInfo', robotInfo);
 	});
 });

@@ -32,11 +32,26 @@ $(function () {
 
 window.addEventListener("load", function(){
   
+  var buttonUpLeft = document.getElementById('buttonUpLeft');
   var buttonUp = document.getElementById('buttonUp');
+  var buttonUpRight = document.getElementById('buttonUpRight');
   var buttonLeft = document.getElementById('buttonLeft');
   var buttonRight = document.getElementById('buttonRight');
+  var buttonDownLeft = document.getElementById('buttonDownLeft');
   var buttonDown = document.getElementById('buttonDown');
+  var buttonDownRight = document.getElementById('buttonDownRight');
 
+  //up left
+  buttonUpLeft.addEventListener('mousedown', function() {
+      console.log("q");
+      socket_robot.emit('Serial Movement', { dir: 'q'});
+  });
+  buttonUpLeft.addEventListener('mouseup', function() {
+      console.log("x");
+      socket_robot.emit('Serial Movement', { dir: 'x'});
+  });
+  
+  //up
   buttonUp.addEventListener('mousedown', function() {
       console.log("w");
       socket_robot.emit('Serial Movement', { dir: 'w'});
@@ -46,8 +61,18 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
+  //up right 
+  buttonUpRight.addEventListener('mousedown', function() {
+      console.log("e");
+      socket_robot.emit('Serial Movement', { dir: 'e'});
+  });
+  buttonUpRight.addEventListener('mouseup', function() {
+      console.log("x");
+      socket_robot.emit('Serial Movement', { dir: 'x'});
+  });
   
   
+  //left
   buttonLeft.addEventListener('mousedown', function() {
       console.log("a");
       socket_robot.emit('Serial Movement', { dir: 'a'});
@@ -58,7 +83,7 @@ window.addEventListener("load", function(){
   });
   
   
-  
+  //right
   buttonRight.addEventListener('mousedown', function() {
       console.log("d");
       socket_robot.emit('Serial Movement', { dir: 'd'});
@@ -69,6 +94,15 @@ window.addEventListener("load", function(){
   });  
   
   
+ buttonDownLeft.addEventListener('mousedown', function() {
+      console.log("z");
+      socket_robot.emit('Serial Movement', { dir: 'z'});
+  });
+  buttonDownLeft.addEventListener('mouseup', function() {
+      console.log("x");
+      socket_robot.emit('Serial Movement', { dir: 'x'});
+  });
+  
   buttonDown.addEventListener('mousedown', function() {
       console.log("s");
       socket_robot.emit('Serial Movement', { dir: 's'});
@@ -77,6 +111,16 @@ window.addEventListener("load", function(){
       console.log("x");
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
+  
+  buttonDownRight.addEventListener('mousedown', function() {
+      console.log("c");
+      socket_robot.emit('Serial Movement', { dir: 'c'});
+  });
+  buttonDownRight.addEventListener('mouseup', function() {
+      console.log("x");
+      socket_robot.emit('Serial Movement', { dir: 'x'});
+  });
+  
   
     var webcam_addr = "raspberrypi3-a.student.iastate.edu";
   var webcam_port = "12000";
