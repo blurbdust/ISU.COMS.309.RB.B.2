@@ -49,7 +49,7 @@ class SuperServo{
             pos += increment;
           }
           servo.write(pos);
-          Serial.println(pos);
+          //Serial.println(pos);
 
         }
       }
@@ -121,9 +121,11 @@ void loop()                     // run over and over again
   }
   //IR Stuff  
   //if the ir sensor goes off, increase damage
-  if(digitalRead(PIN_DETECT) == LOW) {
+  if(digitalRead(PIN_DETECT) == HIGH) {
     damage++;
-	  int bytesWritten = Serial.write("Damage: " + damage);
+    char msg[20];
+    sprintf(msg, "Damage: %d\n", damage);
+	  int bytesWritten = Serial.write(msg);
     if (damage > 15){
       speed = 0;
     }
