@@ -22,7 +22,7 @@ $(function () {
 
 //Operator page(s) redirect
 document.getElementById("operatorButton").addEventListener("click", function(){
-    window.location.href = "/driver"
+    socket.emit("request-for-redirect", getCookie("username"));
 });
 
 //Display connected users
