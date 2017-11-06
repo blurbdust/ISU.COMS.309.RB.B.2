@@ -329,10 +329,6 @@ io.on('connection', function(socket){
 	socket.on('request robot list', function() {
 		io.emit('robotInfo', robotInfoList)
 	});
-	
-	socket.on('request robot ip', function(data){
-		
-	});
 		
 	socket.on('new robot', function(data) {
 
