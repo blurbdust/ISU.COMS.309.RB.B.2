@@ -367,6 +367,19 @@ io.on('connection', function(socket){
 		}
 		socket.emit("redirect", "/spectator");
 	});
+
+	socket.on('request-robotIP', function(data) {
+		for(i = 0; i < robotInfoList.length; i++) {
+			if(robotInfoList[i].gunner === data) {
+				console.log("Returning this IP: " + robotInfoList[i]['ip']);
+				socket.emit("robotIP", robotInfoList[i]['ip']);
+			}
+			if(robotInfoList[i].driver === data) {
+				console.log("Returning this IP: " + robotInfoList[i]['ip']);
+				socket.emit("robotIP", robotInfoList[i]['ip']);
+			}
+		}
+	});	
 		
 	socket.on('new robot', function(data) {
 
