@@ -93,7 +93,8 @@ void setup()
  stop_B();
 // delay(500);
 
-//IR STUFF
+  //IR STUFF
+  digitalWrite(PIN_IR, LOW);
   pinMode(PIN_DETECT, INPUT);
   irsend.enableIROut(38);
   irsend.mark(0);
@@ -242,5 +243,16 @@ void speed_Adjust(){
   }  
   else if(InByte == '0'){
     speed = 100;
+  }
+}
+
+void checkFire(char inByte){
+  if (inByte == 'K'){
+    //Set pin 10 to low.
+    digitalWrite(PIN_IR, LOW);
+  }
+  if (inByte == 'k'){
+    //Set pin 10 to high
+    digitalWrite(PIN_IR, HIGH);
   }
 }
