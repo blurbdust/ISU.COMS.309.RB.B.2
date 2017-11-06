@@ -84,3 +84,13 @@ io_RPI.on('connection', function(socket){
 
 webcam_server.broadcast();
 
+while(true){
+	var readInput = serialPort.read(512);
+	if (readInput == null){
+		sleep(1);
+	}
+	else {
+		var damage = readInput.substring(readInput.indexOf(":"), readInput.length);
+		console.log("Damage updated to " + damage);
+	}
+}

@@ -123,7 +123,7 @@ void loop()                     // run over and over again
   //if the ir sensor goes off, increase damage
   if(digitalRead(PIN_DETECT) == HIGH) {
     damage++;
-	  Serial.write(damage);
+	  int bytesWritten = Serial.write("Damage: " + damage);
   }
 }
 
