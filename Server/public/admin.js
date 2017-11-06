@@ -187,7 +187,7 @@ var deleteAccountText = adminToolsGroup.append('text')
 
 var spectateBtn = adminToolsGroup.append('rect')
 	.attr('x', '1.5%')
-	.attr('y', '48.35%')
+	.attr('y', '50.35%')
 	.attr('width', '9%')
 	.attr('height', '4%')
 	.style('fill', 'white')
@@ -200,7 +200,7 @@ var spectateBtn = adminToolsGroup.append('rect')
 	
 var spectateText = adminToolsGroup.append('text')
 	.attr('x', '2.25%')
-	.attr('y', '51%')
+	.attr('y', '53%')
 	.attr('font-size' , '16px')
 	.attr('font-weight', '900') 
 	.attr('font-family', 'sans-serif')
@@ -296,7 +296,7 @@ socket.on('robotInfo', function(data){
 				return y2 + "%";})
 			.attr('font-family', 'sans-serif')
 			.attr('font-size', '10px')
-			.text(function(d) {return "Driver: " + d['driver'];});
+			.text(function(d) {return "  Driver: " + d['driver'];});
 		
 	gunnerTextGroup.selectAll('text').remove();		
 	gunnerTextGroup.selectAll('text')
@@ -309,7 +309,7 @@ socket.on('robotInfo', function(data){
 				return y3 + "%";})
 			.attr('font-family', 'sans-serif')
 			.attr('font-size', '10px')
-			.text(function(d) {return "Gunner: " + d['gunner'];});
+			.text(function(d) {return "  Gunner: " + d['gunner'];});
 });
 	
 	
@@ -346,6 +346,8 @@ socket.on('dblist', function(data) {
 		.attr('font-family', 'sans-serif')
 		.text(function(d) { return d;});
 });
+
+socket.emit('request robot list');
 
 function kickUser(){
 	var username = prompt("Enter the name of the user to remove from a robot \n ");
