@@ -64,6 +64,11 @@ socket.on('robotInfo', function(data) {
 function setOperator(index, operatorType) {
 	var obj = {'username':getCookie("username"), 'robotIndex':index, 'operatorType':operatorType};
 	socket.emit('set user operator', obj);
-	document.getElementById("" + operatorType + index).innerHTML = "<span style='font-size: 18px'>" + operatorType + ": " + obj.username + "</span>";
+	var opType = "";
+	if (operatorType == "driver")
+		opType = "Driver";
+	else
+		opType = "Gunner";
+	document.getElementById("" + operatorType + index).innerHTML = "<span style='font-size: 18px'>" + opType + ": " + obj.username + "</span>";
 	
 }
