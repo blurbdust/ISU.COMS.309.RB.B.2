@@ -40,21 +40,21 @@ socket.on('robotInfo', function(data) {
 		html += '<span style="font-size: 22px">' + data[i].name + '</span><br/>';
 		
 		//Gunner
-		html += "<span style='font-size: 18px'>Gunner: "
+		html += "<span style='font-size: 18px' id='gunner" + i + "'>Gunner: "
 		if (data[i].gunner != "")
 			html += data[i].gunner + "</span><br/>";
 		else {
-			var varString = '' + i + ', "Gunner"';
-			html += "<button type='button' id='driver" + i +"' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
+			var varString = '' + i + ', "gunner"';
+			html += "<button type='button' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
 		}
 		
 		//Driver
-		html += "<span style='font-size: 18px'>Driver: "
+		html += "<span style='font-size: 18px' id='driver" + i + "'>Driver: "
 		if (data[i].driver != "")
 			html += data[i].driver + "</span><br/>";
 		else {
-			var varString = '' + i + ', "Driver"';
-			html += "<button type='button' id='driver" + i +"' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
+			var varString = '' + i + ', "driver"';
+			html += "<button type='button' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
 		}
 		html += '<br />';
 	}
@@ -64,5 +64,6 @@ socket.on('robotInfo', function(data) {
 function setOperator(index, operatorType) {
 	var obj = {'username':getCookie("username"), 'robotIndex':index, 'operatorType':operatorType};
 	socket.emit('set user operator', obj);
+	document.getElementById("" + operatorType + index).innerHTML = "<span style='font-size: 18px'>" + operatorType + ": " + obj.username + "</span>";
 	
 }
