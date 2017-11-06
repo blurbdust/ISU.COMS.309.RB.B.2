@@ -119,6 +119,7 @@ while(true){
 		//console.log("Read: " + readInput);
 		var damage = readInput.substring(readInput.indexOf(":"), readInput.indexOf(":") + 3);
 		console.log("Damage updated to " + damage);
+		socket.emit("damage", damage);
 	}
 }
 

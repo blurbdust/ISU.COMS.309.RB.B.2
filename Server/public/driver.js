@@ -11,9 +11,19 @@ socket_server.on('redirect', function(destination) {
   window.location.href = destination;
 });
 
+
+socket_server.emit("request-robotIP", function(){
+  console.log("Requested robotIP");
+});
+
+socket_server.on("robotIP", function(data){
+  robot_ip = data;
+});
+
 //Reset user operator
 var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
 socket_server.emit('set user operator', obj);
+
 
 var socket_robot = io(robot_ip + ':5210');
 
