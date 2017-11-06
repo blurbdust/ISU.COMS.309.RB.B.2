@@ -11,6 +11,14 @@ socket_server.on('redirect', function(destination) {
   window.location.href = destination;
 });
 
+socket_server.emit("request-robotIP", function(){
+  console.log("Requested robotIP");
+});
+
+socket_server.on("robotIP", function(data){
+  robot_ip = data;
+});
+
 var socket_robot = io(robot_ip + ':5210');
 
 
