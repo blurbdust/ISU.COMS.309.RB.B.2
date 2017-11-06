@@ -269,7 +269,6 @@ io.on('connection', function(socket){
 	
 	socket.on ('set user operator', function(data) {
 	
-		
 		//If user previously chose one, remove it
 		for (i = 0; i < robotSocketList.length; i++) {
 			
@@ -287,7 +286,6 @@ io.on('connection', function(socket){
 			}
 		}
 
-		
 		//Set chosen robot and operator type
 		if (data.operatorType == 'gunner') {
 			robotSocketList[data.robotIndex].gunner = data.username;
@@ -297,15 +295,9 @@ io.on('connection', function(socket){
 			robotSocketList[data.robotIndex].driver = data.username;
 			robotInfoList[data.robotIndex].driver = data.username;
 		}
-		
-		
-
-
-		console.log("Driver: " + robotSocketList[0].driver + " | Gunner: " + robotSocketList[0].gunner);	
+			
 		io.sockets.emit('robotInfo', robotInfoList);
 	});
-	
-	
 	
 	
 	socket.on('logout', function(data){
