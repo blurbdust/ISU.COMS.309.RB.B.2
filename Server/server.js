@@ -324,6 +324,20 @@ io.on('connection', function(socket){
 			if (socket.username)
 				userNameList.splice(userNameList.indexOf(socket.username), 1);
 			io.sockets.emit('usernames', userNameList);
+			
+			//Remove user from robot on disconnect
+			var user = socket.username;
+			for (i = 0; i < robotSocketList.length; i++) {
+				if (robotSocketList[i].gunner == user) {
+					robotSocketList[i].gunner = "";
+					robotInfoList[i].gunner = "";
+				}
+				else if (robotSocketList[i].driver == user) {
+					robotSocketList[i].driver = "";
+					robotInfoList[i].driver = "";
+				}
+				
+			}
 		}
 		else if (socket.type == "Robot"){
 			console.log(socket.name + " disconnected");
@@ -340,6 +354,18 @@ io.on('connection', function(socket){
 	
 	socket.on('request robot list', function() {
 		io.emit('robotInfo', robotInfoList)
+	});
+	
+	socket.on('request-for-redirect', function(data) {
+		for(i = 0; i < robotInfoList.length; i++) {
+			if(robotInfoList[i].gunner === data) {
+				socket.emit("redirect", "/gunner");
+			}
+			if(robotInfoList[i].driver === data) {
+				socket.emit("redirect", "/driver");
+			}
+		}
+		socket.emit("redirect", "/spectator");
 	});
 		
 	socket.on('new robot', function(data) {
