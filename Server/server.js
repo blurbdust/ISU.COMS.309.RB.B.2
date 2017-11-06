@@ -2,15 +2,15 @@ var express = require("express");
 var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
-var userIO = require('socket.io')(userServer);
+var io = require('socket.io')(userServer);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
-var users = [];
-var usernames = [];
-var dblist = [];
-var robots = [];
-var robotNames = [];
-var robotInfo = [];
+
+var userSocketList = [];
+var userNameList = [];
+var dbAccountList = [];
+var robotSocketList = [];
+var robotInfoList = [];
 
 const path = require('path');
 const url = require('url');
@@ -131,7 +131,7 @@ app.post('/create_account', function(req, res) {
 });
 
 
-userIO.on('connection', function(socket){
+io.on('connection', function(socket){
 	
 	socket.on('new user', function(data) {
 		
@@ -143,9 +143,9 @@ userIO.on('connection', function(socket){
 			socket.username = data;
 			socket.type = "User";
 			console.log(socket.username + " connected");
-			usernames.push(socket.username);
-			users.push(socket);
-			userIO.sockets.emit('usernames', usernames);
+			userNameList.push(socket.username);
+			userSocketList.push(socket);
+			io.sockets.emit('usernames', userNameList);
 			
 			//Emit all database users
 			var con = mysql.createConnection({
@@ -154,19 +154,19 @@ userIO.on('connection', function(socket){
 				password: "Ze3xcZG5",
 				database: "db309rbb2"
 			});
-			dblist = [];
+			dbAccountList = [];
 			con.connect(function(err) {
 				if (err) throw err;
 				var sql = "SELECT * FROM users";
 				con.query(sql, function(err, result, fields)  {
 					if (err) throw err;
 					for (i = 0; i < result.length; i++) {
-						dblist.push(result[i].Username);
+						dbAccountList.push(result[i].Username);
 					}
 				});
 			});
 			setTimeout(function() {
-				userIO.sockets.emit('dblist', dblist);	
+				io.sockets.emit('dblist', dbAccountList);	
 			}, 200);			
 		}
 	});
@@ -177,15 +177,21 @@ userIO.on('connection', function(socket){
 	
 	socket.on('ban user', function(data){
 		//Need to change banned field to true in DB
-		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+		
+		for(var i=0;i<userSocketList.length; i++){
+			if(data==userSocketList[i]){
+				userSocketList[i].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+			}
+		}
 	});
+	
 	socket.on('delete account', function(data){
 		//Need to delete row in DB
-		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+		
 	});
 	socket.on('spectate', function(data){
 		//Need to delete row in DB
-		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectate');
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectator');
 	});
 	socket.on('logout', function(data){
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
@@ -193,32 +199,36 @@ userIO.on('connection', function(socket){
 	
 	
 	socket.on('chat message', function(msg){
-		userIO.emit('chat message', {message: msg, username: socket.username});
+		io.emit('chat message', {message: msg, username: socket.username});
 	});
 	
 	socket.on('disconnect', function() {
 		if (socket.type == "User"){
 			console.log(socket.username + " disconnected");
-			users.splice(users.indexOf(socket), 1);
+			userSocketList.splice(userSocketList.indexOf(socket), 1);
 			if (socket.username)
-				usernames.splice(usernames.indexOf(socket.username), 1);
-			userIO.sockets.emit('usernames', usernames);
+				userNameList.splice(userNameList.indexOf(socket.username), 1);
+			io.sockets.emit('usernames', userNameList);
 		}
 		else if (socket.type == "Robot"){
 			console.log(socket.name + " disconnected");
-			robots.splice(robots.indexOf(socket), 1);
+			robotSocketList.splice(robotSocketList.indexOf(socket), 1);
 			if (socket.name) {
-				var index = robotInfo.findIndex(function(item, i) {
+				var index = robotInfoList.findIndex(function(item, i) {
 					return item.name === socket.name;
 				});
-				robotInfo.splice(index, 1);
+				robotInfoList.splice(index, 1);
 			}
-			userIO.sockets.emit('robotInfo', robotInfo);
+			io.sockets.emit('robotInfo', robotInfoList);
 		}
 	});
 	
 	socket.on('request robot list', function() {
-		userIO.emit('robotInfo', robotInfo)
+		io.emit('robotInfo', robotInfoList)
+	});
+	
+	socket.on('request robot ip', function(data){
+		
 	});
 		
 	socket.on('new robot', function(data) {
@@ -232,12 +242,12 @@ userIO.on('connection', function(socket){
 		socket.driver = "";
 		socket.spectators = [];
 		socket.IP = socket.request.connection.remoteAddress;
-		robots.push(socket);
+		robotSocketList.push(socket);
 		console.log('Robot Name: ' + socket.name + ' Robot IP: ' + socket.IP);
 		
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
-		robotInfo.push(robot);
-		userIO.sockets.emit('robotInfo', robotInfo);
+		robotInfoList.push(robot);
+		io.sockets.emit('robotInfo', robotInfoList);
 	});
 });
