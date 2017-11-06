@@ -353,7 +353,7 @@ io.on('connection', function(socket){
 		socket.driver = "";
 		socket.spectators = [];
 		socket.IP = socket.request.connection.remoteAddress;
-		robotIP = socket.IP.toString().substring(lastIndexOf(":"), socket.IP.toString.length);
+		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":"), socket.IP.toString.length);
 		robotSocketList.push(socket);
 		console.log('Robot Name: ' + socket.name + ' Robot IP: ' + robotIP);
 		
