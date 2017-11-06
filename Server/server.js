@@ -349,8 +349,8 @@ io.on('connection', function(socket){
 				});
 				robotInfoList.splice(index, 1);
 			}
-			io.sockets.emit('robotInfo', robotInfoList);
 		}
+		io.sockets.emit('robotInfo', robotInfoList);
 	});
 	
 	socket.on('request robot list', function() {
