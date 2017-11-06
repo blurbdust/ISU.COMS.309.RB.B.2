@@ -3,7 +3,7 @@
 #include <IRremote.h>
 
 #define PIN_IR 10
-#define PIN_DETECT 2
+#define PIN_DETECT 4
 
 /**
 *
@@ -121,7 +121,7 @@ void loop()                     // run over and over again
   }
   //IR Stuff  
   //if the ir sensor goes off, increase damage
-  if(digitalRead(PIN_DETECT) == HIGH) {
+  if(digitalRead(PIN_DETECT) == LOW) {
     damage++;
     char msg[20];
     sprintf(msg, "Damage: %d\n", damage);
