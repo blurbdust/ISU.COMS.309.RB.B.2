@@ -186,6 +186,7 @@ io.on('connection', function(socket){
 	});
 	
 	socket.on('delete account', function(data){
+		
 		var con = mysql.createConnection({
 			host: "mysql.cs.iastate.edu",
 			user: "dbu309rbb2",
@@ -197,11 +198,14 @@ io.on('connection', function(socket){
 			if (err) throw err;
 			var sql = "DELETE FROM users WHERE Username = '" + data + "';";
 			con.query(sql, function(err, result, fields)  {
-				if (err) throw err;
-				var index = userNameList.indexOf(data);
-				userSocketList[index].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+				if (err) return;	//Currently not throwing errors
+				dbAccountList.splice(dbAccountList.indexOf(data), 1);
 			});
 		});
+		
+		setTimeout(function() {
+			io.sockets.emit('dblist', dbAccountList);	
+		}, 200);
 		
 	});
 	socket.on('spectate', function(data){
