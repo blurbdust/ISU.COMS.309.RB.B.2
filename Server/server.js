@@ -179,9 +179,14 @@ userIO.on('connection', function(socket){
 		//Need to delete row in DB
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
+	socket.on('spectate', function(data){
+		//Need to delete row in DB
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectate');
+	});
 	socket.on('logout', function(data){
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 	});
+	
 	
 	socket.on('chat message', function(msg){
 		userIO.emit('chat message', {message: msg, username: socket.username});
