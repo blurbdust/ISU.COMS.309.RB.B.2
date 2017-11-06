@@ -141,7 +141,7 @@ userIO.on('connection', function(socket){
 			console.log(socket.username + " connected");
 			usernames.push(socket.username);
 			users.push(socket);
-			socket.emit('usernames', usernames);
+			userIO.sockets.emit('usernames', usernames);
 			
 			//Emit all database users
 			var con = mysql.createConnection({
@@ -162,7 +162,7 @@ userIO.on('connection', function(socket){
 				});
 			});
 			setTimeout(function() {
-				socket.emit('dblist', dblist);	
+				userIO.sockets.emit('dblist', dblist);	
 			}, 200);			
 		}
 	});
@@ -204,10 +204,14 @@ userIO.on('connection', function(socket){
 				});
 				robotInfo.splice(index, 1);
 			}
-			socket.emit('robotInfo', robotInfo);
+			userIO.sockets.emit('robotInfo', robotInfo);
 		}
 	});
-
+	
+	socket.on('request robot list', function() {
+		userIO.emit('robotInfo', robotInfo)
+	)};
+		
 	socket.on('new robot', function(data) {
 
 		console.log("Got a robot connection");
@@ -225,6 +229,6 @@ userIO.on('connection', function(socket){
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver};
 		robotInfo.push(robot);
-		socket.emit('robotInfo', robotInfo);
+		userIO.sockets.emit('robotInfo', robotInfo);
 	});
 });
