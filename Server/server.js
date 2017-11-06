@@ -89,6 +89,9 @@ app.post('/login', function(req, res) {
 		else if (result[0].Password != password){
 			res.send("Incorrect password.");
 		}
+		else if (result[0].isBanned != null && result[0].isBanned == 1) {
+			res.send("You are banned.");
+		}
 		else if (result[0].UserRole != null && result[0].UserRole == 1) {
 			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin')
 		}
@@ -200,7 +203,20 @@ io.on('connection', function(socket){
 	});
 	
 	socket.on('ban user', function(data){
-		//Need to change banned field to true in DB
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET isBanned = 1 WHERE Username = '" + data + "';";
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+			});
+		});
 		
 		for(var i=0;i<userSocketList.length; i++){
 			if(data==userNameList[i]){
@@ -210,6 +226,7 @@ io.on('connection', function(socket){
 	});
 	
 	socket.on('delete account', function(data){
+		
 		var con = mysql.createConnection({
 			host: "mysql.cs.iastate.edu",
 			user: "dbu309rbb2",
@@ -221,11 +238,14 @@ io.on('connection', function(socket){
 			if (err) throw err;
 			var sql = "DELETE FROM users WHERE Username = '" + data + "';";
 			con.query(sql, function(err, result, fields)  {
-				if (err) throw err;
-				var index = userNameList.indexOf(data);
-				userSocketList[index].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+				if (err) return;	//Currently not throwing errors
+				dbAccountList.splice(dbAccountList.indexOf(data), 1);
 			});
 		});
+		
+		setTimeout(function() {
+			io.sockets.emit('dblist', dbAccountList);	
+		}, 200);
 		
 	});
 	socket.on('spectate', function(data){
