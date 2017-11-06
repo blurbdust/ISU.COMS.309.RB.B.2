@@ -259,6 +259,25 @@ io.on('connection', function(socket){
 	});
 	
 	socket.on ('set user operator', function(data) {
+	
+		
+		//If user previously chose one, remove it
+		for (i = 0; i < robotSocketList.length; i++) {
+			
+			var gunner = robotSocketList[i].gunner;
+			var driver = robotSocketList[i].driver;
+			
+			if (data.username === gunner) {
+				robotSocketList[i].gunner = "";
+				robotInfoList[i].gunner = "";
+			}
+			
+			else if (data.username === driver) {
+				robotSocketList[i].driver = "";
+				robotInfoList[i].driver = "";
+			}
+		}
+
 		
 		//Set chosen robot and operator type
 		if (data.operatorType == 'gunner') {
@@ -271,23 +290,7 @@ io.on('connection', function(socket){
 		}
 		
 		
-		
-		//If user previously chose one, remove it
-		for (i = 0; i < robotSocketList.length; i++) {
-			
-			var gunner = robotSocketList[i].gunner;
-			var driver = robotSocketList[i].driver;
-			
-			if (data.username === gunner && data.robotIndex != i) {
-				robotSocketList[i].gunner = "";
-				robotInfoList[i].gunner = "";
-			}
-			
-			else if (data.username === driver && data.robotIndex != i) {
-				robotSocketList[i].driver = "";
-				robotInfoList[i].driver = "";
-			}
-		}
+
 
 		console.log("Driver: " + robotSocketList[0].driver + " | Gunner: " + robotSocketList[0].gunner);	
 		io.sockets.emit('robotInfo', robotInfoList);
