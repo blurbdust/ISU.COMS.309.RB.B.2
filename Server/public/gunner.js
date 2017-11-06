@@ -28,7 +28,7 @@ $(function () {
   });
 });
 
-var bodySelect = d3.select('body').select('#feed');
+var bodySelect = d3.select('body').select('svg');
 var svgSelect = bodySelect.append('svg')
 	.attr('width', '50')
 	.attr('height', '50');
