@@ -35,7 +35,9 @@ window.addEventListener("load", function(){
   var buttonRight = document.getElementById('buttonRight');
   var buttonDown = document.getElementById('buttonDown');
   var buttonFire = document.getElementById('buttonFire');
-
+  var logout = document.getElementById('logout');
+  var lobby = document.getElementById('lobby');
+  
   buttonUp.addEventListener('mousedown', function() {
       console.log("I");
       socket_robot.emit('Serial Movement', { dir: 'I'});
@@ -79,7 +81,6 @@ window.addEventListener("load", function(){
 
   buttonFire.addEventListener('mousedown', function() {
       console.log("K");
-	  fireMahLazer();
       socket_robot.emit('Serial Movement', { dir: 'K'});
   });
   buttonFire.addEventListener('mouseup', function() {
@@ -100,6 +101,17 @@ window.addEventListener("load", function(){
 
   cam_socket.on('image', function (data) {
     webcam_host.attr("src", "data:image/jpeg;base64," + data );
+  });
+
+  logout.addEventListener('mouseup', function(){
+    console.log("Logging out...");
+    window.location.href = 'http://proj-309-rb-b-2.cs.iastate.edu:3000/';
+    //Update Database with Robot score
+  });
+
+  lobby.addEventListener('mouseup', function(){
+    console.log("Redirecting back to lobby");
+    window.location.href = 'http://proj-309-rb-b-2.cs.iastate.edu:3000/lobby';
   });
 
 });
