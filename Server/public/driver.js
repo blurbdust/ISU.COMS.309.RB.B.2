@@ -11,6 +11,10 @@ socket_server.on('redirect', function(destination) {
   window.location.href = destination;
 });
 
+//Reset user operator
+var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
+socket_server.emit('set user operator', obj);
+
 var socket_robot = io(robot_ip + ':5210');
 
 
@@ -27,8 +31,6 @@ $(function () {
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });
 });
-
-
 
 window.addEventListener("load", function(){
   
