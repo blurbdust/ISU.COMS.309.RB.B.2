@@ -124,6 +124,15 @@ void loop()                     // run over and over again
   if(digitalRead(PIN_DETECT) == HIGH) {
     damage++;
 	  int bytesWritten = Serial.write("Damage: " + damage);
+    if (damage > 15){
+      speed = 0;
+    }
+    if (damage > 10){
+      speed = 10;
+    }
+    else {
+      speed = (100 - (damage * 5));
+    }
   }
 }
 
