@@ -11,8 +11,8 @@ var http = require('http');
 var express = require('express');
 var app = express();
 var sleep = require('system-sleep');
-//const LiveCam = require('livecam');
-/*const webcam_server = new LiveCam({
+const LiveCam = require('livecam');
+const webcam_server = new LiveCam({
 	'ui_addr' : '0.0.0.0',
 	'ui_port' : 11000,
 	'broadcast_addr' : '0.0.0.0',
@@ -28,16 +28,16 @@ var sleep = require('system-sleep');
 		'framerate': 5
 	}
 
-});*/
+});
 var server = app.listen(5210);
 var io_RPI = require("socket.io").listen(server); //Operators connect to this
 //io_RPI.emit('new robot', 'Robot 1');	//Placeholder robot name
 
 var operator;
 
-/*var SerialPort = require('serialport');
+var SerialPort = require('serialport');
 var serialPort = new SerialPort("/dev/ttyACM0",{
-	baudrate: 9600,
+	baudRate: 9600,
 	dataBits: 8,
 	parity: 'none',
 	stopBits: 1,
@@ -49,7 +49,7 @@ serialPort.on('open', function(){
 	let dir = 'w';
 	console.log('Serial Port Opened');
 	sleep(1000);
-});*/
+});
 
 socket.on('connect', function(){
 	console.log("Connected to Central Server");
