@@ -356,6 +356,18 @@ io.on('connection', function(socket){
 	socket.on('request robot list', function() {
 		io.emit('robotInfo', robotInfoList)
 	});
+	
+	socket.on('request-for-redirect', function(data) {
+		for(i = 0; i < robotInfoList.length; i++) {
+			if(robotInfoList[i].gunner === data) {
+				socket.emit("redirect", "/gunner");
+			}
+			if(robotInfoList[i].driver === data) {
+				socket.emit("redirect", "/driver");
+			}
+		}
+		socket.emit("redirect", "/spectator");
+	});
 		
 	socket.on('new robot', function(data) {
 
