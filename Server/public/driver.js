@@ -36,6 +36,7 @@ window.addEventListener("load", function(){
   var buttonUp = document.getElementById('buttonUp');
   var buttonUpRight = document.getElementById('buttonUpRight');
   var buttonLeft = document.getElementById('buttonLeft');
+  var buttonBoost = document.getElementById('buttonBoost');
   var buttonRight = document.getElementById('buttonRight');
   var buttonDownLeft = document.getElementById('buttonDownLeft');
   var buttonDown = document.getElementById('buttonDown');
@@ -82,7 +83,17 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
-  
+  //boost
+  buttonBoost.addEventListener('mousedown', function() {
+      console.log("+");
+      socket_robot.emit('Serial Movement', { dir: '+'});
+  });
+  buttonBoost.addEventListener('mouseup', function() {
+      console.log("0");
+      socket_robot.emit('Serial Movement', { dir: '0'});
+  });  
+
+
   //right
   buttonRight.addEventListener('mousedown', function() {
       console.log("d");
@@ -122,7 +133,7 @@ window.addEventListener("load", function(){
   });
   
   
-    var webcam_addr = "raspberrypi3-a.student.iastate.edu";
+  var webcam_addr = "raspberrypi3-a.student.iastate.edu";
   var webcam_port = "12000";
   var webcam_host = $(".feed img");
   var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
