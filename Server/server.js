@@ -179,7 +179,7 @@ io.on('connection', function(socket){
 		//Need to change banned field to true in DB
 		
 		for(var i=0;i<userSocketList.length; i++){
-			if(data==userSocketList[i]){
+			if(data==userNameList[i]){
 				userSocketList[i].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 			}
 		}
