@@ -115,7 +115,7 @@ window.addEventListener("load", function(){
 
 
   cam_socket.on("connection", function(socket){
-    console.log("Connected");
+    console.log("Connected to camera");
   });
 
   cam_socket.on('image', function (data) {
