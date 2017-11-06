@@ -41,6 +41,8 @@ window.addEventListener("load", function(){
   var buttonDownLeft = document.getElementById('buttonDownLeft');
   var buttonDown = document.getElementById('buttonDown');
   var buttonDownRight = document.getElementById('buttonDownRight');
+  var logout = document.getElementById('logout');
+  var lobby = document.getElementById('lobby');
 
   //up left
   buttonUpLeft.addEventListener('mousedown', function() {
@@ -145,6 +147,17 @@ window.addEventListener("load", function(){
 
   cam_socket.on('image', function (data) {
     webcam_host.attr("src", "data:image/jpeg;base64," + data );
+  });
+
+  logout.addEventListener('mouseup', function(){
+    console.log("Logging out...");
+    window.location.href = 'http://proj-309-rb-b-2.cs.iastate.edu:3000/';
+    //Update Database with Robot score
+  });
+
+  lobby.addEventListener('mouseup', function(){
+    console.log("Redirecting back to lobby");
+    window.location.href = 'http://proj-309-rb-b-2.cs.iastate.edu:3000/lobby';
   });
 
 });

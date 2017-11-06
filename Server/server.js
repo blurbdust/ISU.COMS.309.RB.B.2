@@ -12,6 +12,8 @@ var dbAccountList = [];
 var robotSocketList = [];
 var robotInfoList = [];
 
+var leaderboard = [];
+
 const path = require('path');
 const url = require('url');
 
@@ -133,6 +135,13 @@ app.post('/create_account', function(req, res) {
 	});	
 });
 
+
+app.post('/updateHP', function(req, res) {
+	var robot = req.body.robot;
+	var amount = req.body.amount;
+
+
+});
 
 io.on('connection', function(socket){
 	
