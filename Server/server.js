@@ -375,8 +375,6 @@ io.on('connection', function(socket){
 	});	
 		
 	socket.on('new robot', function(data) {
-
-		console.log("Got a robot connection");
 		
 		//Set robot name, users, and IP in socket
 		socket.name = data;
@@ -387,7 +385,7 @@ io.on('connection', function(socket){
 		socket.IP = socket.request.connection.remoteAddress;
 		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":"), socket.IP.toString.length);
 		robotSocketList.push(socket);
-		console.log('Robot Name: ' + socket.name + ' Robot IP: ' + robotIP);
+		console.log("Robot " + socket.name + " connected.");
 		
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver, 'spectators':socket.spectators, 'ip':robotIP};

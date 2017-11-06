@@ -68,6 +68,8 @@ socket.on('robotInfo', function(data) {
 
 function setOperator(index, operatorType) {
 	var obj = {'username':getCookie("username"), 'robotIndex':index, 'operatorType':operatorType};
+	document.cookie = "robotIndex=" + index + "; path=/";
+	document.cookie = "operatorType=" + operatorType + "; path=/";
 	socket.emit('set user operator', obj);
 	var opType = "";
 	if (operatorType == "driver")
