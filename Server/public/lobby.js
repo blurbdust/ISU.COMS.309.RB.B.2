@@ -20,6 +20,11 @@ $(function () {
 	});
 });
 
+//Operator page(s) redirect
+document.getElementById("operatorButton").addEventListener("click", function(){
+    window.location.href = "/driver"
+});
+
 //Display connected users
 socket.on('usernames', function(data) {
 
