@@ -3,7 +3,7 @@
 	<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/socket.io.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/cookies.js"></script>
-	<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/operator.js"></script>
+	<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/gunner.js"></script>
 	<style>
       #chat-box * { margin: 0; padding: 0; box-sizing: border-box; }
       #chat-box { font: 13px Helvetica, Arial; }
@@ -37,15 +37,15 @@
 	<div id='button-wrapper' align="center" style="width:33%;height:230px;">
 		<button id="buttonUp" type="button" style="width:75px;height:75px;font-size:30px">↑</button><br>
 		<button id="buttonLeft" type="button" style="width:75px;height:75px;font-size:30px">←</button>
+		<button id="buttonFire" type="button" style="width:75px;height:75px;font-size:30px">FIRE</button>
 		<button id="buttonRight" type="button" style="width:75px;height:75px;font-size:30px">→</button><br>
 		<button id="buttonDown" type="button" style="width:75px;height:75px;font-size:30px">↓</button>
-	</div>
-	<!--
-	<div style="width:620px;height:300px;float: right;border:5px solid red">
-		
-	</div>
-	-->
+		</div>
 </div>
 
 </body>
+<footer>
+	<button id="lobby" type="button" style="float: right;">Return to Lobby</button>
+	<button id="logout" type="button" style="float: right;">Logout</button>
+</footer>
 </html>

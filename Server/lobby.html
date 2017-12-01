@@ -2,18 +2,153 @@
 <html>
 	<head>
 		<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/socket.io.js"></script>
+		<style>
+			#chat-box * { 
+				margin: 0; 
+				padding: 0; 
+				box-sizing: border-box; 
+			}
+			
+			#chat-box { 
+				font: 13px Helvetica, Arial; 
+			}
+		  
+		    #chat-box form { 
+				background: #000; 
+				padding: 3px; 
+				position: fixed; 
+				bottom: 0; 
+				width: 33%; 
+			}
+		  
+		    #chat-box form input { 
+				border: 0; 
+				padding: 10px; 
+				width: 90%; 
+				margin-right: .5%; 
+			}
+		  
+		    #chat-box form button { 
+				width: 9%; 
+				background: rgb(130, 224, 255); 
+				border: none; 
+				padding: 10px; 
+			}
+		  
+		    #messages { 
+				list-style-type: none; 
+				margin: 0; 
+				padding: 0; 
+			}
+		  
+		    #messages li { 
+				padding: 5px 10px; 
+			}
+		  
+		    #messages li:nth-child(odd) { 
+				background: #eee; 
+			}
+		  
+		    #messages { 
+				margin-bottom: 40px 
+			}
+			
+			#wrapper {
+				max-width: 1170px;
+				margin: auto;
+			}
+			
+			#wrapper2 {
+				border: 3px solid #f1f1f1;
+				text-align: center;
+			}
+			
+			.imgcontainer {
+				text-align: center;
+				margin: 24px 0 12px 0;
+			}
+			
+			img.avatar {
+				width: 40%;
+				border-radius: 50%;
+			}
+			
+			#b {
+				background: rgb(130, 224, 255); 
+				border: none;
+				padding: 10px;
+				cursor: pointer;
+			}
+			
+			#m {
+				width: calc(95% - 65px);
+				padding: 10px;
+			}
+			
+			.box {
+				display: inline-block;
+				width: 27%;
+				height: 600px;
+				margin: 1em;
+				border: 5px solid black;
+				vertical-align: top;
+				padding: 10px;
+			}
+			
+			#operatorButton {
+				background-color: #4CAF50; /* Green */
+				border: none;
+				color: white;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				cursor: pointer;
+			
+			}
+			
+			
+		</style>
 	</head>
 	
 	<body>
-		<h1>Lobby</h1>
 		
-		<h3>Users</h3>
-		<div id="users"></div><br />
+		<div id='wrapper'>
+			<h1>Lobby</h1>
+			<div id='wrapper2'>
+				
+				<div class="imgcontainer">
+					<img src="http://proj-309-rb-b-2.cs.iastate.edu:3000/logo.png" class="avatar" alt="CyBots"/>
+				</div>
+				
+				<div class='box'>
+					<h2 style="text-align: center"><u>Active Robots</u></h2>
+					<div id="robots" style="font-size: 22px; text-align: left;"></div>
+				</div>
+				
+				<div class='box'>
+					<h2 style="text-align: center"><u>Active Users</u></h2>
+					<div id="users" style="font-size: 22px; text-align: left;"></div>
+				</div>
+				
+				<div class='box'>
+					<h2 style="text-align: center"><u>Chat Box</u></h2>
+					<div id="chat-box" style="height:480px; overflow: auto">
+						<ul id="messages" style="text-align: left"></ul>
+					</div>
+					<form id="msgform" action="">
+							<input id="m" autocomplete="off"  />
+							<button id='b'>Send</button>
+					</form>
+				</div>
+				
+				<!--Operator Button  TODO: direct to correct operator page-->
+				<button type="button" id="operatorButton">Operate Robot</button>
+			</div>
+		</div>
 		
-		<h3>Robots</h3>
-		<div id="robots"></div><br />
 		
-		<button type="button" id="loginButton" onclick="location.href = '/operator';">Go to Operator</button>
 	</body>
 	
 	<footer>

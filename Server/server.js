@@ -2,17 +2,17 @@ var express = require("express");
 var app = express();
 var port = 3000;
 var userServer = require('http').createServer(app);
-var userIO = require('socket.io')(userServer);
-
-var robotListen = require('http').createServer(app);
-
-var robotIO = require('socket.io')(robotListen);
+var io = require('socket.io')(userServer);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
-var users = [];
-var usernames = [];
-var robots = [];
-var robotIPList = [];
+
+var userSocketList = [];
+var userNameList = [];
+var dbAccountList = [];
+var robotSocketList = [];
+var robotInfoList = [];
+
+var leaderboard = [];
 
 const path = require('path');
 const url = require('url');
@@ -24,24 +24,32 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
  
 //Send login page 
 app.get("/login", (req, res) => {
- res.sendFile(__dirname + "/login.html");;
+	res.sendFile(__dirname + "/login.html");;
 }); 
 
 //Send Create User page
 app.get("/create_account", (req, res) => {
- res.sendFile(__dirname + "/create_account.html");
-}); 
-
-app.get("/operator", (req, res) => {
- res.sendFile(__dirname + "/operator.html");
+	res.sendFile(__dirname + "/create_account.html");
 }); 
 
 app.get("/lobby", (req, res) => {
- res.sendFile(__dirname + "/lobby.html");
+	res.sendFile(__dirname + "/lobby.html");
 }); 
 
 app.get("/admin", (req, res) => {
- res.sendFile(__dirname + "/admin.html");
+	res.sendFile(__dirname + "/admin.html");
+});
+
+app.get("/gunner", (req, res) => {
+	res.sendFile(__dirname + "/gunner.html");
+});
+
+app.get("/driver", (req, res) => {
+	res.sendFile(__dirname + "/driver.html");
+}); 
+
+app.get("/spectator", (req, res) => {
+	res.sendFile(__dirname + "/spectator.html");
 }); 
 
 //Public folder to serve files
@@ -49,20 +57,14 @@ app.use(express.static(__dirname + '/public'));
  
 //Listen on port
 userServer.listen(port, () => {
- console.log("User server listening on port " + port);
+	console.log("User server listening on port " + port);
 });
-
-robotListen.listen(3001, () => {
- console.log("Robot server listening on port " + 3001);
-});
-
-
 
 app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
-app.get('/socket.io/socket.io.js', function(req, res){
+app.get('/socket.io/*', function(req, res){
 	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
 });
 
@@ -89,7 +91,13 @@ app.post('/login', function(req, res) {
 		else if (result[0].Password != password){
 			res.send("Incorrect password.");
 		}
-		else{
+		else if (result[0].isBanned != null && result[0].isBanned == 1) {
+			res.send("You are banned.");
+		}
+		else if (result[0].UserRole != null && result[0].UserRole == 1) {
+			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin')
+		}
+		else {
 			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 		}
 	  });
@@ -112,12 +120,7 @@ app.post('/create_account', function(req, res) {
 	con.connect(function(err) {
 		if (err) throw err;
 		console.log("Connected!");
-		if(password.equals("admin"){
-			var sql = "INSERT INTO users (Username, Password, UserRole) VALUES ('" + username + "', '" + password + "', '" + 1 +"')";
-		}
-		else{
-			var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
-		}
+		var sql = "INSERT INTO users (Username, Password) VALUES ('" + username + "', '" + password + "')";
 		con.query(sql, function (err, result) {
 			if (err && err.code == "ER_DUP_ENTRY") 
 				res.send("Username already taken.");
@@ -133,41 +136,260 @@ app.post('/create_account', function(req, res) {
 });
 
 
-userIO.on('connection', function(socket){
+app.post('/updateHP', function(req, res) {
+	var robot = req.body.robot;
+	var amount = req.body.amount;
+
+
+});
+
+io.on('connection', function(socket){
 	
 	socket.on('new user', function(data) {
 		
 		if (data == "")
 			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 		else {
+			
+			//Associate username with socket
 			socket.username = data;
+			socket.type = "User";
 			console.log(socket.username + " connected");
-			usernames.push(socket.username);
-			users.push(socket);
-			userIO.sockets.emit('usernames', usernames);
+			userNameList.push(socket.username);
+			userSocketList.push(socket);
+			io.sockets.emit('usernames', userNameList);
+			
+			//Emit all database users
+			var con = mysql.createConnection({
+				host: "mysql.cs.iastate.edu",
+				user: "dbu309rbb2",
+				password: "Ze3xcZG5",
+				database: "db309rbb2"
+			});
+			dbAccountList = [];
+			con.connect(function(err) {
+				if (err) throw err;
+				var sql = "SELECT * FROM users";
+				con.query(sql, function(err, result, fields)  {
+					if (err) throw err;
+					for (i = 0; i < result.length; i++) {
+						dbAccountList.push(result[i].Username);
+					}
+				});
+			});
+			setTimeout(function() {
+				io.sockets.emit('dblist', dbAccountList);	
+			}, 200);			
 		}
 	});
 	
+	socket.on('kick user', function(data){
+		
+		for(var i=0;i<robotSocketList.length; i++){
+			if(robotSocketList[i].driver == data){
+				robotSocketList[i].driver = "";
+				robotInfoList[i]['driver'] = "";
+			}
+			else if(robotSocketList[i].gunner == data){
+				robotSocketList[i].gunner = "";
+				robotInfoList[i]['gunner'] = "";
+			}
+			else{
+				for(var j=0; j<robotSocketList[i].spectators.length; j++){
+					if(robotSocketList[i].spectators[j] == data){
+						robotSocketList[i].spectators[j] = "";
+						robotInfoList[i]['spectators'] = "";
+					}
+				}
+			}
+		}
+		for(var k=0; k<userNameList.length; k++){
+			if(data == userNameList[k]){
+				userSocketList[k].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
+			}
+		}
+		
+	});
+	
+	socket.on('ban user', function(data){
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET isBanned = 1 WHERE Username = '" + data + "';";
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+			});
+		});
+		
+		for(var i=0;i<userSocketList.length; i++){
+			if(data==userNameList[i]){
+				userSocketList[i].emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+			}
+		}
+	});
+	
+	socket.on('delete account', function(data){
+		
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "DELETE FROM users WHERE Username = '" + data + "';";
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+				dbAccountList.splice(dbAccountList.indexOf(data), 1);
+			});
+		});
+		
+		setTimeout(function() {
+			io.sockets.emit('dblist', dbAccountList);	
+		}, 200);
+		
+	});
+	socket.on('spectate', function(data){
+		for(var i=0; i<robotSocketList.length; i++){
+			if(data == robotSocketList[i].name){
+				robotSocketList[i].spectators.push(socket.username);
+				robotInfoList[i]['spectators'].push(socket.username);
+				socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'spectator');
+			}
+		}
+	});
+	
+	socket.on ('set user operator', function(data) {
+	
+		//If user previously chose one, remove it
+		for (i = 0; i < robotSocketList.length; i++) {
+			
+			var gunner = robotSocketList[i].gunner;
+			var driver = robotSocketList[i].driver;
+			
+			if (data.username === gunner) {
+				robotSocketList[i].gunner = "";
+				robotInfoList[i].gunner = "";
+			}
+			
+			else if (data.username === driver) {
+				robotSocketList[i].driver = "";
+				robotInfoList[i].driver = "";
+			}
+		}
+
+		//Set chosen robot and operator type
+		if (data.operatorType == 'gunner') {
+			robotSocketList[data.robotIndex].gunner = data.username;
+			robotInfoList[data.robotIndex].gunner = data.username;
+		}
+		else {
+			robotSocketList[data.robotIndex].driver = data.username;
+			robotInfoList[data.robotIndex].driver = data.username;
+		}
+			
+		io.sockets.emit('robotInfo', robotInfoList);
+	});
+	
+	
+	socket.on('logout', function(data){
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
+	});
+	
+	
 	socket.on('chat message', function(msg){
-		userIO.emit('chat message', {message: msg, username: socket.username});
+		io.emit('chat message', {message: msg, username: socket.username});
 	});
 	
 	socket.on('disconnect', function() {
-		console.log(socket.username + " disconnected");
-		users.splice(users.indexOf(socket), 1);
-		if (socket.username)
-			usernames.splice(usernames.indexOf(socket.username), 1);
-		userIO.sockets.emit('usernames', usernames);
+		if (socket.type == "User"){
+			console.log(socket.username + " disconnected");
+			userSocketList.splice(userSocketList.indexOf(socket), 1);
+			if (socket.username)
+				userNameList.splice(userNameList.indexOf(socket.username), 1);
+			io.sockets.emit('usernames', userNameList);
+			
+			//Remove user from robot on disconnect
+			var user = socket.username;
+			for (i = 0; i < robotSocketList.length; i++) {
+				if (robotSocketList[i].gunner == user) {
+					robotSocketList[i].gunner = "";
+					robotInfoList[i].gunner = "";
+				}
+				else if (robotSocketList[i].driver == user) {
+					robotSocketList[i].driver = "";
+					robotInfoList[i].driver = "";
+				}
+				
+			}
+			console.log("Gunner: " + robotSocketList[0].gunner);
+		}
+		else if (socket.type == "Robot"){
+			console.log(socket.name + " disconnected");
+			robotSocketList.splice(robotSocketList.indexOf(socket), 1);
+			if (socket.name) {
+				var index = robotInfoList.findIndex(function(item, i) {
+					return item.name === socket.name;
+				});
+				robotInfoList.splice(index, 1);
+			}
+		}
+		io.sockets.emit('robotInfo', robotInfoList);
 	});
-	//socket.emit('Robot Address', { ip: robotIPList[0]});
-});
+	
+	socket.on('request robot list', function() {
+		io.emit('robotInfo', robotInfoList)
+	});
+	
+	socket.on('request-for-redirect', function(data) {
+		for(i = 0; i < robotInfoList.length; i++) {
+			if(robotInfoList[i].gunner === data) {
+				socket.emit("redirect", "/gunner");
+			}
+			if(robotInfoList[i].driver === data) {
+				socket.emit("redirect", "/driver");
+			}
+		}
+		socket.emit("redirect", "/spectator");
+	});
 
-robotIO.on('connection',function(socket) {
-	console.log("Robot connected");
-	socket.name = "";
-	socket.gunner = "";
-	socket.driver = "";
-	socket.IP = socket.request.connection.remoteAddress;
-	robots.push(socket);
-	console.log(socket.IP);
+	socket.on('request-robotIP', function(data) {
+		for(i = 0; i < robotInfoList.length; i++) {
+			if(robotInfoList[i].gunner === data) {
+				console.log("Returning this IP: " + robotInfoList[i]['ip']);
+				socket.emit("robotIP", robotInfoList[i]['ip']);
+			}
+			if(robotInfoList[i].driver === data) {
+				console.log("Returning this IP: " + robotInfoList[i]['ip']);
+				socket.emit("robotIP", robotInfoList[i]['ip']);
+			}
+		}
+	});	
+		
+	socket.on('new robot', function(data) {
+		
+		//Set robot name, users, and IP in socket
+		socket.name = data;
+		socket.type = "Robot";
+		socket.gunner = "";
+		socket.driver = "";
+		socket.spectators = [];
+		socket.IP = socket.request.connection.remoteAddress;
+		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":"), socket.IP.toString.length);
+		robotSocketList.push(socket);
+		console.log("Robot " + socket.name + " connected.");
+		
+		//Emit robot info to client
+		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver, 'spectators':socket.spectators, 'ip':robotIP};
+		robotInfoList.push(robot);
+		io.sockets.emit('robotInfo', robotInfoList);
+	});
 });

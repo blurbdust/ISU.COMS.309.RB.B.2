@@ -1,6 +1,9 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
-#include <SuperServo.h>
+#include <IRremote.h>
+
+#define PIN_IR 10
+#define PIN_DETECT 4
 
 /**
 *
@@ -46,7 +49,7 @@ class SuperServo{
             pos += increment;
           }
           servo.write(pos);
-          Serial.println(pos);
+          //Serial.println(pos);
 
         }
       }
@@ -65,10 +68,16 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
+//number of times the IR thing has been hit
+int damage = 0;
+
 char InByte;
 int speed; 
 SuperServo servo_A(15);
 SuperServo servo_B(15);
+
+IRsend irsend;
+
 void setup()
 {
  Serial.begin(9600);
@@ -79,6 +88,7 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
+ pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
  speed = 100;
@@ -86,6 +96,12 @@ void setup()
  stop_A();
  stop_B();
 // delay(500);
+
+  //IR STUFF
+  digitalWrite(PIN_IR, HIGH);
+  pinMode(PIN_DETECT, INPUT);
+  //irsend.enableIROut(38);
+  //irsend.mark(0);
 }
 
 void loop()                     // run over and over again
@@ -94,6 +110,7 @@ void loop()                     // run over and over again
     InByte = Serial.read();
     check_Movement(InByte);
     check_Servo(InByte);
+    check_Fire(InByte);
     speed_Adjust();
     
   }
@@ -102,6 +119,23 @@ void loop()                     // run over and over again
   }
   if(servo_B.getInc() != 0){
      servo_B.Update();
+  }
+  //IR Stuff  
+  //if the ir sensor goes off, increase damage
+  if(digitalRead(PIN_DETECT) == LOW) {
+    damage++;
+    char msg[20];
+    sprintf(msg, "Damage: %d\n", damage);
+	  int bytesWritten = Serial.write(msg);
+    if (damage > 15){
+      speed = 0;
+    }
+    if (damage > 10){
+      speed = 10;
+    }
+    else {
+      speed = (100 - (damage * 5));
+    }
   }
 }
 
@@ -225,5 +259,16 @@ void speed_Adjust(){
   }  
   else if(InByte == '0'){
     speed = 100;
+  }
+}
+
+void check_Fire(char inByte){
+  if (inByte == 'K'){
+    //Set pin 10 to low.
+    digitalWrite(PIN_IR, LOW);
+  }
+  if (inByte == 'k'){
+    //Set pin 10 to high
+    digitalWrite(PIN_IR, HIGH);
   }
 }

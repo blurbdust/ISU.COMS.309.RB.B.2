@@ -4,9 +4,6 @@ var port = 3000;
 var userServer = require('http').createServer(app);
 var userIO = require('socket.io')(userServer);
 
-var robotListen = require('http').createServer;
-
-var robotIO = require('socket.io')(robotListen);
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var users = [];
@@ -43,11 +40,6 @@ app.use(express.static(__dirname + '/public'));
 userServer.listen(port, () => {
  console.log("User server listening on port " + port);
 });
-
-robotListen.listen(3001, () => {
- console.log("Robot server listening on port " + 3001);
-});
-
 
 app.get('/', function(req, res){
 	res.redirect('http://localhost:3000/' + 'login');
