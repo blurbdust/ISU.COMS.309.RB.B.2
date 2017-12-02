@@ -52,6 +52,10 @@ app.get("/spectator", (req, res) => {
 	res.sendFile(__dirname + "/spectator.html");
 }); 
 
+app.get("/profile", (req, res) => {
+	res.sendFile(__dirname + "/profile.html");
+}); 
+
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
@@ -330,7 +334,7 @@ io.on('connection', function(socket){
 				}
 				
 			}
-			console.log("Gunner: " + robotSocketList[0].gunner);
+			// console.log("Gunner: " + robotSocketList[0].gunner);
 		}
 		else if (socket.type == "Robot"){
 			console.log(socket.name + " disconnected");
