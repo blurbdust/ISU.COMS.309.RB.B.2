@@ -1,10 +1,10 @@
-var socket_server = connectToUserSocket();
+/*var socket_server = connectToUserSocket();
 var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
-/*
+
 socket_server.on('Robot Address', function(data){
   robot_ip = data.ip;
 });
-*/
+
 
 //Redirect user as instructed by server
 socket_server.on('redirect', function(destination) {
@@ -40,8 +40,11 @@ $(function () {
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });
 });
-	
+
+*/
+
 window.addEventListener("load", function(){
+  
   
   var buttonUp = document.getElementById('buttonUp');
   var buttonLeft = document.getElementById('buttonLeft');
@@ -50,6 +53,7 @@ window.addEventListener("load", function(){
   var buttonFire = document.getElementById('buttonFire');
   var logout = document.getElementById('logout');
   var lobby = document.getElementById('lobby');
+  
   
   buttonUp.addEventListener('mousedown', function() {
       console.log("I");
@@ -94,11 +98,46 @@ window.addEventListener("load", function(){
 
   buttonFire.addEventListener('mousedown', function() {
       console.log("K");
+	  
+	  var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      var centerX = canvas.width / 2;
+      var centerY = canvas.height / 2;
+      var radius = 20;
+	  context.beginPath();
+	  context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+	  context.lineWidth = 1;
+	  context.strokeStyle = 'red';
+	  context.stroke();
+	  
+	  for(var i=0; i < 3; i++){
+		setTimeout(function(){
+			radius -= 5;
+			context.beginPath();
+			context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+			context.lineWidth = 1;
+			context.strokeStyle = 'red';
+			context.stroke();
+			if(radius == 5){
+				context.fillStyle = 'red';
+				context.fill();
+			}
+			
+		}, ((i+1)*1000));
+	  }
+			
+		
       socket_robot.emit('Serial Movement', { dir: 'K'});
   });
   buttonFire.addEventListener('mouseup', function() {
       console.log("k");
-	  svgSelect.selectAll('circle').remove();
+	  
+		var canvas = document.getElementById('canvas');
+		var context = canvas.getContext('2d');
+		context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+	  
       socket_robot.emit('Serial Movement', { dir: 'k'});
   });
   
