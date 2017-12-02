@@ -104,6 +104,8 @@ app.post('/login', function(req, res) {
 		else {
 			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 		}
+		
+		con.end();
 	  });
 	});
 	
@@ -135,6 +137,8 @@ app.post('/create_account', function(req, res) {
 				//res.send("User created!");
 				res.sendFile(path.resolve(__dirname + '/login.html'));
 			}
+			
+			con.end();
 		});
 	});	
 });
@@ -179,6 +183,8 @@ io.on('connection', function(socket){
 					for (i = 0; i < result.length; i++) {
 						dbAccountList.push(result[i].Username);
 					}
+					
+					con.end();
 				});
 			});
 			setTimeout(function() {
@@ -228,6 +234,8 @@ io.on('connection', function(socket){
 			var sql = "UPDATE users SET isBanned = 1 WHERE Username = '" + data + "';";
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
+				
+				con.end();
 			});
 		});
 		
@@ -253,6 +261,8 @@ io.on('connection', function(socket){
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				dbAccountList.splice(dbAccountList.indexOf(data), 1);
+				
+				con.end();
 			});
 		});
 		
@@ -311,6 +321,10 @@ io.on('connection', function(socket){
 	
 	socket.on('chat message', function(msg){
 		io.emit('chat message', {message: msg, username: socket.username});
+	});
+	
+	socket.on('profile info', function(data) {
+		
 	});
 	
 	socket.on('disconnect', function() {
