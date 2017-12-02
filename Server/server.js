@@ -295,7 +295,7 @@ io.on('connection', function(socket){
 			robotSocketList[data.robotIndex].gunner = data.username;
 			robotInfoList[data.robotIndex].gunner = data.username;
 		}
-		else {
+		else if (data.operatorType == 'driver') {
 			robotSocketList[data.robotIndex].driver = data.username;
 			robotInfoList[data.robotIndex].driver = data.username;
 		}
