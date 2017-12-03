@@ -53,6 +53,12 @@ window.addEventListener("load", function(){
   var buttonFire = document.getElementById('buttonFire');
   var logout = document.getElementById('logout');
   var lobby = document.getElementById('lobby');
+  var charge;
+  var c1 = document.getElementById('c1');
+  var c2 = document.getElementById('c2');
+  var c3 = document.getElementById('c3');
+  var c4 = document.getElementById('c4');
+  var reticule = [c1, c2, c3, c4];
   
   
   buttonUp.addEventListener('mousedown', function() {
@@ -95,43 +101,6 @@ window.addEventListener("load", function(){
       console.log("m");
       socket_robot.emit('Serial Movement', { dir: 'm'});
   });
-
-  var charge;
-  var c1 = document.getElementById('c1');
-  var c2 = document.getElementById('c2');
-  var c3 = document.getElementById('c3');
-  var c4 = document.getElementById('c4');
-  var reticule = [c1, c2, c3, c4];
-  
-  /*buttonFire.addEventListener('mousedown', function() {
-      console.log("K");
-      var canvas = document.getElementById('canvas');
-      var context = canvas.getContext('2d');
-      var centerX = canvas.width / 2;
-      var centerY = canvas.height / 2;
-      var radius = 20;
-      context.beginPath();
-      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-      context.lineWidth = 1;
-      context.strokeStyle = 'red';
-      context.stroke();
-      
-      charge = setInterval(function(){
-          radius -= 5;
-          context.beginPath();
-          context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-          context.lineWidth = 1;
-          context.strokeStyle = 'red';
-          context.stroke();
-          if(radius == 5){
-              context.fillStyle = 'red';
-              context.fill();
-			  socket_robot.emit('Serial Movement', { dir: 'K'});
-          }
-      }, 750);
-      
-  });
-  */
   
   buttonFire.addEventListener('mousedown', function() {
 	   console.log("K");
@@ -151,19 +120,12 @@ window.addEventListener("load", function(){
 	   }, 750);
   });
   
-  
-  
-  
+
   buttonFire.addEventListener('mouseup', function() {
 	  console.log("k");
 	  clearInterval(charge);
 	  charge_level = 0;
-      /*
-	  var canvas = document.getElementById('canvas');
-      var context = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
-	  */ 
-	  
+
 	  for(var i=0; i<3; i++){
 		  reticule[i].setAttribute("stroke-opacity", 0); 
 	  }
