@@ -44,7 +44,7 @@ $(function () {
 */
 
 window.addEventListener("load", function(){
-  
+    
   
   var buttonUp = document.getElementById('buttonUp');
   var buttonLeft = document.getElementById('buttonLeft');
@@ -96,50 +96,84 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'm'});
   });
 
-  buttonFire.addEventListener('mousedown', function() {
+  var charge;
+  var c1 = document.getElementById('c1');
+  var c2 = document.getElementById('c2');
+  var c3 = document.getElementById('c3');
+  var c4 = document.getElementById('c4');
+  var reticule = [c1, c2, c3, c4];
+  
+  /*buttonFire.addEventListener('mousedown', function() {
       console.log("K");
-	  
-	  var canvas = document.getElementById('canvas');
+      var canvas = document.getElementById('canvas');
       var context = canvas.getContext('2d');
       var centerX = canvas.width / 2;
       var centerY = canvas.height / 2;
       var radius = 20;
-	  context.beginPath();
-	  context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-	  context.lineWidth = 1;
-	  context.strokeStyle = 'red';
-	  context.stroke();
-	  
-	  for(var i=0; i < 3; i++){
-		setTimeout(function(){
-			radius -= 5;
-			context.beginPath();
-			context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-			context.lineWidth = 1;
-			context.strokeStyle = 'red';
-			context.stroke();
-			if(radius == 5){
-				context.fillStyle = 'red';
-				context.fill();
-			}
-			
-		}, ((i+1)*1000));
-	  }
-			
-		
-      socket_robot.emit('Serial Movement', { dir: 'K'});
+      context.beginPath();
+      context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+      context.lineWidth = 1;
+      context.strokeStyle = 'red';
+      context.stroke();
+      
+      charge = setInterval(function(){
+          radius -= 5;
+          context.beginPath();
+          context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+          context.lineWidth = 1;
+          context.strokeStyle = 'red';
+          context.stroke();
+          if(radius == 5){
+              context.fillStyle = 'red';
+              context.fill();
+			  socket_robot.emit('Serial Movement', { dir: 'K'});
+          }
+      }, 750);
+      
   });
+  */
+  
+  buttonFire.addEventListener('mousedown', function() {
+	   console.log("K");
+	   charge_level = 1;
+	   reticule[charge_level - 1].setAttribute("stroke-opacity", 1);
+	   
+	   charge = setInterval(function(){
+		    charge_level++;
+		    if(charge_level < 4){
+				reticule[charge_level - 1].setAttribute("stroke-opacity", 1);
+		    }
+		    else if(charge_level == 4){
+				reticule[charge_level - 1].setAttribute("fill-opacity", 1);
+				socket_robot.emit('Serial Movement', { dir: 'K'});				
+		    }
+			
+	   }, 750);
+  });
+  
+  
+  
+  
   buttonFire.addEventListener('mouseup', function() {
-      console.log("k");
+	  console.log("k");
+	  clearInterval(charge);
+	  charge_level = 0;
+      /*
+	  var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height);
+	  */ 
 	  
-		var canvas = document.getElementById('canvas');
-		var context = canvas.getContext('2d');
-		context.clearRect(0, 0, canvas.width, canvas.height);
-
-
+	  for(var i=0; i<3; i++){
+		  reticule[i].setAttribute("stroke-opacity", 0); 
+	  }
+	  reticule[3].setAttribute("fill-opacity", 0);
 	  
       socket_robot.emit('Serial Movement', { dir: 'k'});
   });
+  
+  
+  
   
   var webcam_addr = "raspberrypi3-a.student.iastate.edu";
   var webcam_port = "12000";
