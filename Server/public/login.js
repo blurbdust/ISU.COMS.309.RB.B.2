@@ -1,5 +1,8 @@
-//Remove any previous username cookies
+//Remove any previous cookies
 document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+document.cookie = "ID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+document.cookie = "robotIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+document.cookie = "operatorType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
 
 function checkForEnter(event) {
 	if (event.keyCode == 13) {
@@ -35,8 +38,6 @@ function validateForm() {
 	
 	//Set initial cookie values
 	document.cookie = "username=" + uname + "; path=/"
-	document.cookie = "robotIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-	document.cookie = "operatorType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
 	return true;
 
 }
