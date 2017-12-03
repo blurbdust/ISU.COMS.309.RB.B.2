@@ -35,7 +35,7 @@ socket.on('usernames', function(data) {
 	document.getElementById("users").innerHTML = html;
 });
 
-//Display connected users
+//Display connected robots
 socket.emit('request robot list');
 socket.on('robotInfo', function(data) {
 	var html = '';
