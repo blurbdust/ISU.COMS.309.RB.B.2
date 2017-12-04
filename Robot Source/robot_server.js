@@ -104,17 +104,14 @@ io_RPI.on('connection', function(socket){
 		console.log("Writing: " + data.dir);
 	});
 
+	socket.on('request damage', function(damage){
+		socket.emit('damage update', damage);
+	});
 	socket.on('disconnect', function () {
 		console.log('A user disconnected');
 
 	});
-	
-	var lastDamage = damage;
-	if (lastDamage != damage){
-		socket.emit('something', function(data){
-			// Stuff chnaged
 			
-	
 	
 });
 
@@ -129,7 +126,6 @@ while(true){
 	else {
 		readInput = readInput.toString();
 		//console.log("Read: " + readInput);
-		lastDamage = damage;
 		damage = readInput.substring(readInput.indexOf(":"));
 		console.log("Damage updated to " + damage);
 		socket.emit("damage", robotIP + ":" + damage);

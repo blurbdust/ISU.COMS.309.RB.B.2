@@ -39,8 +39,6 @@ $(function () {
 });
 
 
-
-
 window.addEventListener("load", function(){
     
   
@@ -58,6 +56,19 @@ window.addEventListener("load", function(){
   var c4 = document.getElementById('c4'); 
   var c5 = document.getElementById('c5'); 
   var reticule = [c1, c2, c3, c4, c5];
+  
+  var health_container = document.getElementById('health_container');
+  var health_bar = document.getElementById('health_bar');
+  var health = 100;
+  
+  socket_robot.emit('request damage', function(){
+	  console.log('Requested damage');
+  });
+  
+  socket_server.on('damage update', function(damage){
+	  health -= (damage * 5);
+	  health_bar.setAttribute('width', health + "%");
+  });
 
   //laser-charging process and charging status
   var charge;  
@@ -92,8 +103,6 @@ window.addEventListener("load", function(){
 		}
 	};
  
-
-  
   buttonUp.addEventListener('mousedown', function() {
       console.log("I");
       socket_robot.emit('Serial Movement', { dir: 'I'});
@@ -231,6 +240,8 @@ window.addEventListener("load", function(){
 	  socket_robot.emit('Serial Movement', { dir: 'k'});
 	  
   }
+   
+  
    
 });
 
