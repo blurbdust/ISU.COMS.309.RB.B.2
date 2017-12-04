@@ -373,14 +373,48 @@ io.on('connection', function(socket){
 			if (err) throw err;
 			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
 				if (err) throw err;
-				
-				console.log("Username: " + username + " | ID: " + result[0].ID);
-				
 				socket.emit('get user id', result[0].ID);
 				con.end();
 			});
 		});
 		
+	});
+	
+	socket.on('edit display name', function(displayName) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET DisplayName = '" + displayName + "' WHERE Username = '" + socket.username + "';";
+			con.query(sql, function (err, result, fields) {
+				if (err) throw err;
+				con.end();
+			});
+		});
+		
+	});
+	
+	socket.on('edit bio', function(bio) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET Bio = '" + bio + "' WHERE Username = '" + socket.username + "';";
+			con.query(sql, function (err, result, fields) {
+				if (err) throw err;
+				con.end();
+			});
+		});
 	});
 	
 	
@@ -499,7 +533,7 @@ io.on('connection', function(socket){
 			}
 		}
 		
-		for(var i=0; i<userNameList; i++; i++){
+		for(var i=0; i<userNameList; i++){
 			if(gunnerToDamage == userNameList[i]){
 				userSocketList[i].emit('damage update', amount);
 			}
