@@ -68,10 +68,9 @@ app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
-/*app.get('/socket.io/*', function(req, res){
+app.get('/socket.io/*', function(req, res){
 	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
 });
-*/
 
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
@@ -494,9 +493,9 @@ io.on('connection', function(socket){
 		socket.driver = "";
 		socket.spectators = [];
 		socket.IP = socket.request.connection.remoteAddress;
-		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":"), socket.IP.toString.length);
+		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":")+1, socket.IP.toString().length);
 		robotSocketList.push(socket);
-		console.log("Robot " + socket.name + " connected.");
+		console.log("Robot " + socket.name + " connected with " + robotIP);
 		
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver, 'spectators':socket.spectators, 'ip':robotIP};

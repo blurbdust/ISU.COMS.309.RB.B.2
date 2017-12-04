@@ -10,6 +10,23 @@ socket.on('redirect', function(destination) {
 socket.emit('request user id', getCookie('username'));
 socket.on('get user id', function(id) {
 	document.cookie = "ID=" + id + "; path=/";
+	
+	//Set profile picture
+	var urlBase = "http://proj-309-rb-b-2.cs.iastate.edu:3000/avatars/";
+	var url = "";
+	if (urlExists(urlBase + getCookie("ID") + ".png")) {
+		url = urlBase + getCookie("ID") + ".png";
+	}
+	else if (urlExists(urlBase + getCookie("ID") + ".jpg")) {
+		url = urlBase + getCookie("ID") + ".jpg";
+	}
+	else if (urlExists(urlBase + getCookie("ID") + ".jpeg")) {
+		url = urlBase + getCookie("ID") + ".jpeg";
+	}
+	else {
+		url = urlBase + "default.jpg";
+	}
+	document.getElementById('profileLink').innerHTML = '<img src="' + url + '" class="profile-pic" alt="Profile Image"/>'
 });
 
 //Chat Box
@@ -84,4 +101,11 @@ function setOperator(index, operatorType) {
 		opType = "Gunner";
 	document.getElementById("" + operatorType + index).innerHTML = "<span style='font-size: 18px'>" + opType + ": " + obj.username + "</span>";
 	
+}
+
+function urlExists(url) {
+	var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
 }

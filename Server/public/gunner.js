@@ -11,12 +11,14 @@ socket_server.on('redirect', function(destination) {
 var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
 socket_server.emit('set user operator', obj);
 
-socket_server.emit("request-robotIP", function(){
-  console.log("Requested robotIP");
+socket_server.emit("request-robotIP", getCookie("username"), function(){
+  alert("Requested robotIP");
 });
 
 socket_server.on("robotIP", function(data){
   robot_ip = data;
+  console.log("Got new robot ip " + robot_ip);
+  socket_robot = io(robot_ip + ':5210');
 });
 
 var socket_robot = io(robot_ip + ':5210');
@@ -141,10 +143,10 @@ window.addEventListener("load", function(){
   });
   
   
-  var webcam_addr = robot_ip;
+  //var webcam_addr = robot_ip;
   var webcam_port = "12000";
   var webcam_host = $(".feed img");
-  var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
+  var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
 
 
   cam_socket.on("connection", function(socket){
