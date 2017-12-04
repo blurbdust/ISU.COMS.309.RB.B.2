@@ -383,6 +383,27 @@ io.on('connection', function(socket){
 		
 	});
 	
+	socket.on('edit display name', function(displayName) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
+				if (err) throw err;
+				
+				
+				
+				con.end();
+			});
+		});
+		
+	});
+	
 	
 	socket.on('disconnect', function() {
 		if (socket.type == "User"){

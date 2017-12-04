@@ -52,7 +52,11 @@ socket.on('profile info', function(data) {
 });
 
 function editDisplayName() {
-	var displayName = document.getElementById('displayName').innerHTML;
+	var displayName = prompt("Enter your new display name:", "Harry Potter");
+	
+	socket.emit ('edit display name', displayName);
+	socket.emit('request profile info', getCookie("username"));
+	
 	
 	
 }
