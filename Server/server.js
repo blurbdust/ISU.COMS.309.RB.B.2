@@ -498,10 +498,20 @@ io.on('connection', function(socket){
 
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = ""; // Something in SQL here
+			var sql = "SELECT * FROM users WHERE username = " + userToAward;
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
-				// Something here
+				
+				if (result[0].username != null) {
+					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + userToAward + "';";
+					con.query(sql);
+				}
+				else {
+					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + userToAward + "', 10);";
+					con query(sql);
+				}
+				
+				con.end();
 			});
 		});
 
