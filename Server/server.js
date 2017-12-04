@@ -504,11 +504,11 @@ io.on('connection', function(socket){
 				
 				if (result[0].username != null) {
 					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + userToAward + "';";
-					con.query(sql);
+					con.query(update);
 				}
 				else {
 					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + userToAward + "', 10);";
-					con query(sql);
+					con query(insert);
 				}
 				
 				con.end();
