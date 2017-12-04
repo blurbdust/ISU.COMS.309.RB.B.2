@@ -68,9 +68,10 @@ app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
-app.get('/socket.io/*', function(req, res){
+/*app.get('/socket.io/*', function(req, res){
 	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
 });
+*/
 
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
@@ -395,5 +396,45 @@ io.on('connection', function(socket){
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver, 'spectators':socket.spectators, 'ip':robotIP};
 		robotInfoList.push(robot);
 		io.sockets.emit('robotInfo', robotInfoList);
+	});
+
+	socket.on('damage', function(data){
+		var inp = data.toString();
+		var bot = inp.substring(0, inp.indexOf(":"));
+		var amount = inp.substring(inp.indexOf(":"));
+		console.log("Damage update requested. Robot: " + bot + " down to " + amount);
+
+	// Award points to other robot
+	// Go through active robot list
+	// Check for the one not equal to the bot
+	// points += 10;
+		var robotToAward;
+		var userToAward;
+
+
+		for(var i = 0; i < robotSocketList.length; i++){
+			if(robotSocketList[i].IP != bot){
+				robotToAward = robotSocketList[i].name;
+				userToAward = robotSocketList[i].gunner;
+			}
+		}
+
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = ""; // Something in SQL here
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+				// Something here
+			});
+		});
+
+
 	});
 });
