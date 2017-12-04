@@ -428,9 +428,11 @@ io.on('connection', function(socket){
 		for(i = 0; i < robotInfoList.length; i++) {
 			if(robotInfoList[i].gunner === data) {
 				socket.emit("redirect", "/gunner");
+				return;
 			}
 			if(robotInfoList[i].driver === data) {
 				socket.emit("redirect", "/driver");
+				return;
 			}
 		}
 		socket.emit("redirect", "/spectator");
