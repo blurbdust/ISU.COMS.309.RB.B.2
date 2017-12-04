@@ -1,11 +1,11 @@
 var socket_server = connectToUserSocket();
 var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
 
-/*
+
 socket_server.on('Robot Address', function(data){
   robot_ip = data.ip;
 });
-*/
+
 
 //Redirect user as instructed by server
 socket_server.on('redirect', function(destination) {
@@ -197,7 +197,7 @@ window.addEventListener("load", function(){
 	  
 	  if(charge_level >= 4){
 		  console.log('start fire');
-		  socket_robot.emit('Serial Movement', { dir: 'K'});
+		  //socket_robot.emit('Serial Movement', { dir: 'K'});
 		  
 		  var op = [.2,.4,.6,1,1];
 		  reticule[4].setAttribute("fill-opacity", op);
@@ -232,7 +232,7 @@ window.addEventListener("load", function(){
 	  clearInterval(charge);
 	  charge_level = 0;
 	  charging = 0;
-	  socket_robot.emit('Serial Movement', { dir: 'k'});
+	 // socket_robot.emit('Serial Movement', { dir: 'k'});
 	  
   }
    
