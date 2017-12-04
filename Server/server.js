@@ -373,9 +373,6 @@ io.on('connection', function(socket){
 			if (err) throw err;
 			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
 				if (err) throw err;
-				
-				console.log("Username: " + username + " | ID: " + result[0].ID);
-				
 				socket.emit('get user id', result[0].ID);
 				con.end();
 			});
@@ -400,6 +397,24 @@ io.on('connection', function(socket){
 			});
 		});
 		
+	});
+	
+	socket.on('edit bio', function(bio) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET Bio = '" + bio + "' WHERE Username = '" + socket.username + "';";
+			con.query(sql, function (err, result, fields) {
+				if (err) throw err;
+				con.end();
+			});
+		});
 	});
 	
 	

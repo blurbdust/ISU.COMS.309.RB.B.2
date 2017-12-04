@@ -58,8 +58,9 @@ function editDisplayName() {
 }
 
 function editBio() {
-	
-	
+	var bio = prompt("Enter your new bio:", "I am the chosen one!");
+	socket.emit ('edit bio', bio);
+	socket.emit('request profile info', getCookie("username"));
 }
 
 
