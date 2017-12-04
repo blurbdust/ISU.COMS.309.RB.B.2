@@ -23,6 +23,16 @@ socket.on('profile info', function(data) {
 		document.getElementById('onlineStatus').style.color = "red";
 	}
 	
+	//Set edit buttons
+	if (data.username == getCookie("username")) {
+		document.getElementById('displayNameButton').innerHTML = "<button onclick='editDisplayName();'>Edit</button>";
+		document.getElementById('bioButton').innerHTML = "<button onclick='editBio();'>Edit</button>";
+	}
+	else {
+		document.getElementById('displayNameButton').innerHTML = "";
+		document.getElementById('bioButton').innerHTML = "";
+	}
+	
 	//Set profile picture
 	var urlBase = "http://proj-309-rb-b-2.cs.iastate.edu:3000/avatars/";
 	var url = "";
@@ -40,6 +50,18 @@ socket.on('profile info', function(data) {
 	}
 	document.getElementById('profilePic').innerHTML = '<img src="' + url + '" class="avatar" alt="Profile Image"/>'
 });
+
+function editDisplayName() {
+	var displayName = document.getElementById('displayName').innerHTML;
+	
+	
+}
+
+function editBio() {
+	
+	
+}
+
 
 function urlExists(url) {
 	var http = new XMLHttpRequest();
