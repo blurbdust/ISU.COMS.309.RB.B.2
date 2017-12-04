@@ -105,6 +105,8 @@ app.post('/login', function(req, res) {
 		else {
 			res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 		}
+		
+		con.end();
 	  });
 	});
 	
@@ -136,6 +138,8 @@ app.post('/create_account', function(req, res) {
 				//res.send("User created!");
 				res.sendFile(path.resolve(__dirname + '/login.html'));
 			}
+			
+			con.end();
 		});
 	});	
 });
@@ -180,11 +184,11 @@ io.on('connection', function(socket){
 					for (i = 0; i < result.length; i++) {
 						dbAccountList.push(result[i].Username);
 					}
+					io.sockets.emit('dblist', dbAccountList);	
+					
+					con.end();
 				});
-			});
-			setTimeout(function() {
-				io.sockets.emit('dblist', dbAccountList);	
-			}, 200);			
+			});		
 		}
 	});
 	
@@ -229,6 +233,8 @@ io.on('connection', function(socket){
 			var sql = "UPDATE users SET isBanned = 1 WHERE Username = '" + data + "';";
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
+				
+				con.end();
 			});
 		});
 		
@@ -254,14 +260,13 @@ io.on('connection', function(socket){
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				dbAccountList.splice(dbAccountList.indexOf(data), 1);
+				io.sockets.emit('dblist', dbAccountList);	
+				
+				con.end();
 			});
 		});
-		
-		setTimeout(function() {
-			io.sockets.emit('dblist', dbAccountList);	
-		}, 200);
-		
 	});
+	
 	socket.on('spectate', function(data){
 		for(var i=0; i<robotSocketList.length; i++){
 			if(data == robotSocketList[i].name){
@@ -313,6 +318,71 @@ io.on('connection', function(socket){
 	socket.on('chat message', function(msg){
 		io.emit('chat message', {message: msg, username: socket.username});
 	});
+	
+	socket.on('request profile info', function(username) {
+	
+		//Initialize variables
+		var displayName = "";
+		var bio = "";
+		var onlineStatus = false;
+		
+		
+		//Check database for Display Name and Bio
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		con.connect(function(err) {
+			if (err) throw err;
+			
+			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
+				if (err) throw err;
+				
+				if (result[0].DisplayName != null) 
+					displayName = result[0].DisplayName;
+				if (result[0].Bio != null)
+					bio = result[0].Bio;
+				
+				//Check if user is online
+				for (i = 0; i < userNameList.length; i++) {
+					if (userNameList[i] == username)
+						onlineStatus = true;
+				}
+				
+				//Emit findings
+				var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus};
+				socket.emit('profile info', info);
+				
+				con.end();
+			});
+		});
+	});
+	
+	socket.on('request user id', function(username) {
+		
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
+				if (err) throw err;
+				
+				console.log("Username: " + username + " | ID: " + result[0].ID);
+				
+				socket.emit('get user id', result[0].ID);
+				con.end();
+			});
+		});
+		
+	});
+	
 	
 	socket.on('disconnect', function() {
 		if (socket.type == "User"){

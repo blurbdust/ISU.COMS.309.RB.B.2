@@ -6,6 +6,46 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
-function testFunction() {
-	alert('This button was clicked');
+socket.emit('request profile info', getCookie("username"));
+
+socket.on('profile info', function(data) {
+	
+	document.getElementById('username').innerHTML = data.username;
+	document.getElementById('displayName').innerHTML = data.displayName;
+	document.getElementById('bio').innerHTML = data.bio;
+	
+	if (data.onlineStatus == true) {
+		document.getElementById('onlineStatus').innerHTML = "Online";
+		document.getElementById('onlineStatus').style.color = "green";
+	}
+	else {
+		document.getElementById('onlineStatus').innerHTML = "Offline";
+		document.getElementById('onlineStatus').style.color = "red";
+	}
+	
+	//Set profile picture
+	var urlBase = "http://proj-309-rb-b-2.cs.iastate.edu:3000/avatars/";
+	var url = "";
+	if (urlExists(urlBase + data.ID + ".png")) {
+		url = urlBase + data.ID + ".png";
+	}
+	else if (urlExists(urlBase + data.ID + ".jpg")) {
+		url = urlBase + data.ID + ".jpg";
+	}
+	else if (urlExists(urlBase + data.ID + ".jpeg")) {
+		url = urlBase + data.ID + ".jpeg";
+	}
+	else {
+		url = urlBase + "default.jpg";
+	}
+	document.getElementById('profilePic').innerHTML = '<img src="' + url + '" class="avatar" alt="Profile Image"/>'
+});
+
+function urlExists(url) {
+	var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
 }
+		
+		

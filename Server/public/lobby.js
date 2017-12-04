@@ -6,6 +6,12 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
+//Set ID cookie
+socket.emit('request user id', getCookie('username'));
+socket.on('get user id', function(id) {
+	document.cookie = "ID=" + id + "; path=/";
+});
+
 //Chat Box
 $(function () {
 	$('#msgform').submit(function(){
@@ -35,7 +41,7 @@ socket.on('usernames', function(data) {
 	document.getElementById("users").innerHTML = html;
 });
 
-//Display connected users
+//Display connected robots
 socket.emit('request robot list');
 socket.on('robotInfo', function(data) {
 	var html = '';

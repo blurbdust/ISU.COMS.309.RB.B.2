@@ -50,7 +50,7 @@
 			}
 
 			img.avatar {
-				width: 40%;
+				max-height: 300px;
 				border-radius: 50%;
 			}
 
@@ -63,6 +63,10 @@
 				padding-top: 16px;
 			}
 			
+			.content {
+				margin: 15px;
+			}
+			
 			
 		
 		</style>
@@ -71,22 +75,21 @@
 	<body>
 
 		<div id="wrapper">
-			<h2>Profile</h2>
+			<h2 id='username'>Profile</h2>
 
 			<div id='wrapper2'>
 				
 				<!--Logo-->
-				<div class="imgcontainer">
-					<img src="http://proj-309-rb-b-2.cs.iastate.edu:3000/logo.png" class="avatar" alt="CyBots"/>
+				<div id='profilePic' class="imgcontainer">
+					<img src="http://proj-309-rb-b-2.cs.iastate.edu:3000/avatars/default.jpg" class='avatar' alt="Profile Image"/>
 				</div>
 				
-				
-			
-				<!--TODO - the rest-->
-			
-			
-			
-			
+				<div class='content'>
+					<p><strong>Display Name:</strong> <span id='displayName'></span> <!--<button onclick="editDisplayName();">Edit</button>--></p>
+					<p><strong>Bio:</strong> <span id='bio'></span> <!--<button onclick="editBio();">Edit</button>--></p>
+					<p><strong>Online Status:</strong> <span id='onlineStatus'></span>
+				</div>
+					
 			</div>
 		</div>
 	</body>
@@ -95,7 +98,6 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 		<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/cookies.js"></script>
 		<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/profile.js"></script>
-		
 	</footer>
 	
 </html>
