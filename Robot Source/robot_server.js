@@ -1,4 +1,7 @@
 var io = require('socket.io-client');
+var ip = require('ip');
+
+var robotIP = ip.address()
 var macAddress;
 
 require('getmac').getMac(function(err, data){
@@ -119,7 +122,7 @@ while(true){
 		//console.log("Read: " + readInput);
 		var damage = readInput.substring(readInput.indexOf(":"));
 		console.log("Damage updated to " + damage);
-		socket.emit("damage", damage);
+		socket.emit("damage", robotIP + ":" + damage);
 	}
 }
 
