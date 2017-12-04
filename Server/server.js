@@ -483,6 +483,9 @@ io.on('connection', function(socket){
 		var robotToAward;
 		var gunnerToAward;
 		var driverToAward;
+		
+		var gunnerToDamage;
+		var driverToDamage;
 
 		for(var i = 0; i < robotSocketList.length; i++){
 			if(robotSocketList[i].IP != bot){
@@ -490,13 +493,17 @@ io.on('connection', function(socket){
 				gunnerToAward = robotSocketList[i].gunner;
 				driverToAward = robotSocketList[i].driver;
 			}
+			else{
+				gunnerToDamage = robotSocketList[i].gunner;
+				driverToDamage = robotSocketList[i].driver;
+			}
 		}
 		
 		for(var i=0; i<userNameList; i++; i++){
-			if(gunnerToAward == userNameList[i]){
+			if(gunnerToDamage == userNameList[i]){
 				userSocketList[i].emit('damage update', amount);
 			}
-			if(driverToAward == userNameList[i]){
+			if(driverToDamage == userNameList[i]){
 				userSocketList[i].emit('damage update', amount);
 			}
 		}
