@@ -479,13 +479,23 @@ io.on('connection', function(socket){
 	// Check for the one not equal to the bot
 	// points += 10;
 		var robotToAward;
-		var userToAward;
-
+		var gunnerToAward;
+		var driverToAward;
 
 		for(var i = 0; i < robotSocketList.length; i++){
 			if(robotSocketList[i].IP != bot){
 				robotToAward = robotSocketList[i].name;
-				userToAward = robotSocketList[i].gunner;
+				gunnerToAward = robotSocketList[i].gunner;
+				driverToAward = robotSocketList[i].driver;
+			}
+		}
+		
+		for(var i=0; i<userNameList; i++; i++){
+			if(gunnerToAward == userNameList[i]){
+				userSocketList[i].emit('damage update', amount);
+			}
+			if(driverToAward == userNameList[i]){
+				userSocketList[i].emit('damage update', amount);
 			}
 		}
 
@@ -498,22 +508,43 @@ io.on('connection', function(socket){
 
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = "SELECT * FROM users WHERE username = " + userToAward;
+			var sql = "SELECT * FROM users WHERE username = " + gunnerToAward;
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				
 				if (result[0].username != null) {
-					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + userToAward + "';";
+					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + gunnerToAward + "';";
 					con.query(update);
 				}
 				else {
-					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + userToAward + "', 10);";
+					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + gunnerToAward + "', 10);";
 					con.query(insert);
 				}
 				
 				con.end();
 			});
 		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "SELECT * FROM users WHERE username = " + driverToAward;
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+				
+				if (result[0].username != null) {
+					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + driverToAward + "';";
+					con.query(update);
+				}
+				else {
+					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + driverToAward + "', 10);";
+					con.query(insert);
+				}
+				
+				con.end();
+			});
+		});
+		
+		
 
 
 	});

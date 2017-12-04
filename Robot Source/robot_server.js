@@ -93,6 +93,7 @@ socket.on('disconnect', function(){
 	console.log("Disconnected From Central Server");
 });
 
+var damage = 0;
 
 io_RPI.on('connection', function(socket){
 
@@ -107,6 +108,14 @@ io_RPI.on('connection', function(socket){
 		console.log('A user disconnected');
 
 	});
+	
+	var lastDamage = damage;
+	if (lastDamage != damage){
+		socket.emit('something', function(data){
+			// Stuff chnaged
+			
+	
+	
 });
 
 webcam_server.broadcast();
@@ -120,7 +129,8 @@ while(true){
 	else {
 		readInput = readInput.toString();
 		//console.log("Read: " + readInput);
-		var damage = readInput.substring(readInput.indexOf(":"));
+		lastDamage = damage;
+		damage = readInput.substring(readInput.indexOf(":"));
 		console.log("Damage updated to " + damage);
 		socket.emit("damage", robotIP + ":" + damage);
 	}
