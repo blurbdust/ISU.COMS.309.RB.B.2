@@ -197,7 +197,7 @@ window.addEventListener("load", function(){
 	  
 	  if(charge_level >= 4){
 		  console.log('start fire');
-		  //socket_robot.emit('Serial Movement', { dir: 'K'});
+		  socket_robot.emit('Serial Movement', { dir: 'K'});
 		  
 		  var op = [.2,.4,.6,1,1];
 		  reticule[4].setAttribute("fill-opacity", op);
@@ -232,7 +232,7 @@ window.addEventListener("load", function(){
 	  clearInterval(charge);
 	  charge_level = 0;
 	  charging = 0;
-	 // socket_robot.emit('Serial Movement', { dir: 'k'});
+	  socket_robot.emit('Serial Movement', { dir: 'k'});
 	  
   }
    
