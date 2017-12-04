@@ -60,7 +60,7 @@ function editDisplayName() {
 
 function editBio() {
 	var bio = prompt("Enter your new bio:", "I am the chosen one!");
-	bio = bio.replace("'", "\'");
+	//TODO - Fix single quotes
 	socket.emit ('edit bio', bio);
 	socket.emit('request profile info', getCookie("username"));
 }
