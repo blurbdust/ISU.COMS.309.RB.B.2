@@ -31,12 +31,12 @@ var socket_robot = io(robot_ip + ':5210');
 //Chat Box
 $(function () {
   $('#msgform').submit(function(){
-    socket_server.emit('chat message', $('#m').val());
+    socket_server.emit('chat message lobby', $('#m').val());
     $('#m').val('');
     return false;
   });
   socket_server.on('chat message', function(msg){
-    $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
+    $('#messages').append($('<li><strong>[' + msg.type + ']' + msg.username + ":</strong> " + msg.message + '</li>'));
     var chatDiv = document.getElementById("chat-box");
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });

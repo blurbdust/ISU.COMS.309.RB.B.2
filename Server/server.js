@@ -315,10 +315,18 @@ io.on('connection', function(socket){
 	});
 	
 	
-	socket.on('chat message', function(msg){
-		io.emit('chat message', {message: msg, username: socket.username});
+	socket.on('chat message lobby', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'lobby'});
 	});
-	
+	socket.on('chat message gunner', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'gunner'});
+	});
+	socket.on('chat message driver', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'driver'});
+	});
+	socket.on('chat message spectator', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'spectator'});
+	});
 	socket.on('request profile info', function(username) {
 	
 		//Initialize variables
