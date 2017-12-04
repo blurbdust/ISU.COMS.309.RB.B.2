@@ -55,6 +55,19 @@ window.addEventListener("load", function(){
   var buttonDownRight = document.getElementById('buttonDownRight');
   var logout = document.getElementById('logout');
   var lobby = document.getElementById('lobby');
+  
+  var health_container = document.getElementById('health_container');
+  var health_bar = document.getElementById('health_bar');
+  var health = 100;
+  
+  socket_robot.emit('request damage', function(){
+	  console.log('Requested damage');
+  });
+  
+  socket_server.on('damage update', function(damage){
+	  health -= (damage * 5);
+	  health_bar.setAttribute('width', health + "%");
+  });
 
   //up left
   buttonUpLeft.addEventListener('mousedown', function() {
