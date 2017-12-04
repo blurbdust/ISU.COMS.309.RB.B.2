@@ -393,11 +393,9 @@ io.on('connection', function(socket){
 		
 		con.connect(function(err) {
 			if (err) throw err;
-			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
+			var sql = "UPDATE users SET DisplayName = '" + displayName + "' WHERE Username = '" + socket.username + "';";
+			con.query(sql, function (err, result, fields) {
 				if (err) throw err;
-				
-				
-				
 				con.end();
 			});
 		});
@@ -520,7 +518,7 @@ io.on('connection', function(socket){
 			}
 		}
 		
-		for(var i=0; i<userNameList; i++; i++){
+		for(var i=0; i<userNameList; i++){
 			if(gunnerToDamage == userNameList[i]){
 				userSocketList[i].emit('damage update', amount);
 			}
