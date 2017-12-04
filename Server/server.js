@@ -508,7 +508,7 @@ io.on('connection', function(socket){
 				}
 				else {
 					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + userToAward + "', 10);";
-					con query(insert);
+					con.query(insert);
 				}
 				
 				con.end();
