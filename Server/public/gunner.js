@@ -1,10 +1,11 @@
 var socket_server = connectToUserSocket();
 var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
-/*
+
+
 socket_server.on('Robot Address', function(data){
   robot_ip = data.ip;
 });
-*/
+
 
 //Redirect user as instructed by server
 socket_server.on('redirect', function(destination) {
@@ -40,8 +41,12 @@ $(function () {
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });
 });
-	
+
+
+
+
 window.addEventListener("load", function(){
+    
   
   var buttonUp = document.getElementById('buttonUp');
   var buttonLeft = document.getElementById('buttonLeft');
@@ -50,6 +55,48 @@ window.addEventListener("load", function(){
   var buttonFire = document.getElementById('buttonFire');
   var logout = document.getElementById('logout');
   var lobby = document.getElementById('lobby');
+  
+  var c1 = document.getElementById('c1');
+  var c2 = document.getElementById('c2');
+  var c3 = document.getElementById('c3');
+  var c4 = document.getElementById('c4'); 
+  var c5 = document.getElementById('c5'); 
+  var reticule = [c1, c2, c3, c4, c5];
+
+  //laser-charging process and charging status
+  var charge;  
+  var charging = 0;
+  var charge_level = 0;
+  
+  //keydown handler
+  window.onkeydown = function(e){
+	  var key = e.keyCode
+	  
+	  //prevent spacebar from scrolling
+	  if(key == '32' && e.target == document.body) {
+			e.preventDefault();
+	  }
+	  
+	  //start fire
+	  if(key == '32' && charging != 1){
+		  charging = 1;
+		  fireStart();
+	  }
+  };
+  
+  //keyup handler
+  window.onkeyup = function(e){
+		var key = e.keyCode
+		//console.log(key);
+		
+		//stop fire
+		if(key =='32'){
+			charging = 0;
+			fireStop();
+		}
+	};
+ 
+
   
   buttonUp.addEventListener('mousedown', function() {
       console.log("I");
@@ -91,16 +138,14 @@ window.addEventListener("load", function(){
       console.log("m");
       socket_robot.emit('Serial Movement', { dir: 'm'});
   });
-
-  buttonFire.addEventListener('mousedown', function() {
-      console.log("K");
-      socket_robot.emit('Serial Movement', { dir: 'K'});
+  
+  buttonFire.addEventListener('mousedown', function(){
+	  fireStart();
   });
-  buttonFire.addEventListener('mouseup', function() {
-      console.log("k");
-	  svgSelect.selectAll('circle').remove();
-      socket_robot.emit('Serial Movement', { dir: 'k'});
+  buttonFire.addEventListener('mouseup', function(){
+	  fireStop();
   });
+  
   
   var webcam_addr = "raspberrypi3-a.student.iastate.edu";
   var webcam_port = "12000";
@@ -126,5 +171,70 @@ window.addEventListener("load", function(){
     console.log("Redirecting back to lobby");
     window.location.href = 'http://proj-309-rb-b-2.cs.iastate.edu:3000/lobby';
   });
+  
+  function fireStart(){
+	  console.log("K");
+	   charge_level = 1;
+	   reticule[charge_level - 1].setAttribute("stroke-opacity", .2);
 
+		charge = setInterval(function(){
+			charge_level++;
+			if(charge_level == 2){
+				reticule[charge_level - 1].setAttribute("stroke-opacity", .4);
+			}
+			else if (charge_level == 3){
+				reticule[charge_level - 1].setAttribute("stroke-opacity", .6);
+			}
+			else if(charge_level == 4){
+				reticule[charge_level - 1].setAttribute("fill-opacity", 1);		
+			}
+				
+		}, 750);  
+  }
+  
+  function fireStop(){
+	  console.log("k");
+	  
+	  if(charge_level >= 4){
+		  console.log('start fire');
+		  //socket_robot.emit('Serial Movement', { dir: 'K'});
+		  
+		  var op = [.2,.4,.6,1,1];
+		  reticule[4].setAttribute("fill-opacity", op);
+		  var fire;
+		  fire = setInterval(function(){
+			 
+			 
+			for(var i=0; i< 3; i++){
+				reticule[i].setAttribute("stroke-opacity",op[i]); 
+			}
+			reticule[3].setAttribute("fill-opacity", op[3]);
+			reticule[4].setAttribute("fill-opacity", op[4]);
+
+			
+			if(op[4] <= 0){
+			  clearInterval(fire);
+		    }
+			
+			for(var j=0; j<5; j++){
+				op[j] = op[j] - .1;
+			}
+		  },70);
+		  console.log('stop fire');
+	  }
+	  else {
+		  for(var i=0; i<3; i++){
+			reticule[i].setAttribute("stroke-opacity", 0); 
+		  }
+		  reticule[3].setAttribute("fill-opacity", 0);
+		  reticule[4].setAttribute("fill-opacity", 0);
+	  }
+	  clearInterval(charge);
+	  charge_level = 0;
+	  charging = 0;
+	 // socket_robot.emit('Serial Movement', { dir: 'k'});
+	  
+  }
+   
 });
+
