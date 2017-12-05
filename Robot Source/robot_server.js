@@ -92,6 +92,8 @@ socket.on('connect', function(){
 		robotName = 'Excalibur';
 	else if (macAddress == 'b8:27:eb:41:0b:d5')
 		robotName = 'Cornelius';
+	else if (macAddress == 'b8:27:eb:60:3d:21')
+		robotName = 'Mr. Robot';
 	else
 		robotName = macAddress;
 	
