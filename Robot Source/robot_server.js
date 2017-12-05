@@ -60,7 +60,7 @@ const webcam_server = new LiveCam({
 	'ui_port' : 11000,
 	'broadcast_addr' : ip.address(),
 	'broadcast_port' : 12000,
-	'gst_tcp_addr' : ip.address(),
+	'gst_tcp_addr' : '0.0.0.0',
 	'gst_tcp_port' : 10000,
 	'start' : function(){
 		console.log('WebCam server started!');
