@@ -155,6 +155,7 @@ window.addEventListener("load", function(){
   //var webcam_addr = robot_ip;
   var webcam_port = "12000";
   var webcam_host = $(".feed img");
+  console.log(robot_ip);
   var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
 
 
