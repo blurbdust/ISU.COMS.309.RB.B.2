@@ -518,7 +518,7 @@ io.on('connection', function(socket){
 		var userLeaderboardList = [];
 		con.connect(function(err) {
 			if (err) throw err;
-			con.query("SELECT * FROM leaderboardUser", function (err, result, fields) {
+			con.query("SELECT * FROM leaderboardUser ORDER BY totalPoints DESC", function (err, result, fields) {
 				if (err) throw err;
 				for (i = 0; i < result.length; i++) {
 						userLeaderboardList.push(result[i]);
@@ -544,7 +544,7 @@ io.on('connection', function(socket){
 		var robotLeaderboardList = [];
 		con.connect(function(err) {
 			if (err) throw err;
-			con.query("SELECT * FROM leaderboardRobot", function (err, result, fields) {
+			con.query("SELECT * FROM leaderboardRobot ORDER BY totalPoints DESC", function (err, result, fields) {
 				if (err) throw err;
 				for (i = 0; i < result.length; i++) {
 						robotLeaderboardList.push(result[i]);
