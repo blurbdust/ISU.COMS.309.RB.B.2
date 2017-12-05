@@ -1,42 +1,91 @@
+var socket = connectToUserSocket();	
 
-// instanciate new modal
-var modal = new tingle.modal({
-    footer: true,
-    stickyFooter: false,
-    closeMethods: ['overlay', 'button', 'escape'],
-    closeLabel: "Close",
-    cssClass: ['custom-class-1', 'custom-class-2'],
-    onOpen: function() {
-        console.log('modal open');
-    },
-    onClose: function() {
-        console.log('modal closed');
-    },
-    beforeClose: function() {
-        // here's goes some logic
-        // e.g. save content before closing the modal
-        return true; // close the modal
-    	return false; // nothing happens
-    }
-});
+		
+function viewFriends(){
+	socket.emit('request friend list', getCookie("ID"));
+	socket.on('friend list update', function(list){
 
-// set content
-modal.setContent('<h1>here\'s some content</h1>');
+		var friendsList = bootbox.dialog({
+			title: "Friend List",
+			message: "<svg></svg> <script> "+
+			"var svgSel = d3.select('svg')"+
+				".attr('x', '0')"+
+				".attr('y', '0')"+
+				".attr('width', '100%')"+
+				".attr('height', '100%'); "+
+				
+			"svgSel.append('rect')"+
+				".attr('x', '0%')"+
+				".attr('y', '0%')"+
+				".attr('width', '100%')"+
+				".attr('height', '100%')"+
+				".style('fill', '#f0f0f0'); "+
+				
+			"var zebraGroup = svgSel.append('g'); "+
+			
+			"var color; " +
+			"for(var j=0, var i = 6; i < 100; j++, i+= 3){ " +
+				"if(j%2==0){ color ='#bababa';} " +
+				"else{ color='#f0f0f0';} " +
+				
+				"zebraGroup.append('rect')" +
+					".attr('x', '0%')" +
+					".attr('y', i +'%')" + 
+					".attr('width', '100%')" +
+					".attr('height', '4%')" +
+					".style('fill', color);"+
+			 "} "+
+			 
+			 "zebraGroup.append('text')" +
+				".attr('x', '2%')" +
+				".attr('y', '4%')" + 
+				".attr('font-size' , '28px')" +
+				".attr('font-weight', '600')" +
+				".attr('font-family', 'trebuchet ms')" +
+				".style('fill','#0070C0')" +
+				".text('Friend'); "+
 
-// add a button
-modal.addFooterBtn('Button label', 'tingle-btn tingle-btn--primary', function() {
-    // here goes some logic
-    modal.close();
-});
+			"zebraGroup.append('text')" +
+				".attr('x', '80%')" +
+				".attr('y', '4%')" + 
+				".attr('font-size' , '28px')" +
+				".attr('font-weight', '600') " +
+				".attr('font-family', 'trebuchet ms')" +
+				".style('fill','#0070C0')" +
+				".text('Online');"+
+			
+			"var friendNames = zebraGroup.append('g'); " +
+			"friendNames.selectAll('text').remove(); " +
+			
+			"var k = '.8%'; "+
+			
+			"friendNames.selectAll('text')"+
+				".data(list)"+
+				".enter()" +
+					".attr('x', '3%')"+
+					".attr('y', k + 3 + '%')"+
+					".text(function(d){ " +
+						"return d.name});" +
+					
+			"var friendStatus = zebraGroup.append('g');"+
+			"friendStatus.selectAll('text').remove(); " +
+			
+			"k = '.8%';" +
+			
+			"friendStatus.selectAll('text')"+
+				".data(list)"+
+				".enter()" +
+					".attr('x', '3%')"+
+					".attr('y', k + 3 + '%')"+
+					".text(function(d){ " +
+					"return d.online});" +
+		"</script>"
+		
+		});
+	});
 
-// add another button
-modal.addFooterBtn('Dangerous action !', 'tingle-btn tingle-btn--danger', function() {
-    // here goes some logic
-    modal.close();
-});
 
-// open modal
-modal.open();
+}
 
-// close modal
-modal.close();
+
+

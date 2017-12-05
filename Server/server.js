@@ -660,9 +660,37 @@ io.on('connection', function(socket){
 				con.end();
 			});
 		});
+	});
+	
+	//Client request for User Leaderboard
+	socket.on('request friend list', function(UserID) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		var friendList = [];
+		var friendIDList = [];
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM friends WHERE UserID = " + UserID, function (err, result, fields) {
+				if (err) throw err;
+				for (i = 0; i < result.length; i++) {
+						friendIDList.push(result[i].FriendID);
+				}
+				for(i=0; i<friendIDList.length; i++){
+					con.query("SELECT * FROM users WHERE ID = " + friendIDList[i], function(err, result, fields){
+						friendList[i].push({"name":result[0].Username, "online":userNameList.contains(result[0].Username)});
+					}					
+				}
+				
+				
+				//Send friend list
+				socket.emit('friend list update', friendList);
+				con.end();
+			});
+		});
 		
-		
-
-
 	});
 });
