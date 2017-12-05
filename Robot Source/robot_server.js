@@ -130,6 +130,9 @@ io_RPI.on('connection', function(socket){
 webcam_server.broadcast();
 
 while(true){
+	if (serialPort == undefined){
+		continue;
+	}
 	var readInput = serialPort.read(512);
 	if (readInput == null){
 		//console.log("Read is null");
