@@ -155,17 +155,23 @@ window.addEventListener("load", function(){
   //var webcam_addr = robot_ip;
   var webcam_port = "12000";
   var webcam_host = $(".feed img");
+  var cam_socket;
   console.log(robot_ip);
-  var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+  if (robot_ip == "http://raspberrypi3-a.student.iastate.edu"){
+    while (robot_ip == "http://raspberrypi3-a.student.iastate.edu"){
+    sleep(0.1);
+    }
+  }
+  else {
+    cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+    cam_socket.on("connection", function(socket){
+      console.log("Connected to camera");
+    });
 
-
-  cam_socket.on("connection", function(socket){
-    console.log("Connected to camera");
-  });
-
-  cam_socket.on('image', function (data) {
-    webcam_host.attr("src", "data:image/jpeg;base64," + data );
-  });
+    cam_socket.on('image', function (data) {
+      webcam_host.attr("src", "data:image/jpeg;base64," + data );
+    });
+  }
 
   logout.addEventListener('mouseup', function(){
     console.log("Logging out...");
