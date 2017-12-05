@@ -72,7 +72,7 @@ socket.on('robotInfo', function(data) {
 		if (data[i].gunner != "")
 			html += data[i].gunner + "</span><br/>";
 		else {
-			var varString = '' + i + ', "gunner", ' + data[i].name;
+			var varString = '' + i + ', "gunner", "' + data[i].name + '"';
 			html += "<button type='button' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
 		}
 		
@@ -81,7 +81,7 @@ socket.on('robotInfo', function(data) {
 		if (data[i].driver != "")
 			html += data[i].driver + "</span><br/>";
 		else {
-			var varString = '' + i + ', "driver", ' + data[i].name;
+			var varString = '' + i + ', "driver", "' + data[i].name + '"';
 			html += "<button type='button' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
 		}
 		html += '<br />';
