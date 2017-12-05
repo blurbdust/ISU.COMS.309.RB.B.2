@@ -271,7 +271,7 @@ function buildUserLeaderboard(data){
 			.attr('font-family', 'trebuchet ms')
 			.style('fill','#0070C0')
 			.text(function(d){
-				return d['name'];
+				return d['username'];
 			});
 			
 	/*
@@ -287,7 +287,7 @@ function buildUserLeaderboard(data){
 			.attr('font-family', 'trebuchet ms')
 			.style('fill','#0070C0')
 			.text(function(d){
-				return d['points'];
+				return d['totalPoints'];
 			});
 }
 
@@ -323,7 +323,7 @@ function buildRobotLeaderboard(data){
 			.attr('font-family', 'trebuchet ms')
 			.style('fill','#0070C0')
 			.text(function(d){
-				return d['name'];
+				return d['robotName'];
 			});
 			
 	/*
@@ -339,7 +339,7 @@ function buildRobotLeaderboard(data){
 			.attr('font-family', 'trebuchet ms')
 			.style('fill','#0070C0')
 			.text(function(d){
-				return d['points'];
+				return d['totalPoints'];
 			});
 }
 
