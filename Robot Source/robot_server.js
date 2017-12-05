@@ -58,7 +58,7 @@ const LiveCam = require('livecam');
 const webcam_server = new LiveCam({
 	'ui_addr' : ip.address(),
 	'ui_port' : 11000,
-	'broadcast_addr' : ip.address(),
+	'broadcast_addr' : '0.0.0.0',
 	'broadcast_port' : 12000,
 	'gst_tcp_addr' : '0.0.0.0',
 	'gst_tcp_port' : 10000,
