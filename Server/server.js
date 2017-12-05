@@ -623,7 +623,7 @@ io.on('connection', function(socket){
 		
 	});
 	
-	/*socket.on('add friend', function(friendUname) {
+	socket.on('add friend', function(friendUname) {
 		var con = mysql.createConnection({
 			host: "mysql.cs.iastate.edu",
 			user: "dbu309rbb2",
@@ -633,13 +633,12 @@ io.on('connection', function(socket){
 		con.connect(function(err) {
 			if (err) throw err;
 			con.query("SELECT * FROM user WHERE Username = \"" + friendUname + "\";", function (err, result, fields) {
-				if (err) return; //Not throwing errors
+				if (err) throw err; //Not throwing errors
 				if (result.length == 0) return;
 				
-				con.query("INSERT INTO friends (FriendID, UserID) VALUES (" + result[0].ID + ", " + socket., function (err, result, fields) {
-				
-				
-				
+				con.query("INSERT INTO friends (FriendID, UserID) VALUES (" + result[0].ID + ", " + socket.id + ");", function (err, result, fields) {
+					if (err) return; //Not throwing errors
+				});
 				
 				con.end();
 			});
@@ -647,7 +646,7 @@ io.on('connection', function(socket){
 		
 		
 		
-	});*/
+	});
 	
 	
 	socket.on('damage', function(data){

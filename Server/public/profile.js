@@ -30,10 +30,13 @@ socket.on('profile info', function(data) {
 			document.getElementById('displayNameButton').innerHTML = "<button onclick='editDisplayName();'>Edit</button>";
 			document.getElementById('bioButton').innerHTML = "<button onclick='editBio();'>Edit</button>";
 			document.getElementById('profilePicButton').innerHTML = "<button type=\"button\" class=\"button\" onclick=\"openModal();\">Change Profile Pic</button>";
+			document.getElementById('addFriendButton').innerHTML = "";
 		}
 		else {
 			document.getElementById('displayNameButton').innerHTML = "";
 			document.getElementById('bioButton').innerHTML = "";
+			document.getElementById('profilePicButton').innerHTML = "";
+			document.getElementById('addFriendButton').innerHTML = "<button type=\"button\" class=\"button\" onclick=\"addFriend()\">Add Friend</button>";
 		}
 		
 		//Set profile picture
@@ -117,24 +120,11 @@ function uploadProfilePic() {
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
-	
-	
-	
-	
-	/*var test = {"test":"hello, world!"};
-	
-	var toSend = {"image":reader.result, "ID":getCookie("ID")};
-	
-	$.ajax({
-	  type: "POST",
-	  url: "/profile",
-	  data: test,
-	  success: function(){},
-	  dataType: "json",
-	  contentType : "application/json"
-	});*/
-	
-	
+}
+
+function addFriend() {
+	var uname = prompt("Enter username:", "user123");
+	socket.emit('add friend', uname);
 }
 		
 		
