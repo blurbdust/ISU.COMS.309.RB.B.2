@@ -24,7 +24,7 @@ require('getmac').getMac(function(err, data){
 		});
 	}
 	else {
-		serialPort = new SerialPort("/dev/ttyUSB0",{
+		serialPort = new SerialPort("/dev/ttyACM0",{
 			baudRate: 9600,
 			dataBits: 8,
 			parity: 'none',

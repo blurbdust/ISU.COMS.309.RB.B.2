@@ -113,7 +113,7 @@ void loop()                     // run over and over again
     
   }
   if(irrecv.decode(&results)) {
-    Serial.write('test');
+    //Serial.write('test');
     damage++;
     char msg[20];
     sprintf(msg, "Damage: %d\n", damage);
@@ -160,35 +160,35 @@ void check_Servo(char InByte){
   switch(InByte){
     case 'L':
         servo_A.setInc(-1);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'l':
         servo_A.setInc(0);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'J':
         servo_A.setInc(1);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'j':
         servo_A.setInc(0);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'M':
         servo_B.setInc(1);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'm':
         servo_B.setInc(0);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'I':
         servo_B.setInc(-1);
-        Serial.write('test');
+        //Serial.write('test');
       break;
     case 'i':
         servo_B.setInc(0);
-        Serial.write('test');
+        //Serial.write('test');
   }  
 }
 void check_Movement(char InByte){
@@ -200,7 +200,7 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
-    Serial.write('test');
+    //Serial.write('test');
   }  
   if(InByte == 's'){
     digitalWrite(DIR_A, HIGH);
@@ -209,7 +209,7 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
-    Serial.write('test');
+    //Serial.write('test');
   }  
   if(InByte == 'd'){
     digitalWrite(DIR_A, LOW);
@@ -218,7 +218,7 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
-    Serial.write('test');
+    //Serial.write('test');
   }
   if(InByte == 'a'){
     digitalWrite(DIR_A, HIGH);
@@ -282,7 +282,7 @@ void check_Fire(char inByte){
     
     for (int i = 0; i < 3; i++) {
       irsend.sendSony(0xa90, 12); // Sony TV power code
-      Serial.write('test');
+      //Serial.write('test');
       delay(100);
     }
   }
