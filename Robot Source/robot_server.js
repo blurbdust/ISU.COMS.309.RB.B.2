@@ -3,6 +3,7 @@ var ip = require('ip');
 
 var robotIP = ip.address()
 var macAddress;
+var serialPort = "dumb";
 
 require('getmac').getMac(function(err, data){
     if (err){
@@ -12,7 +13,6 @@ require('getmac').getMac(function(err, data){
     macAddress = data;
 
     var SerialPort = require('serialport');
-	var serialPort;
 
 	if (macAddress.includes('b8:27:eb:41:0b:d5')){
 		serialPort = new SerialPort("/dev/ttyACM0",{
@@ -130,7 +130,7 @@ io_RPI.on('connection', function(socket){
 webcam_server.broadcast();
 
 while(true){
-	if (serialPort == undefined){
+	if (serialPort == "dumb"){
 		continue;
 	}
 	var readInput = serialPort.read(512);
