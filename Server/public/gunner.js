@@ -159,7 +159,9 @@ window.addEventListener("load", function(){
   console.log(robot_ip);
   if (robot_ip == "http://raspberrypi3-a.student.iastate.edu"){
     while (robot_ip == "http://raspberrypi3-a.student.iastate.edu"){
-    sleep(0.1);
+      setTimeout(function(){
+
+      }, 100);
     }
   }
   else {
