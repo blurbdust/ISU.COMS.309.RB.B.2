@@ -131,6 +131,7 @@ webcam_server.broadcast();
 
 while(true){
 	if (serialPort == "dumb"){
+		sleep(0.1);
 		continue;
 	}
 	var readInput = serialPort.read(512);
