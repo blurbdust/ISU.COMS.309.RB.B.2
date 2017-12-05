@@ -405,7 +405,7 @@ function spectate(){
 		socket.emit("spectate", robot);
 	}
 }
-function spectate(){
+function leaderboard(){
 	socket.emit("leaderboard", robot);	
 }
 
