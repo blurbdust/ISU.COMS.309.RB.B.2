@@ -10,7 +10,36 @@ require('getmac').getMac(function(err, data){
     }
     console.log("Got MAC: " + data);
     macAddress = data;
-})
+
+    var SerialPort = require('serialport');
+	var serialPort;
+
+	if (macAddress.includes('b8:27:eb:41:0b:d5')){
+		serialPort = new SerialPort("/dev/ttyACM0",{
+			baudRate: 9600,
+			dataBits: 8,
+			parity: 'none',
+			stopBits: 1,
+			flowControl: false
+		});
+	}
+	else {
+		serialPort = new SerialPort("/dev/ttyUSB0",{
+			baudRate: 9600,
+			dataBits: 8,
+			parity: 'none',
+			stopBits: 1,
+			flowControl: false
+		});
+	}
+
+	serialPort.on('open', function(){
+		let dir = 'w';
+		console.log('Serial Port Opened');
+		sleep(1000);
+	});
+		
+});
 
 var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000', {
 	transports: ["websockets", "polling"],
@@ -49,40 +78,6 @@ var io_RPI = require("socket.io").listen(server); //Operators connect to this
 //io_RPI.emit('new robot', 'Robot 1');	//Placeholder robot name
 
 var operator;
-
-
-var SerialPort = require('serialport');
-var serialPort;
-
-if (macAddress.includes('b8:27:eb:41:0b:d5')){
-	serialPort = new SerialPort("/dev/ttyACM0",{
-		baudRate: 9600,
-		dataBits: 8,
-		parity: 'none',
-		stopBits: 1,
-		flowControl: false
-	});
-}
-else {
-	serialPort = new SerialPort("/dev/ttyUSB0",{
-		baudRate: 9600,
-		dataBits: 8,
-		parity: 'none',
-		stopBits: 1,
-		flowControl: false
-	});
-}
-		
-
-
-
-
-serialPort.on('open', function(){
-	let dir = 'w';
-	console.log('Serial Port Opened');
-	sleep(1000);
-});
-	
 
 
 socket.on('connect', function(){
