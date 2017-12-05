@@ -508,7 +508,7 @@ io.on('connection', function(socket){
 	});
 
 	//Client request for User Leaderboard
-	socket.on('request user leaderboard', function(username) {
+	socket.on('request user leaderboard', function() {
 		var con = mysql.createConnection({
 			host: "mysql.cs.iastate.edu",
 			user: "dbu309rbb2",
@@ -534,10 +534,10 @@ io.on('connection', function(socket){
 	
 	
 	//Client request for Robot Leaderboard
-	socket.on('request robot leaderboard', function(robotname) {
+	socket.on('request robot leaderboard', function() {
 		var con = mysql.createConnection({
 			host: "mysql.cs.iastate.edu",
-			robot: "dbu309rbb2",
+			user: "dbu309rbb2",
 			password: "Ze3xcZG5",
 			database: "db309rbb2"
 		});
