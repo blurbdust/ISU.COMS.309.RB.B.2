@@ -16,7 +16,7 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
 });
 
 
-  var webcam_addr = "monmodenic.student.iastate.edu";
+  var webcam_addr = "raspberrypi3-a.student.iastate.edu";
   var webcam_port = "12000";
   var webcam_host = $(".feed img");
   var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
