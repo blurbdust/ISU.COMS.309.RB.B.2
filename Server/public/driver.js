@@ -11,9 +11,27 @@ socket_server.on('redirect', function(destination) {
 var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
 socket_server.emit('set user operator', obj);
 
+
 socket_server.emit("request-robotIP", getCookie("username"), function(){
   alert("Requested robotIP");
 });
+
+
+  //var webcam_addr = robot_ip;
+  var webcam_port = "12000";
+  var webcam_host = $(".feed img");
+  var cam_socket;
+
+  function waitForRobotIP(){
+      cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+      cam_socket.on("connection", function(socket){
+        console.log("Connected to camera");
+      });
+  
+      cam_socket.on('image', function (data) {
+        webcam_host.attr("src", "data:image/jpeg;base64," + data );
+      });
+  }
 
 socket_server.on("robotIP", function(data){
   robot_ip = data;
@@ -156,22 +174,7 @@ window.addEventListener("load", function(){
       socket_robot.emit('Serial Movement', { dir: 'x'});
   });
   
-  
-    //var webcam_addr = robot_ip;
-  var webcam_port = "12000";
-  var webcam_host = $(".feed img");
-  var cam_socket;
 
-  function waitForRobotIP(){
-      cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
-      cam_socket.on("connection", function(socket){
-        console.log("Connected to camera");
-      });
-  
-      cam_socket.on('image', function (data) {
-        webcam_host.attr("src", "data:image/jpeg;base64," + data );
-      });
-  }
 
   logout.addEventListener('mouseup', function(){
     console.log("Logging out...");

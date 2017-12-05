@@ -15,6 +15,23 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
   alert("Requested robotIP");
 });
 
+
+  //var webcam_addr = robot_ip;
+  var webcam_port = "12000";
+  var webcam_host = $(".feed img");
+  var cam_socket;
+
+  function waitForRobotIP(){
+      cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+      cam_socket.on("connection", function(socket){
+        console.log("Connected to camera");
+      });
+  
+      cam_socket.on('image', function (data) {
+        webcam_host.attr("src", "data:image/jpeg;base64," + data );
+      });
+  }
+
 socket_server.on("robotIP", function(data){
   robot_ip = data;
   console.log("Got new robot ip " + robot_ip);
@@ -152,22 +169,6 @@ window.addEventListener("load", function(){
 	  fireStop();
   });
   
-  
-  //var webcam_addr = robot_ip;
-  var webcam_port = "12000";
-  var webcam_host = $(".feed img");
-  var cam_socket;
-
-  function waitForRobotIP(){
-      cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
-      cam_socket.on("connection", function(socket){
-        console.log("Connected to camera");
-      });
-  
-      cam_socket.on('image', function (data) {
-        webcam_host.attr("src", "data:image/jpeg;base64," + data );
-      });
-  }
 
   logout.addEventListener('mouseup', function(){
     console.log("Logging out...");
