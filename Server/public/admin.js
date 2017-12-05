@@ -4,6 +4,12 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
+//Set ID cookie
+socket.emit('request user id', getCookie('username'));
+socket.on('get user id', function(id) {
+	document.cookie = "ID=" + id + "; path=/";
+}
+
 var bodySelect = d3.select("body").select("div");
 var svgSelect = bodySelect.append("svg")
 				.attr("preserveAspectRatio", "xMinYMin meet")
@@ -45,7 +51,7 @@ var menuBar = menuGroup.append('rect')
 	.attr('y','0')
 	.attr('width','15%')
 	.attr('height','100%')
-	.style('fill', '#284a85');
+	.style('fill', '#0070C0');
 	
 var gearImage = menuGroup
 	.append('image')
@@ -61,7 +67,7 @@ var bannerBar = bannerGroup.append('rect')
 	.attr('y','13%')
 	.attr('width','100%')
 	.attr('height','7%')
-	.style('fill', '#284a85');
+	.style('fill', '#0070C0');
 	
 var adminToolsLabel = adminToolsGroup.append('text')
 	.attr('x', '1.25%')
@@ -106,7 +112,7 @@ var dbLabel = mainGroup.append('text')
 var kickUserBtn = adminToolsGroup.append('rect')
 	.attr('x', '1.5%')
 	.attr('y', '27.35%')
-	.attr('width', '9%')
+	.attr('width', '10%')
 	.attr('height', '4%')
 	.style('fill', 'white')
 	.attr('stroke-width', 3)
@@ -122,7 +128,7 @@ var kickUserText = adminToolsGroup.append('text')
 	.attr('font-size' , '16px')
 	.attr('font-weight', '900') 
 	.attr('font-family', 'sans-serif')
-	.attr('fill', '#284a85')
+	.attr('fill', '#0070C0')
 	.style('cursor','pointer')
 	.text('Kick User')
 	.on('click', function(){
@@ -132,7 +138,7 @@ var kickUserText = adminToolsGroup.append('text')
 var banUserBtn = adminToolsGroup.append('rect')
 	.attr('x', '1.5%')
 	.attr('y', '34.35%')
-	.attr('width', '9%')
+	.attr('width', '10%')
 	.attr('height', '4%')
 	.style('fill', 'white')
 	.attr('stroke-width', 3)
@@ -148,7 +154,7 @@ var banUserText = adminToolsGroup.append('text')
 	.attr('font-size' , '16px')
 	.attr('font-weight', '900') 
 	.attr('font-family', 'sans-serif')
-	.attr('fill', '#284a85')
+	.attr('fill', '#0070C0')
 	.style('cursor','pointer')
 	.text('Ban User')
 	.on('click', function(){
@@ -158,7 +164,7 @@ var banUserText = adminToolsGroup.append('text')
 var deleteAccountBtn = adminToolsGroup.append('rect')
 	.attr('x', '1.5%')
 	.attr('y', '41.35%')
-	.attr('width', '9%')
+	.attr('width', '10%')
 	.attr('height', '6%')
 	.style('fill', 'white')
 	.attr('stroke-width', 3)
@@ -174,7 +180,7 @@ var deleteAccountText = adminToolsGroup.append('text')
 	.attr('font-size' , '16px')
 	.attr('font-weight', '900') 
 	.attr('font-family', 'sans-serif')
-	.attr('fill', '#284a85')
+	.attr('fill', '#0070C0')
 	.style('cursor','pointer')
 	.text('Delete')
 	.on('click', function(){
@@ -188,7 +194,7 @@ var deleteAccountText = adminToolsGroup.append('text')
 var spectateBtn = adminToolsGroup.append('rect')
 	.attr('x', '1.5%')
 	.attr('y', '50.35%')
-	.attr('width', '9%')
+	.attr('width', '10%')
 	.attr('height', '4%')
 	.style('fill', 'white')
 	.attr('stroke-width', 3)
@@ -204,11 +210,37 @@ var spectateText = adminToolsGroup.append('text')
 	.attr('font-size' , '16px')
 	.attr('font-weight', '900') 
 	.attr('font-family', 'sans-serif')
-	.attr('fill', '#284a85')
+	.attr('fill', '#0070C0')
 	.style('cursor','pointer')
 	.text('Spectate')
 	.on('click', function(){
 		spectate();
+	});
+	
+var leaderboardBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '57.35%')
+	.attr('width', '10%')
+	.attr('height', '4%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
+	.on('click', function(){
+		leaderboard();
+	});;
+	
+var leaderboardText = adminToolsGroup.append('text')
+	.attr('x', '2%')
+	.attr('y', '60%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#0070C0')
+	.style('cursor','pointer')
+	.text('Leaderboard')
+	.on('click', function(){
+		leaderboard();
 	});
 	
 var logoutBtn = logoutGroup.append('rect')
@@ -229,7 +261,7 @@ var logoutText = logoutGroup.append('text')
 	.attr('font-family', 'sans-serif')
 	.attr('font-size' , '18px')
 	.attr('font-weight', '900') 
-	.attr('fill', '#284a85')
+	.attr('fill', '#0070C0')
 	.style('cursor','pointer')
 	.text('Logout')
 	.on('click', function(){
@@ -379,6 +411,10 @@ function spectate(){
 		socket.emit("spectate", robot);
 	}
 }
+function leaderboard(){
+	socket.emit("leaderboard");	
+}
+
 
 function logout(){
 	var check = confirm("Are you sure you want to log out?");

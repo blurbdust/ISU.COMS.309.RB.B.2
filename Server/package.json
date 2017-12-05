@@ -13,6 +13,8 @@
   },
   "private": "true",
   "dependencies": {
+    "d3-jetpack": "^2.0.15",
+    "d3-tip": "^0.7.1",
     "express": "^4.16.0",
     "mysql": "^2.15.0"
   }

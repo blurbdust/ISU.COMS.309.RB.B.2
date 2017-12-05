@@ -3,6 +3,12 @@
 	<head>
 		<script type="text/javascript" src="http://proj-309-rb-b-2.cs.iastate.edu:3000/socket.io.js"></script>
 		<style>
+			
+			body {
+				background-color: #0070C0;
+				font-family: Trebuchet MS;
+			}
+			
 			#chat-box * { 
 				margin: 0; 
 				padding: 0; 
@@ -10,7 +16,7 @@
 			}
 			
 			#chat-box { 
-				font: 13px Helvetica, Arial; 
+				font: 13px; 
 			}
 		  
 		    #chat-box form { 
@@ -61,6 +67,8 @@
 			#wrapper2 {
 				border: 3px solid #f1f1f1;
 				text-align: center;
+				max-width: 1170px;
+				margin: auto
 			}
 			
 			.imgcontainer {
@@ -68,8 +76,20 @@
 				margin: 24px 0 12px 0;
 			}
 			
+			.profile-wrapper {
+				float:right;
+				display:inline-block;
+				padding: 25px 15px 0 0;
+				
+			}
+			
 			img.avatar {
 				width: 40%;
+			}
+			
+			img.profile-pic {
+				max-height:50px;
+				border-radius: 50%;
 			}
 			
 			#b {
@@ -92,10 +112,11 @@
 				border: 5px solid black;
 				vertical-align: top;
 				padding: 10px;
+				background-color:#F0F0F0;
 			}
 			
-			#operatorButton {
-				background-color: #4CAF50; /* Green */
+			.button {
+				background-color: #0070C0;
 				border: none;
 				color: white;
 				padding: 15px 32px;
@@ -104,7 +125,8 @@
 				display: inline-block;
 				font-size: 16px;
 				cursor: pointer;
-			
+				margin: 15px;
+				width: 210px;
 			}
 			
 			
@@ -114,8 +136,14 @@
 	<body>
 		
 		<div id='wrapper'>
-			<h1>Lobby</h1>
-			<div id='wrapper2'>
+			<div id='wrapper2' style="background-color: #E0E0E0;">
+				
+				<h1 style="display:inline-block; float:left; padding-left:15px; font-size:40px">Lobby</h1>
+				<div class="profile-wrapper">
+					<a id='profileLink' href='http://proj-309-rb-b-2.cs.iastate.edu:3000/profile'>
+						<img src="http://proj-309-rb-b-2.cs.iastate.edu:3000/avatars/default.jpg" class='profile-pic' alt="Profile Image"/>
+					</a>
+				</div>
 				
 				<div class="imgcontainer">
 					<img src="http://proj-309-rb-b-2.cs.iastate.edu:3000/logo.png" class="avatar" alt="CyBots"/>
@@ -143,7 +171,8 @@
 				</div>
 				
 				<!--Operator Button-->
-				<button type="button" id="operatorButton">Operate Robot</button>
+				<button type="button" class='button' id="operatorButton">Operate Robot</button>
+				<button type="button" class='button' style="background-color:red" onclick="logout();">Logout</button>
 			</div>
 		</div>
 		

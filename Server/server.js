@@ -56,6 +56,10 @@ app.get("/profile", (req, res) => {
 	res.sendFile(__dirname + "/profile.html");
 }); 
 
+app.get("/leaderboard", (req, res) => {
+	res.sendFile(__dirname + "/leaderboard.html");
+}); 
+
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
@@ -68,10 +72,9 @@ app.get('/', function(req, res){
 	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 });
 
-/*app.get('/socket.io/*', function(req, res){
+app.get('/socket.io/*', function(req, res){
 	res.sendFile(path.resolve(__dirname + '/public/socket.io.js'));
 });
-*/
 
 app.post('/login', function(req, res) {
 	var username = req.body.uname;
@@ -347,20 +350,28 @@ io.on('connection', function(socket){
 			
 			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
 				if (err) throw err;
+				var info = "";
 				
-				if (result[0].DisplayName != null) 
-					displayName = result[0].DisplayName;
-				if (result[0].Bio != null)
-					bio = result[0].Bio;
+				if (result.length == 0) {
+					info = {"success":false};
+				}
+				else {
 				
-				//Check if user is online
-				for (i = 0; i < userNameList.length; i++) {
-					if (userNameList[i] == username)
-						onlineStatus = true;
+					if (result[0].DisplayName != null) 
+						displayName = result[0].DisplayName;
+					if (result[0].Bio != null)
+						bio = result[0].Bio;
+					
+					//Check if user is online
+					for (i = 0; i < userNameList.length; i++) {
+						if (userNameList[i] == username)
+							onlineStatus = true;
+					}
+					
+					var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus, "success":true};
 				}
 				
 				//Emit findings
-				var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus};
 				socket.emit('profile info', info);
 				
 				con.end();
@@ -381,14 +392,48 @@ io.on('connection', function(socket){
 			if (err) throw err;
 			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
 				if (err) throw err;
-				
-				console.log("Username: " + username + " | ID: " + result[0].ID);
-				
 				socket.emit('get user id', result[0].ID);
 				con.end();
 			});
 		});
 		
+	});
+	
+	socket.on('edit display name', function(displayName) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET DisplayName = '" + displayName + "' WHERE Username = '" + socket.username + "';";
+			con.query(sql, function (err, result, fields) {
+				if (err) throw err;
+				con.end();
+			});
+		});
+		
+	});
+	
+	socket.on('edit bio', function(bio) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "UPDATE users SET Bio = \"" + bio + "\" WHERE Username = \"" + socket.username + "\";";
+			con.query(sql, function (err, result, fields) {
+				if (err) throw err;
+				con.end();
+			});
+		});
 	});
 	
 	
@@ -436,9 +481,11 @@ io.on('connection', function(socket){
 		for(i = 0; i < robotInfoList.length; i++) {
 			if(robotInfoList[i].gunner === data) {
 				socket.emit("redirect", "/gunner");
+				return;
 			}
 			if(robotInfoList[i].driver === data) {
 				socket.emit("redirect", "/driver");
+				return;
 			}
 		}
 		socket.emit("redirect", "/spectator");
@@ -466,9 +513,9 @@ io.on('connection', function(socket){
 		socket.driver = "";
 		socket.spectators = [];
 		socket.IP = socket.request.connection.remoteAddress;
-		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":"), socket.IP.toString.length);
+		robotIP = socket.IP.toString().substring(socket.IP.toString().lastIndexOf(":")+1, socket.IP.toString().length);
 		robotSocketList.push(socket);
-		console.log("Robot " + socket.name + " connected.");
+		console.log("Robot " + socket.name + " connected with " + robotIP);
 		
 		//Emit robot info to client
 		var robot = {'name':socket.name, 'gunner':socket.gunner, 'driver':socket.driver, 'spectators':socket.spectators, 'ip':robotIP};
@@ -476,6 +523,57 @@ io.on('connection', function(socket){
 		io.sockets.emit('robotInfo', robotInfoList);
 	});
 
+	//Client request for User Leaderboard
+	socket.on('request user leaderboard', function() {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		var userLeaderboardList = [];
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM leaderboardUser ORDER BY totalPoints DESC", function (err, result, fields) {
+				if (err) throw err;
+				for (i = 0; i < result.length; i++) {
+						userLeaderboardList.push(result[i]);
+				}
+				
+				//Send User Leaderboard to client
+				socket.emit('user leaderboard update', userLeaderboardList);
+				con.end();
+			});
+		});
+		
+	});
+	
+	
+	//Client request for Robot Leaderboard
+	socket.on('request robot leaderboard', function() {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		var robotLeaderboardList = [];
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM leaderboardRobot ORDER BY totalPoints DESC", function (err, result, fields) {
+				if (err) throw err;
+				for (i = 0; i < result.length; i++) {
+						robotLeaderboardList.push(result[i]);
+				}
+				//Send Robot Leaderboard to client
+				socket.emit('robot leaderboard update', robotLeaderboardList);
+				con.end();
+			});
+		});
+		
+	});
+	
+	
 	socket.on('damage', function(data){
 		var inp = data.toString();
 		var bot = inp.substring(0, inp.indexOf(":"));
@@ -487,13 +585,30 @@ io.on('connection', function(socket){
 	// Check for the one not equal to the bot
 	// points += 10;
 		var robotToAward;
-		var userToAward;
-
+		var gunnerToAward;
+		var driverToAward;
+		
+		var gunnerToDamage;
+		var driverToDamage;
 
 		for(var i = 0; i < robotSocketList.length; i++){
 			if(robotSocketList[i].IP != bot){
 				robotToAward = robotSocketList[i].name;
-				userToAward = robotSocketList[i].gunner;
+				gunnerToAward = robotSocketList[i].gunner;
+				driverToAward = robotSocketList[i].driver;
+			}
+			else{
+				gunnerToDamage = robotSocketList[i].gunner;
+				driverToDamage = robotSocketList[i].driver;
+			}
+		}
+		
+		for(var i=0; i<userNameList; i++){
+			if(gunnerToDamage == userNameList[i]){
+				userSocketList[i].emit('damage update', amount);
+			}
+			if(driverToDamage == userNameList[i]){
+				userSocketList[i].emit('damage update', amount);
 			}
 		}
 
@@ -503,25 +618,66 @@ io.on('connection', function(socket){
 			password: "Ze3xcZG5",
 			database: "db309rbb2"
 		});
-
+		// Update Gunner leaderboard points
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = "SELECT * FROM users WHERE username = " + userToAward;
+			var sql = "SELECT * FROM leaderboardUser WHERE username = " + gunnerToAward;
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				
 				if (result[0].username != null) {
-					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + userToAward + "';";
+					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + gunnerToAward + "';";
 					con.query(update);
 				}
 				else {
-					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + userToAward + "', 10);";
-					con query(insert);
+					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + gunnerToAward + "', 10);";
+					con.query(insert);
 				}
 				
 				con.end();
 			});
 		});
+		//Update Driver leaderboard points
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "SELECT * FROM leaderboardUser WHERE username = " + driverToAward;
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+				
+				if (result[0].username != null) {
+					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + driverToAward + "';";
+					con.query(update);
+				}
+				else {
+					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + driverToAward + "', 10);";
+					con.query(insert);
+				}
+				
+				con.end();
+			});
+		});
+		
+		//Update Robot leaderboard points
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "SELECT * FROM leaderboardRobot WHERE robotName = " + robotToAward;
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+				
+				if (result[0].robotName != null) {
+					var update = "UPDATE leaderboardRobot SET totalPoints = totalPoints + 10 WHERE robotName = '" + robotToAward + "';";
+					con.query(update);
+				}
+				else {
+					var insert = "INSERT INTO leaderboardRobot (robotName, totalPoints) values ('" + robotToAward + "', 10);";
+					con.query(insert);
+				}
+				
+				con.end();
+			});
+		});
+		
+		
 
 
 	});

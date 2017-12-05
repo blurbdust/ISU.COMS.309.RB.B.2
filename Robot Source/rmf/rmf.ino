@@ -1,9 +1,8 @@
-#include <SoftwareSerial.h>
 #include <Servo.h>
 #include <IRremote.h>
+#include <IRremoteInt.h>
 
-#define PIN_IR 10
-#define PIN_DETECT 4
+
 
 /**
 *
@@ -77,6 +76,8 @@ SuperServo servo_A(15);
 SuperServo servo_B(15);
 
 IRsend irsend;
+IRrecv irrecv(4);
+decode_results results;
 
 void setup()
 {
@@ -88,20 +89,17 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
- pinMode(PIN_IR, OUTPUT);
+ //pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
  speed = 100;
  
  stop_A();
  stop_B();
-// delay(500);
+ delay(500);
 
   //IR STUFF
-  digitalWrite(PIN_IR, HIGH);
-  pinMode(PIN_DETECT, INPUT);
-  //irsend.enableIROut(38);
-  //irsend.mark(0);
+  irrecv.enableIRIn();
 }
 
 void loop()                     // run over and over again
@@ -114,19 +112,12 @@ void loop()                     // run over and over again
     speed_Adjust();
     
   }
-  if(servo_A.getInc() != 0){
-     servo_A.Update();
-  }
-  if(servo_B.getInc() != 0){
-     servo_B.Update();
-  }
-  //IR Stuff  
-  //if the ir sensor goes off, increase damage
-  if(digitalRead(PIN_DETECT) == LOW) {
+  if(irrecv.decode(&results)) {
+    Serial.write('test');
     damage++;
     char msg[20];
     sprintf(msg, "Damage: %d\n", damage);
-	  int bytesWritten = Serial.write(msg);
+    int bytesWritten = Serial.write(msg);
     if (damage > 15){
       speed = 0;
     }
@@ -136,7 +127,20 @@ void loop()                     // run over and over again
     else {
       speed = (100 - (damage * 5));
     }
+  delay(100);
+  irrecv.resume();
+  delay(100);
   }
+  
+  if(servo_A.getInc() != 0){
+     servo_A.Update();
+  }
+  if(servo_B.getInc() != 0){
+     servo_B.Update();
+  }
+  //IR Stuff  
+  //if the ir sensor goes off, increase damage
+  
 }
 
 
@@ -156,27 +160,35 @@ void check_Servo(char InByte){
   switch(InByte){
     case 'L':
         servo_A.setInc(-1);
+        Serial.write('test');
       break;
     case 'l':
         servo_A.setInc(0);
+        Serial.write('test');
       break;
     case 'J':
         servo_A.setInc(1);
+        Serial.write('test');
       break;
     case 'j':
         servo_A.setInc(0);
+        Serial.write('test');
       break;
     case 'M':
         servo_B.setInc(1);
+        Serial.write('test');
       break;
     case 'm':
         servo_B.setInc(0);
+        Serial.write('test');
       break;
     case 'I':
         servo_B.setInc(-1);
+        Serial.write('test');
       break;
     case 'i':
         servo_B.setInc(0);
+        Serial.write('test');
   }  
 }
 void check_Movement(char InByte){
@@ -188,6 +200,7 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
+    Serial.write('test');
   }  
   if(InByte == 's'){
     digitalWrite(DIR_A, HIGH);
@@ -196,6 +209,7 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
+    Serial.write('test');
   }  
   if(InByte == 'd'){
     digitalWrite(DIR_A, LOW);
@@ -204,6 +218,7 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
+    Serial.write('test');
   }
   if(InByte == 'a'){
     digitalWrite(DIR_A, HIGH);
@@ -264,11 +279,11 @@ void speed_Adjust(){
 
 void check_Fire(char inByte){
   if (inByte == 'K'){
-    //Set pin 10 to low.
-    digitalWrite(PIN_IR, LOW);
-  }
-  if (inByte == 'k'){
-    //Set pin 10 to high
-    digitalWrite(PIN_IR, HIGH);
+    
+    for (int i = 0; i < 3; i++) {
+      irsend.sendSony(0xa90, 12); // Sony TV power code
+      Serial.write('test');
+      delay(100);
+    }
   }
 }
