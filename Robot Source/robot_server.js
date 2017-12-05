@@ -54,7 +54,7 @@ var operator;
 var SerialPort = require('serialport');
 var serialPort;
 
-if (macAddress == 'b8:27:eb:41:0b:d5'){
+if (macAddress === 'b8:27:eb:41:0b:d5'){
 	serialPort = new SerialPort("/dev/ttyACM0",{
 		baudRate: 9600,
 		dataBits: 8,
