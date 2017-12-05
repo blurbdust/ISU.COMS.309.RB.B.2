@@ -37,8 +37,7 @@ socket_server.on("robotIP", function(data){
   socket_robot = io(robot_ip + ':5210');
 });
 
-var socket_robot = io(robot_ip + ':5210');
-
+var socket_robot;
 
 //Chat Box
 $(function () {
