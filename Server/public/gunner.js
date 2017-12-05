@@ -17,15 +17,12 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
 
 
   //var webcam_addr = robot_ip;
-  var webcam_port = "12000";
+  var webcam_port = "11000";
   var webcam_host = $(".feed img");
-  var cam_socket = "wait";
+  var cam_socket;
 
   function waitForRobotIP(){
       cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
-  }
-
-  if (cam_socket != "wait"){
       cam_socket.on("connection", function(socket){
         console.log("Connected to camera");
       });
