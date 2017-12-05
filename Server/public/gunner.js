@@ -36,8 +36,8 @@ cam_socket.on("connection", function(socket){
 
   
 socket_server.on("robotIP", function(data){
-  robot_ip = data;
-  console.log("Got new robot ip " + robot_ip);
+  //robot_ip = data;
+  console.log("Got new robot ip " + data);
 });
 
 //Chat Box
