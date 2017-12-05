@@ -34,10 +34,8 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
 socket_server.on("robotIP", function(data){
   robot_ip = data;
   console.log("Got new robot ip " + robot_ip);
-  socket_robot = io(robot_ip + ':5210');
+  var socket_robot = io(robot_ip + ':5210');
 });
-
-var socket_robot;
 
 //Chat Box
 $(function () {
