@@ -148,9 +148,55 @@ app.post('/create_account', function(req, res) {
 });
 
 app.post('/profile', function(req, res) {
-	console.log("User ID: " + req.body.test);
 	
+	const fs = require('fs');
 	
+	var fileType = req.body.pic.split(',')[0];
+	fileType = fileType.split(';')[0];
+	fileType = fileType.split('/')[1];
+	console.log(fileType);
+	var data = req.body.pic.split(',')[1];
+	let buff = new Buffer(data, 'base64');
+	if (fileType == "jpeg") {
+		
+		//Delete png if it exists
+		fs.stat(__dirname + "/public/avatars/" + req.body.id + ".png", function (err, stats) {
+		   console.log(stats);//here we got all information of file in stats variable
+
+		   if (err) {
+			   return console.error(err);
+		   }
+
+		   fs.unlink(__dirname + "/public/avatars/" + req.body.id + ".png",function(err){
+				if(err) return console.log(err);
+				console.log('file deleted successfully');
+		   });  
+		});
+		
+		//Convert to Base64 and write to folder
+		fs.writeFileSync(__dirname + "/public/avatars/" + req.body.id + ".jpg", buff);
+	}
+	else if (fileType == "png") {
+		
+		//Delete jpg if it exists
+		fs.stat(__dirname + "/public/avatars/" + req.body.id + ".jpg", function (err, stats) {
+		   console.log(stats);//here we got all information of file in stats variable
+
+		   if (err) {
+			   return console.error(err);
+		   }
+
+		   fs.unlink(__dirname + "/public/avatars/" + req.body.id + ".jpg",function(err){
+				if(err) return console.log(err);
+				console.log('file deleted successfully');
+		   });  
+		});
+		
+		//Convert from Base64 and write to folder
+		fs.writeFileSync(__dirname + "/public/avatars/" + req.body.id + ".png", buff);
+	}
+	
+	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'profile');
 	
 });
 
@@ -697,7 +743,7 @@ io.on('connection', function(socket){
 				for(i=0; i<friendIDList.length; i++){
 					con.query("SELECT * FROM users WHERE ID = " + friendIDList[i], function(err, result, fields){
 						friendList[i].push({"name":result[0].Username, "online":userNameList.contains(result[0].Username)});
-					}					
+					});					
 				}
 				
 				

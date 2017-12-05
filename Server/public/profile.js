@@ -102,22 +102,29 @@ document.getElementsByClassName("close")[0].onclick = function() {
 
 function uploadProfilePic() {
 	
-	//Convert to Base64
+	//Convert to Base64 and submit form
 	var file = document.getElementById('newProfilePic').files[0];
 	var reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
       console.log(reader.result);
+	  document.getElementById('id').value = getCookie("ID");
+	  document.getElementById('pic').value = reader.result;
+	  //document.getElementById('pic').value = reader.result.split(',')[1];
+	  document.getElementById("profileForm").submit();
     };
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
 	
-	var test = {"test":"hello, world!"};
+	
+	
+	
+	/*var test = {"test":"hello, world!"};
 	
 	var toSend = {"image":reader.result, "ID":getCookie("ID")};
 	
-	/*$.ajax({
+	$.ajax({
 	  type: "POST",
 	  url: "/profile",
 	  data: test,

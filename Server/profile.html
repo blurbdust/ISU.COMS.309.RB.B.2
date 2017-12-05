@@ -168,6 +168,17 @@
 					<h2>Upload New Profile Picture</h2>
 					<input type="file" id="newProfilePic" accept="image/*"><br/><br/>
 					<button type="button" class="button" onclick = "uploadProfilePic();">Upload!</button>
+					
+					<div style="display:none";>
+						<form id="profileForm" action="/profile" method="post">
+							<input type="text" name="id" id="id">
+							<input type="text" name="pic" id="pic">
+							<input type="submit" value="Submit">
+						</form>
+					
+					</div>
+					
+					
 				  </div>
 
 				</div>
