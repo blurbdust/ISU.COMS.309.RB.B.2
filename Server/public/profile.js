@@ -55,6 +55,13 @@ socket.on('profile info', function(data) {
 			url = urlBase + "default.jpg";
 		}
 		document.getElementById('profilePic').innerHTML = '<img src="' + url + '" class="avatar" alt="Profile Image"/>'
+		
+		//Display friends
+		var html = '';
+		for (i = 0; i < data.friendsArray.length; i++) {
+			html += data.friendsArray[i] + '<br/>';
+		}
+		document.getElementById("friendsList").innerHTML = html;
 	}
 	else {
 		alert("User does not exist.");

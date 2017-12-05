@@ -386,6 +386,7 @@ io.on('connection', function(socket){
 		var displayName = "";
 		var bio = "";
 		var onlineStatus = false;
+		var friendsArray = [];
 		
 		
 		//Check database for Display Name and Bio
@@ -418,13 +419,26 @@ io.on('connection', function(socket){
 							onlineStatus = true;
 					}
 					
-					var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus, "success":true};
+					
+					//Create friends list
+					con.query("SELECT * FROM friends WHERE UserID = " + socket.id + ";", function (err, friend, fields) {
+						if (err) throw err;
+						for (i = 0; i < friend.length; i++) {
+							console.log(friend[i].FriendID);
+							con.query("SELECT * FROM users WHERE ID = " + friend[i].FriendID + ";", function (err, friendUser, fields) {
+								if (err) throw err;							
+								friendsArray.push(friendUser[0].Username);
+								console.log(friendUser[0].Username);
+							});
+						}
+						con.end();
+					});
+					
+					setTimeout(function() {
+						var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus, "friendsArray":friendsArray, "success":true};
+						socket.emit('profile info', info);
+					}, 200);
 				}
-				
-				//Emit findings
-				socket.emit('profile info', info);
-				
-				con.end();
 			});
 		});
 	});
@@ -632,15 +646,15 @@ io.on('connection', function(socket){
 		});
 		con.connect(function(err) {
 			if (err) throw err;
-			con.query("SELECT * FROM user WHERE Username = \"" + friendUname + "\";", function (err, result, fields) {
-				if (err) throw err; //Not throwing errors
+			con.query("SELECT * FROM users WHERE Username = \"" + friendUname + "\";", function (err, result, fields) {
+				if (err) throw err;
 				if (result.length == 0) return;
 				
 				con.query("INSERT INTO friends (FriendID, UserID) VALUES (" + result[0].ID + ", " + socket.id + ");", function (err, result, fields) {
-					if (err) return; //Not throwing errors
+					if (err) throw err;
+					
 				});
 				
-				con.end();
 			});
 		});
 		
