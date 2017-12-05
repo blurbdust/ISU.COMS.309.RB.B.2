@@ -56,7 +56,7 @@ var sleep = require('system-sleep');
 
 const LiveCam = require('livecam');
 const webcam_server = new LiveCam({
-	'ui_addr' : ip.address(),
+	'ui_addr' : '0.0.0.0',
 	'ui_port' : 11000,
 	'broadcast_addr' : '0.0.0.0',
 	'broadcast_port' : 12000,
