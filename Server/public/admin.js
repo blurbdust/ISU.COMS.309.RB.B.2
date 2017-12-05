@@ -243,6 +243,32 @@ var leaderboardText = adminToolsGroup.append('text')
 		leaderboard();
 	});
 	
+	var viewFriendsBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '57.35%')
+	.attr('width', '10%')
+	.attr('height', '4%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
+	.on('click', function(){
+		viewFriends();
+	});;
+	
+var viewFriendsText = adminToolsGroup.append('text')
+	.attr('x', '2%')
+	.attr('y', '60%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#0070C0')
+	.style('cursor','pointer')
+	.text('View Friends')
+	.on('click', function(){
+		viewFriends();
+	});
+	
 var logoutBtn = logoutGroup.append('rect')
 	.attr('height', '4%')
 	.attr('width', '8%')
