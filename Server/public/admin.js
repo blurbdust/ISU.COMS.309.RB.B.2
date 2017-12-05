@@ -8,7 +8,7 @@ socket.on('redirect', function(destination) {
 socket.emit('request user id', getCookie('username'));
 socket.on('get user id', function(id) {
 	document.cookie = "ID=" + id + "; path=/";
-}
+});
 
 var bodySelect = d3.select("body").select("div");
 var svgSelect = bodySelect.append("svg")
