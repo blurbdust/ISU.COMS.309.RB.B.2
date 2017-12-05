@@ -1,5 +1,5 @@
 var socket_server = connectToUserSocket();
-var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
+var robot_ip = "raspberrypi3-a.student.iastate.edu";
 
 //Redirect user as instructed by server
 socket_server.on('redirect', function(destination) {
@@ -157,23 +157,26 @@ window.addEventListener("load", function(){
   var webcam_host = $(".feed img");
   var cam_socket;
   console.log(robot_ip);
-  if (robot_ip == "http://raspberrypi3-a.student.iastate.edu"){
-    while (robot_ip == "http://raspberrypi3-a.student.iastate.edu"){
-      setTimeout(function(){
 
-      }, 100);
+  function waitForRobotIP(){
+    if (robot_ip == "raspberrypi3-a.student.iastate.edu"){
+      while (robot_ip == "raspberrypi3-a.student.iastate.edu"){
+        setTimeout(waitForRobotIP, 100);
+      }
+    }
+
+    else {
+      cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+      cam_socket.on("connection", function(socket){
+        console.log("Connected to camera");
+      });
+  
+      cam_socket.on('image', function (data) {
+        webcam_host.attr("src", "data:image/jpeg;base64," + data );
+      });
     }
   }
-  else {
-    cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
-    cam_socket.on("connection", function(socket){
-      console.log("Connected to camera");
-    });
-
-    cam_socket.on('image', function (data) {
-      webcam_host.attr("src", "data:image/jpeg;base64," + data );
-    });
-  }
+  waitForRobotIP();
 
   logout.addEventListener('mouseup', function(){
     console.log("Logging out...");
