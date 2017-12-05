@@ -56,6 +56,10 @@ app.get("/profile", (req, res) => {
 	res.sendFile(__dirname + "/profile.html");
 }); 
 
+app.get("/leaderboard", (req, res) => {
+	res.sendFile(__dirname + "/leaderboard.html");
+}); 
+
 //Public folder to serve files
 app.use(express.static(__dirname + '/public'));
  
@@ -503,6 +507,57 @@ io.on('connection', function(socket){
 		io.sockets.emit('robotInfo', robotInfoList);
 	});
 
+	//Client request for User Leaderboard
+	socket.on('request user leaderboard', function(username) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		var userLeaderboardList = [];
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM leaderboardUser", function (err, result, fields) {
+				if (err) throw err;
+				for (i = 0; i < result.length; i++) {
+						userLeaderboardList.push(result[i]);
+				}
+				
+				//Send User Leaderboard to client
+				socket.emit('user leaderboard update', userLeaderboardList);
+				con.end();
+			});
+		});
+		
+	});
+	
+	
+	//Client request for Robot Leaderboard
+	socket.on('request robot leaderboard', function(robotname) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			robot: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		var robotLeaderboardList = [];
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM leaderboardRobot", function (err, result, fields) {
+				if (err) throw err;
+				for (i = 0; i < result.length; i++) {
+						robotLeaderboardList.push(result[i]);
+				}
+				//Send Robot Leaderboard to client
+				socket.emit('robot leaderboard update', robotLeaderboardList);
+				con.end();
+			});
+		});
+		
+	});
+	
+	
 	socket.on('damage', function(data){
 		var inp = data.toString();
 		var bot = inp.substring(0, inp.indexOf(":"));
@@ -547,10 +602,10 @@ io.on('connection', function(socket){
 			password: "Ze3xcZG5",
 			database: "db309rbb2"
 		});
-
+		// Update Gunner leaderboard points
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = "SELECT * FROM users WHERE username = " + gunnerToAward;
+			var sql = "SELECT * FROM leaderboardUser WHERE username = " + gunnerToAward;
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				
@@ -566,10 +621,10 @@ io.on('connection', function(socket){
 				con.end();
 			});
 		});
-		
+		//Update Driver leaderboard points
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = "SELECT * FROM users WHERE username = " + driverToAward;
+			var sql = "SELECT * FROM leaderboardUser WHERE username = " + driverToAward;
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				
@@ -579,6 +634,26 @@ io.on('connection', function(socket){
 				}
 				else {
 					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + driverToAward + "', 10);";
+					con.query(insert);
+				}
+				
+				con.end();
+			});
+		});
+		
+		//Update Robot leaderboard points
+		con.connect(function(err) {
+			if (err) throw err;
+			var sql = "SELECT * FROM leaderboardRobot WHERE robotName = " + robotToAward;
+			con.query(sql, function(err, result, fields)  {
+				if (err) return;	//Currently not throwing errors
+				
+				if (result[0].robotName != null) {
+					var update = "UPDATE leaderboardRobot SET totalPoints = totalPoints + 10 WHERE robotName = '" + robotToAward + "';";
+					con.query(update);
+				}
+				else {
+					var insert = "INSERT INTO leaderboardRobot (robotName, totalPoints) values ('" + robotToAward + "', 10);";
 					con.query(insert);
 				}
 				

@@ -1,9 +1,10 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
+#include <boarddefs.h>
 #include <IRremote.h>
+#include <IRremoteInt.h>
 
-#define PIN_IR 10
-#define PIN_DETECT 4
+
 
 /**
 *
@@ -77,6 +78,8 @@ SuperServo servo_A(15);
 SuperServo servo_B(15);
 
 IRsend irsend;
+IRrecv irrecv(4);
+decode_results results;
 
 void setup()
 {
@@ -88,7 +91,7 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
- pinMode(PIN_IR, OUTPUT);
+ //pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
  speed = 100;
@@ -98,8 +101,9 @@ void setup()
 // delay(500);
 
   //IR STUFF
-  digitalWrite(PIN_IR, HIGH);
-  pinMode(PIN_DETECT, INPUT);
+  irrecv.enableIRIn();
+  //digitalWrite(PIN_IR, HIGH);
+  //pinMode(PIN_DETECT, INPUT);
   //irsend.enableIROut(38);
   //irsend.mark(0);
 }
@@ -122,7 +126,7 @@ void loop()                     // run over and over again
   }
   //IR Stuff  
   //if the ir sensor goes off, increase damage
-  if(digitalRead(PIN_DETECT) == LOW) {
+  if(irrecv.decode(&results)) {
     damage++;
     char msg[20];
     sprintf(msg, "Damage: %d\n", damage);
@@ -136,6 +140,7 @@ void loop()                     // run over and over again
     else {
       speed = (100 - (damage * 5));
     }
+	irrecv.resume();
   }
 }
 
@@ -264,11 +269,8 @@ void speed_Adjust(){
 
 void check_Fire(char inByte){
   if (inByte == 'K'){
-    //Set pin 10 to low.
-    digitalWrite(PIN_IR, LOW);
-  }
-  if (inByte == 'k'){
-    //Set pin 10 to high
-    digitalWrite(PIN_IR, HIGH);
-  }
+    for (int i = 0; i < 3; i++) {
+      irsend.sendSony(0xa90, 12); // Sony TV power code
+      delay(100);
+    }
 }
