@@ -1,4 +1,3 @@
-
 var socket= connectToUserSocket();
 
 
@@ -370,4 +369,5 @@ socket.on('robot leaderboard update', function(data){
 socket.on('user leaderboard update', function(data){
 	buildUserLeaderboard(data)
 });
+
 
