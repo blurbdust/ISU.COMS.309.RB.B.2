@@ -29,6 +29,7 @@ socket.on('profile info', function(data) {
 		if (data.username == getCookie("username")) {
 			document.getElementById('displayNameButton').innerHTML = "<button onclick='editDisplayName();'>Edit</button>";
 			document.getElementById('bioButton').innerHTML = "<button onclick='editBio();'>Edit</button>";
+			document.getElementById('profilePicButton').innerHTML = "<button type=\"button\" class=\"button\" onclick=\"openModal();\">Change Profile Pic</button>";
 		}
 		else {
 			document.getElementById('displayNameButton').innerHTML = "";

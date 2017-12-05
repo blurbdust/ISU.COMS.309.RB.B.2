@@ -216,14 +216,6 @@ io.on('connection', function(socket){
 			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 		else {
 			
-			//Associate username with socket
-			socket.username = data;
-			socket.type = "User";
-			console.log(socket.username + " connected");
-			userNameList.push(socket.username);
-			userSocketList.push(socket);
-			io.sockets.emit('usernames', userNameList);
-			
 			//Emit all database users
 			var con = mysql.createConnection({
 				host: "mysql.cs.iastate.edu",
@@ -237,6 +229,19 @@ io.on('connection', function(socket){
 				var sql = "SELECT * FROM users";
 				con.query(sql, function(err, result, fields)  {
 					if (err) throw err;
+					
+					//Associate username and ID with socket
+					socket.username = data;
+					socket.type = "User";
+					console.log(socket.username + " connected");
+					userNameList.push(socket.username);
+					userSocketList.push(socket);
+					io.sockets.emit('usernames', userNameList);
+					con.query("SELECT * FROM users WHERE Username = \"" + socket.username + "\";", function(err, result, fields) {
+						if (err) throw err;
+						socket.id = result[0].ID;
+					});
+					
 					for (i = 0; i < result.length; i++) {
 						dbAccountList.push(result[i].Username);
 					}
@@ -617,6 +622,32 @@ io.on('connection', function(socket){
 		});
 		
 	});
+	
+	/*socket.on('add friend', function(friendUname) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM user WHERE Username = \"" + friendUname + "\";", function (err, result, fields) {
+				if (err) return; //Not throwing errors
+				if (result.length == 0) return;
+				
+				con.query("INSERT INTO friends (FriendID, UserID) VALUES (" + result[0].ID + ", " + socket., function (err, result, fields) {
+				
+				
+				
+				
+				con.end();
+			});
+		});
+		
+		
+		
+	});*/
 	
 	
 	socket.on('damage', function(data){
