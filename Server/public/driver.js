@@ -1,6 +1,6 @@
 var socket_server = connectToUserSocket();
 
-if (getCookie("currentRobot") == "b8:27:eb:41:0b:d5"){
+if (getCookie("currentRobot") == "Cornelius"){
   var robot_ip = "raspberrypi3-a.student.iastate.edu";
 }
 else {
@@ -15,7 +15,7 @@ socket_server.on('redirect', function(destination) {
 
 
 //Reset user operator
-var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
+var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType"), 'currentRobot':getCookie("currentRobot")};
 socket_server.emit('set user operator', obj);
 
 socket_server.emit("request-robotIP", getCookie("username"), function(){

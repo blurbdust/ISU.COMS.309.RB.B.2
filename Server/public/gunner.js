@@ -15,7 +15,7 @@ socket_server.on('redirect', function(destination) {
 
 
 //Reset user operator
-var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
+var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType"), 'currentRobot':getCookie("currentRobot")};
 socket_server.emit('set user operator', obj);
 
 socket_server.emit("request-robotIP", getCookie("username"), function(){
