@@ -25,18 +25,15 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
   cam_socket.on('image', function (data) {
     webcam_host.attr("src", "data:image/jpeg;base64," + data );
   });
-
-  function waitForRobotIP(){
-      cam_socket.on("connection", function(socket){
+  
+  cam_socket.on("connection", function(socket){
         console.log("Connected to camera");
-      });
-  }
+  });
 
   
 socket_server.on("robotIP", function(data){
   robot_ip = data;
   console.log("Got new robot ip " + robot_ip);
-  waitForRobotIP();
   socket_robot = io(robot_ip + ':5210');
 });
 
