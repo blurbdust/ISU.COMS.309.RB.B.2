@@ -1,5 +1,5 @@
 var socket_server = connectToUserSocket();
-var robot_ip = "http://raspberrypi3-a.student.iastate.edu";
+var robot_ip = "raspberrypi3-a.student.iastate.edu";
 
 //Redirect user as instructed by server
 socket_server.on('redirect', function(destination) {
@@ -15,13 +15,32 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
   alert("Requested robotIP");
 });
 
+
+  var webcam_addr = "raspberrypi3-a.student.iastate.edu";
+  var webcam_port = "12000";
+  var webcam_host = $(".feed img");
+  var cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
+
+  cam_socket.on('image', function (data) {
+    webcam_host.attr("src", "data:image/jpeg;base64," + data );
+  });
+
+  function waitForRobotIP(){
+      cam_socket.on("connection", function(socket){
+        console.log("Connected to camera");
+      });
+  }
+  
+  
+
 socket_server.on("robotIP", function(data){
   robot_ip = data;
   console.log("Got new robot ip " + robot_ip);
+  waitForRobotIP();
   socket_robot = io(robot_ip + ':5210');
 });
 
-var socket_robot = io(robot_ip + ':5210');
+var socket_robot;
 
 
 //Chat Box
@@ -151,20 +170,6 @@ window.addEventListener("load", function(){
 	  fireStop();
   });
   
-  
-  //var webcam_addr = robot_ip;
-  var webcam_port = "12000";
-  var webcam_host = $(".feed img");
-  var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
-
-
-  cam_socket.on("connection", function(socket){
-    console.log("Connected to camera");
-  });
-
-  cam_socket.on('image', function (data) {
-    webcam_host.attr("src", "data:image/jpeg;base64," + data );
-  });
 
   logout.addEventListener('mouseup', function(){
     console.log("Logging out...");

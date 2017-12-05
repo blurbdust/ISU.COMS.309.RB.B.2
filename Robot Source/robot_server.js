@@ -1,8 +1,9 @@
 var io = require('socket.io-client');
 var ip = require('ip');
 
-var robotIP = ip.address()
+var robotIP = ip.address();
 var macAddress;
+var serialPort = "dumb";
 
 require('getmac').getMac(function(err, data){
     if (err){
@@ -10,7 +11,35 @@ require('getmac').getMac(function(err, data){
     }
     console.log("Got MAC: " + data);
     macAddress = data;
-})
+
+    var SerialPort = require('serialport');
+
+	if (macAddress.includes('b8:27:eb:41:0b:d5')){
+		serialPort = new SerialPort("/dev/ttyACM0",{
+			baudRate: 9600,
+			dataBits: 8,
+			parity: 'none',
+			stopBits: 1,
+			flowControl: false
+		});
+	}
+	else {
+		serialPort = new SerialPort("/dev/ttyUSB0",{
+			baudRate: 9600,
+			dataBits: 8,
+			parity: 'none',
+			stopBits: 1,
+			flowControl: false
+		});
+	}
+
+	serialPort.on('open', function(){
+		let dir = 'w';
+		console.log('Serial Port Opened');
+		sleep(1000);
+	});
+		
+});
 
 var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000', {
 	transports: ["websockets", "polling"],
@@ -51,40 +80,6 @@ var io_RPI = require("socket.io").listen(server); //Operators connect to this
 var operator;
 
 
-var SerialPort = require('serialport');
-var serialPort;
-
-if (macAddress == 'b8:27:eb:41:0b:d5'){
-	serialPort = new SerialPort("/dev/ttyACM0",{
-		baudRate: 9600,
-		dataBits: 8,
-		parity: 'none',
-		stopBits: 1,
-		flowControl: false
-	});
-}
-else {
-	serialPort = new SerialPort("/dev/ttyUSB0",{
-		baudRate: 9600,
-		dataBits: 8,
-		parity: 'none',
-		stopBits: 1,
-		flowControl: false
-	});
-}
-		
-
-
-
-
-serialPort.on('open', function(){
-	let dir = 'w';
-	console.log('Serial Port Opened');
-	sleep(1000);
-});
-	
-
-
 socket.on('connect', function(){
 	console.log("Connected to Central Server");
 	var robotName = "";
@@ -92,6 +87,8 @@ socket.on('connect', function(){
 		robotName = 'Excalibur';
 	else if (macAddress == 'b8:27:eb:41:0b:d5')
 		robotName = 'Cornelius';
+	else if (macAddress == 'b8:27:eb:60:3d:21')
+		robotName = 'Mr. Robot';
 	else
 		robotName = macAddress;
 	
@@ -133,6 +130,10 @@ io_RPI.on('connection', function(socket){
 webcam_server.broadcast();
 
 while(true){
+	if (serialPort == "dumb"){
+		sleep(0.1);
+		continue;
+	}
 	var readInput = serialPort.read(512);
 	if (readInput == null){
 		//console.log("Read is null");

@@ -342,20 +342,28 @@ io.on('connection', function(socket){
 			
 			con.query("SELECT * FROM users WHERE Username = '" + username + "'", function (err, result, fields) {
 				if (err) throw err;
+				var info = "";
 				
-				if (result[0].DisplayName != null) 
-					displayName = result[0].DisplayName;
-				if (result[0].Bio != null)
-					bio = result[0].Bio;
+				if (result.length == 0) {
+					info = {"success":false};
+				}
+				else {
 				
-				//Check if user is online
-				for (i = 0; i < userNameList.length; i++) {
-					if (userNameList[i] == username)
-						onlineStatus = true;
+					if (result[0].DisplayName != null) 
+						displayName = result[0].DisplayName;
+					if (result[0].Bio != null)
+						bio = result[0].Bio;
+					
+					//Check if user is online
+					for (i = 0; i < userNameList.length; i++) {
+						if (userNameList[i] == username)
+							onlineStatus = true;
+					}
+					
+					var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus, "success":true};
 				}
 				
 				//Emit findings
-				var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus};
 				socket.emit('profile info', info);
 				
 				con.end();
@@ -412,7 +420,7 @@ io.on('connection', function(socket){
 		
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = "UPDATE users SET Bio = '" + bio + "' WHERE Username = '" + socket.username + "';";
+			var sql = "UPDATE users SET Bio = \"" + bio + "\" WHERE Username = \"" + socket.username + "\";";
 			con.query(sql, function (err, result, fields) {
 				if (err) throw err;
 				con.end();
