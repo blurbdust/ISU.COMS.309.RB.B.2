@@ -147,6 +147,13 @@ app.post('/create_account', function(req, res) {
 	});	
 });
 
+app.post('/profile', function(req, res) {
+	console.log("User ID: " + req.body.test);
+	
+	
+	
+});
+
 
 app.post('/updateHP', function(req, res) {
 	var robot = req.body.robot;

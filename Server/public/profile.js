@@ -113,7 +113,18 @@ function uploadProfilePic() {
       console.log('Error: ', error);
     };
 	
+	var test = {"test":"hello, world!"};
+	
 	var toSend = {"image":reader.result, "ID":getCookie("ID")};
+	
+	/*$.ajax({
+	  type: "POST",
+	  url: "/profile",
+	  data: test,
+	  success: function(){},
+	  dataType: "json",
+	  contentType : "application/json"
+	});*/
 	
 	
 }
