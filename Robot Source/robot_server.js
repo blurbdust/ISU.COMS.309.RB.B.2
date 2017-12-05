@@ -11,9 +11,18 @@ require('getmac').getMac(function(err, data){
     }
     console.log("Got MAC: " + data);
     macAddress = data;
-	//if (macAddress.includes('b8:27:eb:41:0b:d5')){
 
-	/*}
+    var SerialPort = require('serialport');
+
+	if (macAddress.includes('b8:27:eb:41:0b:d5')){
+		serialPort = new SerialPort("/dev/ttyACM0",{
+			baudRate: 9600,
+			dataBits: 8,
+			parity: 'none',
+			stopBits: 1,
+			flowControl: false
+		});
+	}
 	else {
 		serialPort = new SerialPort("/dev/ttyACM0",{
 			baudRate: 9600,
@@ -22,27 +31,15 @@ require('getmac').getMac(function(err, data){
 			stopBits: 1,
 			flowControl: false
 		});
-	}*/
+	}
 
-
-		
-});
-
-
-    var SerialPort = require('serialport');
-
-		serialPort = new SerialPort("/dev/ttyACM0",{
-			baudRate: 9600,
-			dataBits: 8,
-			parity: 'none',
-			stopBits: 1,
-			flowControl: false
-		});
-			serialPort.on('open', function(){
+	serialPort.on('open', function(){
 		let dir = 'w';
 		console.log('Serial Port Opened');
 		sleep(1000);
 	});
+		
+});
 
 var socket = io.connect('http://proj-309-rb-b-2.cs.iastate.edu:3000', {
 	transports: ["websockets", "polling"],
