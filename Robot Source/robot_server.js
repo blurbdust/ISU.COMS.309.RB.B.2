@@ -1,7 +1,7 @@
 var io = require('socket.io-client');
 var ip = require('ip');
 
-var robotIP = ip.address()
+var robotIP = ip.address();
 var macAddress;
 var serialPort = "dumb";
 
@@ -56,11 +56,11 @@ var sleep = require('system-sleep');
 
 const LiveCam = require('livecam');
 const webcam_server = new LiveCam({
-	'ui_addr' : '0.0.0.0',
+	'ui_addr' : ip.address(),
 	'ui_port' : 11000,
-	'broadcast_addr' : '0.0.0.0',
+	'broadcast_addr' : ip.address(),
 	'broadcast_port' : 12000,
-	'gst_tcp_addr' : '0.0.0.0',
+	'gst_tcp_addr' : ip.address(),
 	'gst_tcp_port' : 10000,
 	'start' : function(){
 		console.log('WebCam server started!');
