@@ -2,7 +2,7 @@
 #include <IRremote.h>
 #include <IRremoteInt.h>
 
-#define PIN_DETECT 4
+
 
 /**
 *
@@ -67,10 +67,8 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
-int it = 0;
-int beenASecond = 1;
-
-int PIN_IR = 10;
+char robotType = "C";
+//int PIN_IR = 10;
 
 //number of times the IR thing has been hit
 int damage = 0;
@@ -81,9 +79,8 @@ SuperServo servo_A(15);
 SuperServo servo_B(15);
 
 IRsend irsend;
-//IRrecv irrecv(4);
+IRrecv irrecv(4);
 decode_results results;
-char msg[20];
 
 void setup()
 {
@@ -95,66 +92,59 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
- pinMode(PIN_IR, OUTPUT);
+// pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
- speed = 75;
+ speed = 100;
  
  stop_A();
  stop_B();
- //delay(500);
+ delay(500);
 
   //IR STUFF
-  //irrecv.enableIRIn();
+  irrecv.enableIRIn();
 }
 
 void loop()                     // run over and over again
 {
-  
-  if ((beenASecond == 1) && (digitalRead(PIN_DETECT) == LOW)) {
-
-    //if (((damage % 10) == 0)){
-      sprintf(msg, "Damage: %d\n", damage);
-      int bytesWritten = Serial.write(msg);
-      if (damage > 1500){
-        speed = 0;
-      }
-      if (damage > 1000){
-        speed = 10;
-      }
-      else {
-        speed = (75 - (damage * 0.05));
-      }
-    //}
-    damage++;
-    beenASecond = 0;
-    
-  }
-  
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
     check_Servo(InByte);
     check_Fire(InByte);
-    //speed_Adjust();
+    speed_Adjust();
     
   }
-  
+  /*
+  if(irrecv.decode(&results)) {
+    
+    damage++;
+    char msg[20];
+    sprintf(msg, "Damage: %d\n", damage);
+    int bytesWritten = Serial.write(msg);
+    if (damage > 15){
+      speed = 0;
+    }
+    if (damage > 10){
+      speed = 10;
+    }
+    else {
+      speed = (100 - (damage * 5));
+    }
+
+  irrecv.resume();
+
+  }
+  */
   if(servo_A.getInc() != 0){
      servo_A.Update();
   }
   if(servo_B.getInc() != 0){
      servo_B.Update();
   }
-
-  if ((it % 10000) == 0){
-    it = 0;
-    beenASecond = 1;
-  }
-  else {
-    beenASecond = 0;
-    it++;
-  }
+  //IR Stuff  
+  //if the ir sensor goes off, increase damage
+  
 }
 
 
@@ -276,7 +266,6 @@ void check_Movement(char InByte){
     stop_B();
   }
 }
-/*
 void speed_Adjust(){
   if(InByte == '+'){
     speed = 225;
@@ -288,19 +277,24 @@ void speed_Adjust(){
     speed = 100;
   }
 }
-*/
+
 void check_Fire(char inByte){
   if (inByte == 'K'){
-
-    
-    for (int i = 0; i < 3; i++) {
-      irsend.sendSony(0xa90, 12); // Sony TV power code
-      Serial.println("IR Sent");
-      delay(100);
+    if (robotType == "C"){
+      //pin write mode
+      //digitalWrite(PIN_IR, LOW);
     }
-    //irrecv.resume();
-    //irrecv.enableIRIn();
-    delay(200);
-
+    else {
+      for (int i = 0; i < 3; i++) {
+        irsend.sendSony(0xa90, 12); // Sony TV power code
+        delay(100);
+      }
+    }
+  }
+  if (inByte == 'k'){
+      if (robotType == "C"){
+        //pin write mode
+        //digitalWrite(PIN_IR, HIGH);
+      }
   }
 }
