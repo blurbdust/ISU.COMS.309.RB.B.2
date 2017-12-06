@@ -21,6 +21,18 @@
 				max-width: 1170px;
 				margin: auto;
 			}
+			
+			a {
+				color: #000000;
+				text-decoration: none;
+			}
+
+			a:hover 
+			{
+				 color:#00A0C6; 
+				 text-decoration:none; 
+				 cursor:pointer;  
+			}
 
 			input[type=text], input[type=password] {
 				width: 100%;
@@ -142,18 +154,18 @@
 				<div style="text-align:center;">
 					<div class='box'>
 						<u><h2 id='username' style="text-align:center"></h2></u>
-						<p style="font-size:18px"><strong>Display Name:</strong> <span id='displayName'></span> <span id='displayNameButton'></span></p>
-						<p style="font-size:18px"><strong>Bio:</strong> <span id='bio'></span> <span id='bioButton'><button onclick="editBio();">Edit</button></span></p>
+						<p style="font-size:20px"><strong>Display Name:</strong> <span id='displayName'></span> <span id='displayNameButton'></span></p>
+						<p style="font-size:20px"><strong>Bio:</strong> <span id='bio'></span> <span id='bioButton'><button onclick="editBio();">Edit</button></span></p>
 					</div>
 					
 					<div class='box'>
 						<u><h2 id='friends' style="text-align:center">Friends</h2></u>
-						<div id='friendsList' style="font-size:18px;"></div>
+						<div id='friendsList' style="font-size:20px;"></div>
 					</div>
 					
 					<div style="text-align:center">
-						<button type="button" class="button" onclick="viewProfile();">View Profile</button>
 						<button type="button" class="button" onclick="goToLobby();">Return to Lobby</button>
+						<button type="button" class="button" onclick="viewProfile();">View Profile</button>
 						<span id="profilePicButton"><button type="button" class="button" onclick="openModal();">Change Profile Pic</button></span>
 						<span id="addFriendButton"></span>
 						<button type="button" class="button" onclick="logout();" style="background-color:red">Logout</button>
@@ -176,10 +188,7 @@
 							<input type="text" name="pic" id="pic">
 							<input type="submit" value="Submit">
 						</form>
-					
 					</div>
-					
-					
 				  </div>
 
 				</div>

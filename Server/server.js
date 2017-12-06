@@ -19,8 +19,8 @@ const url = require('url');
 
 
 //Initialize bodyParser
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.json({limit: '5mb'})); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // support encoded bodies
  
 //Send login page 
 app.get("/login", (req, res) => {
@@ -139,7 +139,7 @@ app.post('/create_account', function(req, res) {
 			else {
 				console.log("1 record inserted");
 				//res.send("User created!");
-				res.sendFile(path.resolve(__dirname + '/login.html'));
+				res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 			}
 			
 			con.end();
@@ -421,14 +421,12 @@ io.on('connection', function(socket){
 					
 					
 					//Create friends list
-					con.query("SELECT * FROM friends WHERE UserID = " + socket.id + ";", function (err, friend, fields) {
+					con.query("SELECT * FROM friends WHERE UserID = " + result[0].ID + ";", function (err, friend, fields) {
 						if (err) throw err;
 						for (i = 0; i < friend.length; i++) {
-							console.log(friend[i].FriendID);
 							con.query("SELECT * FROM users WHERE ID = " + friend[i].FriendID + ";", function (err, friendUser, fields) {
 								if (err) throw err;							
 								friendsArray.push(friendUser[0].Username);
-								console.log(friendUser[0].Username);
 							});
 						}
 						con.end();

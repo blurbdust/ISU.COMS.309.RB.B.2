@@ -6,7 +6,9 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
-socket.emit('request profile info', getCookie("username"));
+//View own profile
+var curProfile = getCookie("username");
+socket.emit('request profile info', curProfile);
 
 socket.on('profile info', function(data) {
 	
@@ -59,7 +61,7 @@ socket.on('profile info', function(data) {
 		//Display friends
 		var html = '';
 		for (i = 0; i < data.friendsArray.length; i++) {
-			html += data.friendsArray[i] + '<br/>';
+			html += "<a onclick=\"viewProfileByUsername('" + data.friendsArray[i] + "')\" href=\"#\">" + data.friendsArray[i] + "</a><br/>";
 		}
 		document.getElementById("friendsList").innerHTML = html;
 	}
@@ -91,8 +93,12 @@ function urlExists(url) {
 }
 
 function viewProfile() {
-	var uname = prompt("Enter username:", getCookie("username"));
-	socket.emit('request profile info', uname);
+	curProfile = prompt("Enter username:", getCookie("username"));
+	socket.emit('request profile info', curProfile);
+}
+
+function viewProfileByUsername(username) {
+	socket.emit('request profile info', username);
 }
 
 function goToLobby() {
@@ -130,8 +136,9 @@ function uploadProfilePic() {
 }
 
 function addFriend() {
-	var uname = prompt("Enter username:", "user123");
-	socket.emit('add friend', uname);
+	if (confirm("Add " + curProfile + " to friends list?")) {
+		socket.emit('add friend', curProfile);
+	} 
 }
 		
 		
