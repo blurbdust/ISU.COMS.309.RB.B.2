@@ -337,7 +337,9 @@ io.on('connection', function(socket){
 			}
 		}
 	});
-	
+	socket.on('redirect leaderboard', function(data){
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'leaderboard');
+	});
 	socket.on ('set user operator', function(data) {
 	
 		//If user previously chose one, remove it

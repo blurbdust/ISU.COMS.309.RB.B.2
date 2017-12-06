@@ -412,7 +412,7 @@ function spectate(){
 	}
 }
 function leaderboard(){
-	socket.emit("leaderboard");	
+	socket.emit("redirect leaderboard");	
 }
 
 
