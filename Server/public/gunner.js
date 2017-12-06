@@ -24,7 +24,15 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
 });
 
 
+socket_robot.emit('request damage', function(){
+	  console.log('Requested damage');
+  });
   
+  socket_server.on('damage update', function(damage) {
+    console.log("Damage update event recieved. " + damage);
+	  health = ((1500 - damage) / (1500));
+	  health_bar.style.setAttribute('width', "" + health + "%");
+  });
 socket_server.on("robotIP", function(data){
   //robot_ip = data;
   console.log("Got new robot ip " + data);
@@ -66,16 +74,6 @@ window.addEventListener("load", function(){
   var health_container = document.getElementById('health_container');
   var health_bar = document.getElementById('health_bar');
   var health = 100;
-  
-  socket_robot.emit('request damage', function(){
-	  console.log('Requested damage');
-  });
-  
-  socket_server.on('damage update', function(damage) {
-    console.log("Damage update event recieved. " + damage);
-	  health = ((1500 - damage) / (1500));
-	  health_bar.style.setAttribute('width', "" + health + "%");
-  });
 
   //laser-charging process and charging status
   var charge;  
