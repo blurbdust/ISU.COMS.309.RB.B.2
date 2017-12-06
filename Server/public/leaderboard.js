@@ -361,7 +361,7 @@ var requestUpdate = setInterval(function(){
 /	BASED ON ADMIN OR USER
 */
 function back(){
-	clearInterval(requestUpdate());
+	//clearInterval(requestUpdate());
 	socket.emit('request back');
 }
 
