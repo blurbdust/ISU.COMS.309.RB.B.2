@@ -24,7 +24,7 @@ require('getmac').getMac(function(err, data){
 		});
 	}
 	else {
-		serialPort = new SerialPort("/dev/ttyUSB0",{
+		serialPort = new SerialPort("/dev/ttyACM0",{
 			baudRate: 9600,
 			dataBits: 8,
 			parity: 'none',
@@ -56,9 +56,9 @@ var sleep = require('system-sleep');
 
 const LiveCam = require('livecam');
 const webcam_server = new LiveCam({
-	'ui_addr' : '0.0.0.0',
+	'ui_addr' : ip.address(),
 	'ui_port' : 11000,
-	'broadcast_addr' : '0.0.0.0',
+	'broadcast_addr' : ip.address(),
 	'broadcast_port' : 12000,
 	'gst_tcp_addr' : '0.0.0.0',
 	'gst_tcp_port' : 10000,
@@ -88,7 +88,7 @@ socket.on('connect', function(){
 	else if (macAddress == 'b8:27:eb:41:0b:d5')
 		robotName = 'Cornelius';
 	else if (macAddress == 'b8:27:eb:60:3d:21')
-		robotName = 'Mr. Robot';
+		robotName = 'MrRobot';
 	else
 		robotName = macAddress;
 	

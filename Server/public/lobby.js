@@ -48,6 +48,10 @@ document.getElementById("operatorButton").addEventListener("click", function(){
     socket.emit("request-for-redirect", getCookie("username"));
 });
 
+document.getElementById("leaderboardButton").addEventListener("click", function(){
+    window.location.href = "http://proj-309-rb-b-2.cs.iastate.edu:3000/leaderboard";
+});
+
 //Display connected users
 socket.on('usernames', function(data) {
 
@@ -72,7 +76,7 @@ socket.on('robotInfo', function(data) {
 		if (data[i].gunner != "")
 			html += data[i].gunner + "</span><br/>";
 		else {
-			var varString = '' + i + ', "gunner"';
+			var varString = '' + i + ', "gunner", "' + data[i].name + '"';
 			html += "<button type='button' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
 		}
 		
@@ -81,7 +85,7 @@ socket.on('robotInfo', function(data) {
 		if (data[i].driver != "")
 			html += data[i].driver + "</span><br/>";
 		else {
-			var varString = '' + i + ', "driver"';
+			var varString = '' + i + ', "driver", "' + data[i].name + '"';
 			html += "<button type='button' onclick='setOperator(" + varString + ");'>Join</button></span><br/>";
 		}
 		html += '<br />';
@@ -89,10 +93,11 @@ socket.on('robotInfo', function(data) {
 	document.getElementById("robots").innerHTML = html;
 });
 
-function setOperator(index, operatorType) {
+function setOperator(index, operatorType, robotName) {
 	var obj = {'username':getCookie("username"), 'robotIndex':index, 'operatorType':operatorType};
 	document.cookie = "robotIndex=" + index + "; path=/";
 	document.cookie = "operatorType=" + operatorType + "; path=/";
+	document.cookie = "currentRobot=" + robotName + "; path=/";
 	socket.emit('set user operator', obj);
 	var opType = "";
 	if (operatorType == "driver")

@@ -19,8 +19,8 @@ const url = require('url');
 
 
 //Initialize bodyParser
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.json({limit: '5mb'})); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' })); // support encoded bodies
  
 //Send login page 
 app.get("/login", (req, res) => {
@@ -139,12 +139,65 @@ app.post('/create_account', function(req, res) {
 			else {
 				console.log("1 record inserted");
 				//res.send("User created!");
-				res.sendFile(path.resolve(__dirname + '/login.html'));
+				res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 			}
 			
 			con.end();
 		});
 	});	
+});
+
+app.post('/profile', function(req, res) {
+	
+	const fs = require('fs');
+	
+	var fileType = req.body.pic.split(',')[0];
+	fileType = fileType.split(';')[0];
+	fileType = fileType.split('/')[1];
+	console.log(fileType);
+	var data = req.body.pic.split(',')[1];
+	let buff = new Buffer(data, 'base64');
+	if (fileType == "jpeg") {
+		
+		//Delete png if it exists
+		fs.stat(__dirname + "/public/avatars/" + req.body.id + ".png", function (err, stats) {
+		   console.log(stats);//here we got all information of file in stats variable
+
+		   if (err) {
+			   return console.error(err);
+		   }
+
+		   fs.unlink(__dirname + "/public/avatars/" + req.body.id + ".png",function(err){
+				if(err) return console.log(err);
+				console.log('file deleted successfully');
+		   });  
+		});
+		
+		//Convert to Base64 and write to folder
+		fs.writeFileSync(__dirname + "/public/avatars/" + req.body.id + ".jpg", buff);
+	}
+	else if (fileType == "png") {
+		
+		//Delete jpg if it exists
+		fs.stat(__dirname + "/public/avatars/" + req.body.id + ".jpg", function (err, stats) {
+		   console.log(stats);//here we got all information of file in stats variable
+
+		   if (err) {
+			   return console.error(err);
+		   }
+
+		   fs.unlink(__dirname + "/public/avatars/" + req.body.id + ".jpg",function(err){
+				if(err) return console.log(err);
+				console.log('file deleted successfully');
+		   });  
+		});
+		
+		//Convert from Base64 and write to folder
+		fs.writeFileSync(__dirname + "/public/avatars/" + req.body.id + ".png", buff);
+	}
+	
+	res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'profile');
+	
 });
 
 
@@ -163,14 +216,6 @@ io.on('connection', function(socket){
 			socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'login');
 		else {
 			
-			//Associate username with socket
-			socket.username = data;
-			socket.type = "User";
-			console.log(socket.username + " connected");
-			userNameList.push(socket.username);
-			userSocketList.push(socket);
-			io.sockets.emit('usernames', userNameList);
-			
 			//Emit all database users
 			var con = mysql.createConnection({
 				host: "mysql.cs.iastate.edu",
@@ -184,6 +229,19 @@ io.on('connection', function(socket){
 				var sql = "SELECT * FROM users";
 				con.query(sql, function(err, result, fields)  {
 					if (err) throw err;
+					
+					//Associate username and ID with socket
+					socket.username = data;
+					socket.type = "User";
+					console.log(socket.username + " connected");
+					userNameList.push(socket.username);
+					userSocketList.push(socket);
+					io.sockets.emit('usernames', userNameList);
+					con.query("SELECT * FROM users WHERE Username = \"" + socket.username + "\";", function(err, result, fields) {
+						if (err) throw err;
+						socket.id = result[0].ID;
+					});
+					
 					for (i = 0; i < result.length; i++) {
 						dbAccountList.push(result[i].Username);
 					}
@@ -279,7 +337,38 @@ io.on('connection', function(socket){
 			}
 		}
 	});
+	socket.on('redirect leaderboard', function(data){
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'leaderboard');
+	});
 	
+	socket.on('redirect back', function(data){
+		
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+		  if (err) throw err;
+		  con.query("SELECT * FROM users WHERE Username = '" + data + "'", function (err, result, fields) {
+			if (err){
+				throw err;
+			}
+
+		
+			else if (result[0].UserRole != null && result[0].UserRole == 1) {
+				socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin');
+			}
+			else {
+				socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
+			}
+			
+			con.end();
+		  });
+		});
+	});
 	socket.on ('set user operator', function(data) {
 	
 		//If user previously chose one, remove it
@@ -336,6 +425,7 @@ io.on('connection', function(socket){
 		var displayName = "";
 		var bio = "";
 		var onlineStatus = false;
+		var friendsArray = [];
 		
 		
 		//Check database for Display Name and Bio
@@ -368,13 +458,24 @@ io.on('connection', function(socket){
 							onlineStatus = true;
 					}
 					
-					var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus, "success":true};
+					
+					//Create friends list
+					con.query("SELECT * FROM friends WHERE UserID = " + result[0].ID + ";", function (err, friend, fields) {
+						if (err) throw err;
+						for (i = 0; i < friend.length; i++) {
+							con.query("SELECT * FROM users WHERE ID = " + friend[i].FriendID + ";", function (err, friendUser, fields) {
+								if (err) throw err;							
+								friendsArray.push(friendUser[0].Username);
+							});
+						}
+						con.end();
+					});
+					
+					setTimeout(function() {
+						var info = {"ID":result[0].ID, "username":username, "displayName":displayName, "bio":bio, "onlineStatus":onlineStatus, "friendsArray":friendsArray, "success":true};
+						socket.emit('profile info', info);
+					}, 200);
 				}
-				
-				//Emit findings
-				socket.emit('profile info', info);
-				
-				con.end();
 			});
 		});
 	});
@@ -573,6 +674,32 @@ io.on('connection', function(socket){
 		
 	});
 	
+	socket.on('add friend', function(friendUname) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM users WHERE Username = \"" + friendUname + "\";", function (err, result, fields) {
+				if (err) throw err;
+				if (result.length == 0) return;
+				
+				con.query("INSERT INTO friends (FriendID, UserID) VALUES (" + result[0].ID + ", " + socket.id + ");", function (err, result, fields) {
+					if (err) throw err;
+					socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'profile');
+					con.end();
+				});
+				
+			});
+		});
+		
+		
+		
+	});
+	
 	
 	socket.on('damage', function(data){
 		var inp = data.toString();
@@ -676,9 +803,37 @@ io.on('connection', function(socket){
 				con.end();
 			});
 		});
+	});
+	
+	//Client request for User Leaderboard
+	socket.on('request friend list', function(UserID) {
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		var friendList = [];
+		var friendIDList = [];
+		con.connect(function(err) {
+			if (err) throw err;
+			con.query("SELECT * FROM friends WHERE UserID = " + UserID, function (err, result, fields) {
+				if (err) throw err;
+				for (i = 0; i < result.length; i++) {
+						friendIDList.push(result[i].FriendID);
+				}
+				for(i=0; i<friendIDList.length; i++){
+					con.query("SELECT * FROM users WHERE ID = " + friendIDList[i], function(err, result, fields){
+						friendList[i].push({"name":result[0].Username, "online":userNameList.contains(result[0].Username)});
+					});					
+				}
+				
+				
+				//Send friend list
+				socket.emit('friend list update', friendList);
+				con.end();
+			});
+		});
 		
-		
-
-
 	});
 });

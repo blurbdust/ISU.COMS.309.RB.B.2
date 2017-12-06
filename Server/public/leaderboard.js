@@ -5,6 +5,9 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
+socket.emit('request user leaderboard');
+socket.emit('request robot leaderboard');
+
 var bodySelect = d3.select("body").append("div");
 var svgSelect = bodySelect.append("svg")
 				.attr("preserveAspectRatio", "xMinYMin meet")
@@ -256,7 +259,7 @@ function buildUserLeaderboard(data){
 			.attr('font-family', 'trebuchet ms')
 			.style('fill','#0070C0')
 			.text(function(d){
-				return data.indexOf(d);
+				return data.indexOf(d)+1;
 			});
 			
 	/*
@@ -308,7 +311,7 @@ function buildRobotLeaderboard(data){
 			.attr('font-family', 'trebuchet ms')
 			.style('fill','#0070C0')
 			.text(function(d){
-				return data.indexOf(d);
+				return data.indexOf(d)+1;
 			});
 			
 	/*
@@ -343,13 +346,7 @@ function buildRobotLeaderboard(data){
 			});
 }
 
-/*
-/	REQUEST TO GO BACK TO PREVIOUS PAGE 
-/	BASED ON ADMIN OR USER
-*/
-function back(){
-	socket.emit('request back');
-}
+
 
 /*
 /	REQUEST UPDATE FROM SERVER EVERY MINUTE
@@ -359,6 +356,14 @@ var requestUpdate = setInterval(function(){
 	socket.emit('request robot leaderboard');
 }, 60000);
 
+/*
+/	REQUEST TO GO BACK TO PREVIOUS PAGE 
+/	BASED ON ADMIN OR USER
+*/
+function back(){
+	//clearInterval(requestUpdate());
+	socket.emit('redirect back', getCookie("username"));
+}
 
 /*
 /	RECEIVE LEADERBOARD DATA AND BUILD TABLES 

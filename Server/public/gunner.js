@@ -1,5 +1,13 @@
+
 var socket_server = connectToUserSocket();
-var robot_ip = "raspberrypi3-a.student.iastate.edu";
+
+if (getCookie("currentRobot") == "Cornelius"){
+  var robot_ip = "raspberrypi3-a.student.iastate.edu";
+}
+else {
+  var robot_ip = "monmodenic.student.iastate.edu";
+}
+var socket_robot = io(robot_ip + ":5210");
 
 //Redirect user as instructed by server
 socket_server.on('redirect', function(destination) {
@@ -8,7 +16,7 @@ socket_server.on('redirect', function(destination) {
 
 
 //Reset user operator
-var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType")};
+var obj = {'username':getCookie("username"), 'robotIndex':getCookie("robotIndex"), 'operatorType':getCookie("operatorType"), 'currentRobot':getCookie("currentRobot")};
 socket_server.emit('set user operator', obj);
 
 socket_server.emit("request-robotIP", getCookie("username"), function(){
@@ -16,31 +24,11 @@ socket_server.emit("request-robotIP", getCookie("username"), function(){
 });
 
 
-  var webcam_addr = "monmodenic.student.iastate.edu";
-  var webcam_port = "12000";
-  var webcam_host = $(".feed img");
-  var cam_socket;
-
-  function waitForRobotIP(){
-      cam_socket = io.connect('http://' + webcam_addr + ':' + webcam_port);
-      cam_socket.on("connection", function(socket){
-        console.log("Connected to camera");
-      });
   
-      cam_socket.on('image', function (data) {
-        webcam_host.attr("src", "data:image/jpeg;base64," + data );
-      });
-  }
-
 socket_server.on("robotIP", function(data){
-  robot_ip = data;
-  console.log("Got new robot ip " + robot_ip);
-  waitForRobotIP();
-  socket_robot = io(robot_ip + ':5210');
+  //robot_ip = data;
+  console.log("Got new robot ip " + data);
 });
-
-var socket_robot = io(robot_ip + ':5210');
-
 
 //Chat Box
 $(function () {
@@ -169,6 +157,18 @@ window.addEventListener("load", function(){
 	  fireStop();
   });
   
+
+  var webcam_port = "12000";
+  var webcam_host = $(".feed img");
+  var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+    
+  cam_socket.on("connection", function(socket){
+    console.log("Connected to camera");
+  });
+  cam_socket.on('image', function (data) {
+    webcam_host.attr("src", "data:image/jpeg;base64," + data );
+  });
+    
 
   logout.addEventListener('mouseup', function(){
     console.log("Logging out...");
