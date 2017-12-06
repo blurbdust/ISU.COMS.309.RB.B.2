@@ -1,3 +1,4 @@
+
 var socket= connectToUserSocket();
 
 socket.on('redirect', function(destination) {
@@ -243,6 +244,36 @@ var leaderboardText = adminToolsGroup.append('text')
 		leaderboard();
 	});
 	
+var profileBtn = adminToolsGroup.append('rect')
+	.attr('x', '1.5%')
+	.attr('y', '65.35%')
+	.attr('width', '10%')
+	.attr('height', '6%')
+	.style('fill', 'white')
+	.attr('stroke-width', 3)
+	.attr('stroke', 'black')
+	.style('cursor','pointer')
+	.on('click', function(){
+		profile();
+	});
+	
+var profileText = adminToolsGroup.append('text')
+	.attr('x', '2.25%')
+	.attr('y', '68%')
+	.attr('font-size' , '16px')
+	.attr('font-weight', '900') 
+	.attr('font-family', 'sans-serif')
+	.attr('fill', '#0070C0')
+	.style('cursor','pointer')
+	.text('View')
+	.on('click', function(){
+			deleteAccount();
+		})
+	.append('tspan')
+		.attr('dy', '1.1em')
+		.attr('dx', '-1.5em')
+		.text('Profile');
+	
 var logoutBtn = logoutGroup.append('rect')
 	.attr('height', '4%')
 	.attr('width', '8%')
@@ -255,6 +286,7 @@ var logoutBtn = logoutGroup.append('rect')
 	.on('click', function(){
 		logout();
 	});
+	
 var logoutText = logoutGroup.append('text')
 	.attr('x', '2.25%')
 	.attr('y', '77.75%')

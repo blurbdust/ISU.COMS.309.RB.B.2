@@ -340,6 +340,9 @@ io.on('connection', function(socket){
 	socket.on('redirect leaderboard', function(data){
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'leaderboard');
 	});
+	socket.on('redirect profile', function(data){
+		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'leaderboard');
+	});
 	
 	socket.on('redirect back', function(data){
 		

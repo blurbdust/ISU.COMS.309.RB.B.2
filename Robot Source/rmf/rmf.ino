@@ -67,7 +67,6 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
-char robotType = "C";
 int PIN_IR = 10;
 
 //number of times the IR thing has been hit
@@ -107,6 +106,7 @@ void setup()
 
 void loop()                     // run over and over again
 {
+  /*
   if(irrecv.decode(&results)) {
 	  
     Serial.println("IR recieved");
@@ -128,7 +128,7 @@ void loop()                     // run over and over again
     
     irrecv.resume();
   }
-  
+  */
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
