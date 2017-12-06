@@ -2,7 +2,7 @@
 #include <IRremote.h>
 #include <IRremoteInt.h>
 
-
+#define PIN_DETECT 4
 
 /**
 *
@@ -106,29 +106,25 @@ void setup()
 
 void loop()                     // run over and over again
 {
-  /*
-  if(irrecv.decode(&results)) {
-	  
-    Serial.println("IR recieved");
+  
+  if(digitalRead(PIN_DETECT) == LOW) {
 
-    
     damage++;
     char msg[20];
     sprintf(msg, "Damage: %d\n", damage);
     int bytesWritten = Serial.write(msg);
-    if (damage > 15){
+    if (damage > 150){
       speed = 0;
     }
-    if (damage > 10){
+    if (damage > 100){
       speed = 10;
     }
     else {
-      speed = (100 - (damage * 5));
+      speed = (75 - (damage * 5));
     }
     
-    irrecv.resume();
   }
-  */
+  
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
