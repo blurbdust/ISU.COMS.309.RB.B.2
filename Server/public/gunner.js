@@ -72,6 +72,7 @@ window.addEventListener("load", function(){
   });
   
   socket_server.on('damage update', function(damage){
+    console.log("Damage update event recieved. " + damage);
 	  health = ((1500 - damage) / (1500));
 	  health_bar.setAttribute('width', health + "%");
   });
