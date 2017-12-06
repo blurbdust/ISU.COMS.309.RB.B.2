@@ -33,7 +33,7 @@ socket_server.on("robotIP", function(data){
 //Chat Box
 $(function () {
   $('#msgform').submit(function(){
-    socket_server.emit('chat message gunnner', $('#m').val());
+    socket_server.emit('chat message gunner', $('#m').val());
     $('#m').val('');
     return false;
   });
