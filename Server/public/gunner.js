@@ -72,7 +72,7 @@ window.addEventListener("load", function(){
   });
   
   socket_server.on('damage update', function(damage){
-	  health -= (damage * 5);
+	  health = ((damage) / (1500));
 	  health_bar.setAttribute('width', health + "%");
   });
 

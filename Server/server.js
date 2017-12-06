@@ -707,8 +707,8 @@ io.on('connection', function(socket){
 	socket.on('damage', function(data){
 		var inp = data.toString();
 		var bot = inp.substring(0, inp.indexOf(":"));
-		var amount = inp.substring(inp.indexOf(":"));
-		console.log("Damage update requested. Robot: " + bot + " down to " + amount);
+		var amount = inp.substring(inp.indexOf(":") + 1);
+		console.log("Damage update requested. Robot: " + bot + " down to" + amount);
 
 	// Award points to other robot
 	// Go through active robot list
