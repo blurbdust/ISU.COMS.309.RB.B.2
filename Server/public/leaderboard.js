@@ -362,7 +362,7 @@ var requestUpdate = setInterval(function(){
 */
 function back(){
 	//clearInterval(requestUpdate());
-	socket.emit('request back');
+	socket.emit('redirect back', getCookie("username"));
 }
 
 /*
