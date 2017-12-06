@@ -101,8 +101,8 @@ function viewProfileByUsername(username) {
 	socket.emit('request profile info', username);
 }
 
-function goToLobby() {
-	window.location.href = 'http://proj-309-rb-b-2.cs.iastate.edu:3000/lobby';
+function returnHome() {
+	socket.emit('redirect back', getCookie("username"));
 }
 
 function logout() {

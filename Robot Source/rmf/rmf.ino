@@ -3,7 +3,6 @@
 #include <IRremoteInt.h>
 
 #define PIN_DETECT 4
-
 /**
 *
 *@author Kevin Haan and Ryan Pals
@@ -71,20 +70,18 @@ int it = 0;
 int beenASecond = 1;
 
 int PIN_IR = 10;
+int PIN_FLAME_DIG = 4; 
+int PIN_FLAME_AN = A0; 
 
 //number of times the IR thing has been hit
 int damage = 0;
-
+int hitVal;
 char InByte;
 int speed; 
 SuperServo servo_A(15);
 SuperServo servo_B(15);
 
-IRsend irsend;
-//IRrecv irrecv(4);
-decode_results results;
 char msg[20];
-
 void setup()
 {
  Serial.begin(9600);
@@ -291,16 +288,23 @@ void speed_Adjust(){
 */
 void check_Fire(char inByte){
   if (inByte == 'K'){
+    digitalWrite(PIN_IR, HIGH);
+    delay(1000);
+    digitalWrite(PIN_IR, LOW);
+  }
+}
 
-    
-    for (int i = 0; i < 3; i++) {
-      irsend.sendSony(0xa90, 12); // Sony TV power code
-      Serial.println("IR Sent");
-      delay(100);
+void check_Hit(){
+    hitVal = digitalRead(PIN_DETECT);
+    if(hitVal== HIGH){
+      Serial.println("damage received");
     }
+
     //irrecv.resume();
     //irrecv.enableIRIn();
     delay(200);
 
   }
 }
+
+
