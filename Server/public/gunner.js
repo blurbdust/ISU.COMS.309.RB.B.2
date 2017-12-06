@@ -37,8 +37,8 @@ $(function () {
     $('#m').val('');
     return false;
   });
-  socket_server.on('chat message', function(msg){
-    $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
+  socket_server.on('chat message gunner', function(msg){
+    $('#messages').append($('<li><strong>[' + msg.type + ']' + msg.username + ":</strong> " + msg.message + '</li>'));
     var chatDiv = document.getElementById("chat-box");
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });
@@ -72,7 +72,8 @@ window.addEventListener("load", function(){
   });
   
   socket_server.on('damage update', function(damage){
-	  health -= (damage * 5);
+    console.log("Damage update event recieved. " + damage);
+	  health = ((1500 - damage) / (1500));
 	  health_bar.setAttribute('width', health + "%");
   });
 

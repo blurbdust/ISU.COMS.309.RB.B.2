@@ -410,10 +410,18 @@ io.on('connection', function(socket){
 	});
 	
 	
-	socket.on('chat message', function(msg){
-		io.emit('chat message', {message: msg, username: socket.username});
+	socket.on('chat message lobby', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Lobby'});
 	});
-	
+	socket.on('chat message gunner', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Gunner'});
+	});
+	socket.on('chat message driver', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Driver'});
+	});
+	socket.on('chat message spectator', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Spectator'});
+	});
 	socket.on('request profile info', function(username) {
 	
 		//Initialize variables
@@ -699,8 +707,8 @@ io.on('connection', function(socket){
 	socket.on('damage', function(data){
 		var inp = data.toString();
 		var bot = inp.substring(0, inp.indexOf(":"));
-		var amount = inp.substring(inp.indexOf(":"));
-		console.log("Damage update requested. Robot: " + bot + " down to " + amount);
+		var amount = inp.substring(inp.indexOf(":") + 1);
+		console.log("Damage update requested. Robot: " + bot + " down to" + amount);
 
 	// Award points to other robot
 	// Go through active robot list
@@ -740,62 +748,56 @@ io.on('connection', function(socket){
 			password: "Ze3xcZG5",
 			database: "db309rbb2"
 		});
-		// Update Gunner leaderboard points
-		con.connect(function(err) {
-			if (err) throw err;
-			var sql = "SELECT * FROM leaderboardUser WHERE username = " + gunnerToAward;
-			con.query(sql, function(err, result, fields)  {
-				if (err) return;	//Currently not throwing errors
-				
-				if (result[0].username != null) {
-					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + gunnerToAward + "';";
-					con.query(update);
-				}
-				else {
-					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + gunnerToAward + "', 10);";
-					con.query(insert);
-				}
-				
-				con.end();
-			});
-		});
+		
 		//Update Driver leaderboard points
 		con.connect(function(err) {
 			if (err) throw err;
-			var sql = "SELECT * FROM leaderboardUser WHERE username = " + driverToAward;
+			var sql = "SELECT * FROM leaderboardUser WHERE username = \"" + driverToAward + "\";";
 			con.query(sql, function(err, result, fields)  {
 				if (err) return;	//Currently not throwing errors
 				
-				if (result[0].username != null) {
-					var update = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + driverToAward + "';";
-					con.query(update);
+				if (result.length > 0) {
+					var updateDriver = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + driverToAward + "';";
+					con.query(updateDriver);
 				}
 				else {
-					var insert = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + driverToAward + "', 10);";
-					con.query(insert);
+					var insertDriver = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + driverToAward + "', 10);";
+					con.query(insertDriver);
 				}
 				
-				con.end();
-			});
-		});
-		
-		//Update Robot leaderboard points
-		con.connect(function(err) {
-			if (err) throw err;
-			var sql = "SELECT * FROM leaderboardRobot WHERE robotName = " + robotToAward;
-			con.query(sql, function(err, result, fields)  {
-				if (err) return;	//Currently not throwing errors
-				
-				if (result[0].robotName != null) {
-					var update = "UPDATE leaderboardRobot SET totalPoints = totalPoints + 10 WHERE robotName = '" + robotToAward + "';";
-					con.query(update);
-				}
-				else {
-					var insert = "INSERT INTO leaderboardRobot (robotName, totalPoints) values ('" + robotToAward + "', 10);";
-					con.query(insert);
-				}
-				
-				con.end();
+				//Update Gunner leaderboard points
+				var sql2 = "SELECT * FROM leaderboardUser WHERE username = \"" + gunnerToAward + "\";";
+				con.query(sql2, function(err, result2, fields)  {
+					if (err) return;	//Currently not throwing errors
+					
+					if (result2.length > 0) {
+						var updateGunner = "UPDATE leaderboardUser SET totalPoints = totalPoints + 10 WHERE username = '" + gunnerToAward + "';";
+						con.query(updateGunner);
+					}
+					else {
+						var insertGunner = "INSERT INTO leaderboardUser (username, totalPoints) values ('" + gunnerToAward + "', 10);";
+						con.query(insertGunner);
+					}
+					
+					//Update Robot leaderboard points
+					var sql3 = "SELECT * FROM leaderboardRobot WHERE robotName = \"" + robotToAward + "\";";
+					con.query(sql3, function(err, result3, fields)  {
+						if (err) return;	//Currently not throwing errors
+						
+						if (result3.length > 0) {
+							var updateRobot = "UPDATE leaderboardRobot SET totalPoints = totalPoints + 10 WHERE robotName = '" + robotToAward + "';";
+							con.query(updateRobot);
+						}
+						else {
+							var insertRobot = "INSERT INTO leaderboardRobot (robotName, totalPoints) values ('" + robotToAward + "', 10);";
+							con.query(insertRobot);
+						}
+						
+						setTimeout(function() {	
+							con.end();
+						}, 200);
+					});	
+				});
 			});
 		});
 	});

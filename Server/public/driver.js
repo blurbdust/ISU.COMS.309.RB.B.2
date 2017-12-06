@@ -30,12 +30,12 @@ socket_server.on("robotIP", function(data){
 //Chat Box
 $(function () {
   $('#msgform').submit(function(){
-    socket_server.emit('chat message', $('#m').val());
+    socket_server.emit('chat message lobby', $('#m').val());
     $('#m').val('');
     return false;
   });
   socket_server.on('chat message', function(msg){
-    $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
+    $('#messages').append($('<li><strong>[' + msg.type + ']' + msg.username + ":</strong> " + msg.message + '</li>'));
     var chatDiv = document.getElementById("chat-box");
     chatDiv.scrollTop = chatDiv.scrollHeight;
   });
@@ -64,8 +64,8 @@ window.addEventListener("load", function(){
   });
   
   socket_server.on('damage update', function(damage){
-	  health -= (damage * 5);
-	  health_bar.setAttribute('width', health + "%");
+    health = ((1500 - damage) / (1500));
+    health_bar.setAttribute('width', health + "%");
   });
 
   //up left
