@@ -33,11 +33,11 @@ socket_server.on("robotIP", function(data){
 //Chat Box
 $(function () {
   $('#msgform').submit(function(){
-    socket_server.emit('chat message', $('#m').val());
+    socket_server.emit('chat message gunnner', $('#m').val());
     $('#m').val('');
     return false;
   });
-  socket_server.on('chat message gunner', function(msg){
+  socket_server.on('chat message', function(msg){
     $('#messages').append($('<li><strong>[' + msg.type + ']' + msg.username + ":</strong> " + msg.message + '</li>'));
     var chatDiv = document.getElementById("chat-box");
     chatDiv.scrollTop = chatDiv.scrollHeight;
