@@ -652,7 +652,8 @@ io.on('connection', function(socket){
 				
 				con.query("INSERT INTO friends (FriendID, UserID) VALUES (" + result[0].ID + ", " + socket.id + ");", function (err, result, fields) {
 					if (err) throw err;
-					
+					socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'profile');
+					con.end();
 				});
 				
 			});
