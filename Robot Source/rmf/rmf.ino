@@ -2,7 +2,7 @@
 #include <IRremote.h>
 #include <IRremoteInt.h>
 
-
+#define PIN_DETECT 4
 
 /**
 *
@@ -67,7 +67,6 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
-char robotType = "C";
 int PIN_IR = 10;
 
 //number of times the IR thing has been hit
@@ -107,44 +106,40 @@ void setup()
 
 void loop()                     // run over and over again
 {
+  
+  if(digitalRead(PIN_DETECT) == LOW) {
+
+    damage++;
+    char msg[20];
+    sprintf(msg, "Damage: %d\n", damage);
+    int bytesWritten = Serial.write(msg);
+    if (damage > 150){
+      speed = 0;
+    }
+    if (damage > 100){
+      speed = 10;
+    }
+    else {
+      speed = (75 - (damage * 5));
+    }
+    
+  }
+  
   if(Serial.available() > 0){
     InByte = Serial.read();
     check_Movement(InByte);
     check_Servo(InByte);
     check_Fire(InByte);
-    speed_Adjust();
+    //speed_Adjust();
     
   }
-  /*
-  if(irrecv.decode(&results)) {
-    
-    damage++;
-    char msg[20];
-    sprintf(msg, "Damage: %d\n", damage);
-    int bytesWritten = Serial.write(msg);
-    if (damage > 15){
-      speed = 0;
-    }
-    if (damage > 10){
-      speed = 10;
-    }
-    else {
-      speed = (100 - (damage * 5));
-    }
-
-  irrecv.resume();
-
-  }
-  */
+  
   if(servo_A.getInc() != 0){
      servo_A.Update();
   }
   if(servo_B.getInc() != 0){
      servo_B.Update();
   }
-  //IR Stuff  
-  //if the ir sensor goes off, increase damage
-  
 }
 
 
@@ -266,6 +261,7 @@ void check_Movement(char InByte){
     stop_B();
   }
 }
+/*
 void speed_Adjust(){
   if(InByte == '+'){
     speed = 225;
@@ -277,24 +273,19 @@ void speed_Adjust(){
     speed = 100;
   }
 }
-
+*/
 void check_Fire(char inByte){
   if (inByte == 'K'){
-    if (robotType == "C"){
-      //pin write mode
-      digitalWrite(PIN_IR, LOW);
+
+    
+    for (int i = 0; i < 3; i++) {
+      irsend.sendSony(0xa90, 12); // Sony TV power code
+      Serial.println("IR Sent");
+      delay(100);
     }
-    else {
-      for (int i = 0; i < 3; i++) {
-        irsend.sendSony(0xa90, 12); // Sony TV power code
-        delay(100);
-      }
-    }
-  }
-  if (inByte == 'K'){
-      if (robotType == "C"){
-        //pin write mode
-        digitalWrite(PIN_IR, HIGH);
-      }
+    irrecv.resume();
+    irrecv.enableIRIn();
+    delay(200);
+
   }
 }
