@@ -81,7 +81,7 @@ SuperServo servo_A(15);
 SuperServo servo_B(15);
 
 IRsend irsend;
-IRrecv irrecv(4);
+//IRrecv irrecv(4);
 decode_results results;
 char msg[20];
 
@@ -98,14 +98,14 @@ void setup()
  pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
- speed = 100;
+ speed = 75;
  
  stop_A();
  stop_B();
- delay(500);
+ //delay(500);
 
   //IR STUFF
-  irrecv.enableIRIn();
+  //irrecv.enableIRIn();
 }
 
 void loop()                     // run over and over again
@@ -127,7 +127,7 @@ void loop()                     // run over and over again
       }
     //}
     damage++;
-    
+    beenASecond = 0;
     
   }
   
@@ -147,7 +147,7 @@ void loop()                     // run over and over again
      servo_B.Update();
   }
 
-  if ((it % 1000) == 0){
+  if ((it % 10000) == 0){
     it = 0;
     beenASecond = 1;
   }
@@ -298,8 +298,8 @@ void check_Fire(char inByte){
       Serial.println("IR Sent");
       delay(100);
     }
-    irrecv.resume();
-    irrecv.enableIRIn();
+    //irrecv.resume();
+    //irrecv.enableIRIn();
     delay(200);
 
   }
