@@ -359,10 +359,10 @@ io.on('connection', function(socket){
 
 		
 			else if (result[0].UserRole != null && result[0].UserRole == 1) {
-				res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin')
+				socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin');
 			}
 			else {
-				res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
+				socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
 			}
 			
 			con.end();
