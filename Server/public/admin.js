@@ -446,6 +446,9 @@ function spectate(){
 function leaderboard(){
 	socket.emit("redirect leaderboard");	
 }
+function profile(){
+	socket.emit("redirect profile");	
+}
 
 
 function logout(){
