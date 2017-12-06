@@ -67,6 +67,9 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
+char robotType = "C";
+int PIN_IR = 10;
+
 //number of times the IR thing has been hit
 int damage = 0;
 
@@ -89,7 +92,7 @@ void setup()
  pinMode(DIR_B, OUTPUT);
  pinMode(BRAKE_B, OUTPUT);
  pinMode(PWM_B, OUTPUT);
- //pinMode(PIN_IR, OUTPUT);
+ pinMode(PIN_IR, OUTPUT);
  servo_A.Attach(6);
  servo_B.Attach(5);
  speed = 100;
@@ -105,7 +108,9 @@ void setup()
 void loop()                     // run over and over again
 {
   if(irrecv.decode(&results)) {
+	  
     Serial.println("IR recieved");
+
     
     damage++;
     char msg[20];
@@ -158,35 +163,35 @@ void check_Servo(char InByte){
   switch(InByte){
     case 'L':
         servo_A.setInc(-1);
-        //Serial.write('test');
+        
       break;
     case 'l':
         servo_A.setInc(0);
-        //Serial.write('test');
+        
       break;
     case 'J':
         servo_A.setInc(1);
-        //Serial.write('test');
+        
       break;
     case 'j':
         servo_A.setInc(0);
-        //Serial.write('test');
+        
       break;
     case 'M':
         servo_B.setInc(1);
-        //Serial.write('test');
+        
       break;
     case 'm':
         servo_B.setInc(0);
-        //Serial.write('test');
+        
       break;
     case 'I':
         servo_B.setInc(-1);
-        //Serial.write('test');
+        
       break;
     case 'i':
         servo_B.setInc(0);
-        //Serial.write('test');
+        
   }  
 }
 void check_Movement(char InByte){
@@ -198,7 +203,6 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
-    //Serial.write('test');
   }  
   if(InByte == 's'){
     digitalWrite(DIR_A, HIGH);
@@ -207,7 +211,6 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
-    //Serial.write('test');
   }  
   if(InByte == 'd'){
     digitalWrite(DIR_A, LOW);
@@ -216,7 +219,6 @@ void check_Movement(char InByte){
     digitalWrite(BRAKE_B, LOW);
     analogWrite(PWM_A, speed);
     analogWrite(PWM_B, speed);
-    //Serial.write('test');
   }
   if(InByte == 'a'){
     digitalWrite(DIR_A, HIGH);
@@ -278,6 +280,7 @@ void speed_Adjust(){
 */
 void check_Fire(char inByte){
   if (inByte == 'K'){
+
     
     for (int i = 0; i < 3; i++) {
       irsend.sendSony(0xa90, 12); // Sony TV power code
@@ -287,5 +290,6 @@ void check_Fire(char inByte){
     irrecv.resume();
     irrecv.enableIRIn();
     delay(200);
+
   }
 }
