@@ -65,13 +65,10 @@ int PWM_A = 3;
 int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
-<<<<<<< HEAD
-=======
 
 int it = 0;
 int beenASecond = 1;
 
->>>>>>> f367e6bfc0d540be5de938120915f2cc2c8c7da6
 int PIN_IR = 10;
 int PIN_FLAME_DIG = 4; 
 int PIN_FLAME_AN = A0; 
@@ -84,14 +81,7 @@ int speed;
 SuperServo servo_A(15);
 SuperServo servo_B(15);
 
-<<<<<<< HEAD
-=======
-IRsend irsend;
-//IRrecv irrecv(4);
-decode_results results;
 char msg[20];
-
->>>>>>> f367e6bfc0d540be5de938120915f2cc2c8c7da6
 void setup()
 {
  Serial.begin(9600);
@@ -305,7 +295,7 @@ void check_Fire(char inByte){
 }
 
 void check_Hit(){
-    hitVal = digitalRead(PIN_FLAME_DIG);
+    hitVal = digitalRead(PIN_DETECT);
     if(hitVal== HIGH){
       Serial.println("damage received");
     }
