@@ -71,10 +71,10 @@ window.addEventListener("load", function(){
 	  console.log('Requested damage');
   });
   
-  socket_server.on('damage update', function(damage){
+  socket_server.on('damage update', function(damage) {
     console.log("Damage update event recieved. " + damage);
 	  health = ((1500 - damage) / (1500));
-	  health_bar.setAttribute('width', health + "%");
+	  health_bar.style.setAttribute('width', "" + health + "%");
   });
 
   //laser-charging process and charging status
@@ -162,6 +162,11 @@ window.addEventListener("load", function(){
   var webcam_port = "12000";
   var webcam_host = $(".feed img");
   var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
+  
+  if (robot_ip == "monmodenic.student.iastate.edu")
+	  document.getElementById('video').style.transform='scaleY(-1)';
+  else
+	  document.getElementById('video').style.transform='scaleY(1)';
     
   cam_socket.on("connection", function(socket){
     console.log("Connected to camera");
