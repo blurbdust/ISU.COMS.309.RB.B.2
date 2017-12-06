@@ -366,6 +366,8 @@ io.on('connection', function(socket){
 			}
 			
 			con.end();
+		  }
+		}
 	});
 	socket.on ('set user operator', function(data) {
 	
