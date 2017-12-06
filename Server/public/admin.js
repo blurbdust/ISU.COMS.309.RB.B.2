@@ -267,7 +267,7 @@ var profileText = adminToolsGroup.append('text')
 	.style('cursor','pointer')
 	.text('View')
 	.on('click', function(){
-			deleteAccount();
+			profile();
 		})
 	.append('tspan')
 		.attr('dy', '1.1em')
