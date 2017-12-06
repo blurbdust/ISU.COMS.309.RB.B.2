@@ -32,12 +32,12 @@ socket.on('get user id', function(id) {
 //Chat Box
 $(function () {
 	$('#msgform').submit(function(){
-	  socket.emit('chat message', $('#m').val());
+	  socket.emit('chat message lobby', $('#m').val());
 	  $('#m').val('');
 	  return false;
 	});
 	socket.on('chat message', function(msg){
-	  $('#messages').append($('<li><strong>' + msg.username + ":</strong> " + msg.message + '</li>'));
+	  $('#messages').append($('<li><strong>[' + msg.type + ']' + msg.username + ":</strong> " + msg.message + '</li>'));
 	  var chatDiv = document.getElementById("chat-box");
 	  chatDiv.scrollTop = chatDiv.scrollHeight;
 	});

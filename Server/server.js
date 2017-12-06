@@ -410,10 +410,18 @@ io.on('connection', function(socket){
 	});
 	
 	
-	socket.on('chat message', function(msg){
-		io.emit('chat message', {message: msg, username: socket.username});
+	socket.on('chat message lobby', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Lobby'});
 	});
-	
+	socket.on('chat message gunner', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Gunner'});
+	});
+	socket.on('chat message driver', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Driver'});
+	});
+	socket.on('chat message spectator', function(msg){
+		io.emit('chat message', {message: msg, username: socket.username, type:'Spectator'});
+	});
 	socket.on('request profile info', function(username) {
 	
 		//Initialize variables
