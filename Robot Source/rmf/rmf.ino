@@ -147,7 +147,7 @@ void loop()                     // run over and over again
      servo_B.Update();
   }
 
-  if ((it % 100) == 0){
+  if ((it % 1000) == 0){
     it = 0;
     beenASecond = 1;
   }
