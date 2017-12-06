@@ -6,7 +6,9 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
-socket.emit('request profile info', getCookie("username"));
+//View own profile
+var curProfile = getCookie("username");
+socket.emit('request profile info', curProfile);
 
 socket.on('profile info', function(data) {
 	
@@ -30,10 +32,13 @@ socket.on('profile info', function(data) {
 			document.getElementById('displayNameButton').innerHTML = "<button onclick='editDisplayName();'>Edit</button>";
 			document.getElementById('bioButton').innerHTML = "<button onclick='editBio();'>Edit</button>";
 			document.getElementById('profilePicButton').innerHTML = "<button type=\"button\" class=\"button\" onclick=\"openModal();\">Change Profile Pic</button>";
+			document.getElementById('addFriendButton').innerHTML = "";
 		}
 		else {
 			document.getElementById('displayNameButton').innerHTML = "";
 			document.getElementById('bioButton').innerHTML = "";
+			document.getElementById('profilePicButton').innerHTML = "";
+			document.getElementById('addFriendButton').innerHTML = "<button type=\"button\" class=\"button\" onclick=\"addFriend()\">Add Friend</button>";
 		}
 		
 		//Set profile picture
@@ -52,6 +57,13 @@ socket.on('profile info', function(data) {
 			url = urlBase + "default.jpg";
 		}
 		document.getElementById('profilePic').innerHTML = '<img src="' + url + '" class="avatar" alt="Profile Image"/>'
+		
+		//Display friends
+		var html = '';
+		for (i = 0; i < data.friendsArray.length; i++) {
+			html += "<a onclick=\"viewProfileByUsername('" + data.friendsArray[i] + "')\" href=\"#\">" + data.friendsArray[i] + "</a><br/>";
+		}
+		document.getElementById("friendsList").innerHTML = html;
 	}
 	else {
 		alert("User does not exist.");
@@ -81,8 +93,12 @@ function urlExists(url) {
 }
 
 function viewProfile() {
-	var uname = prompt("Enter username:", getCookie("username"));
-	socket.emit('request profile info', uname);
+	curProfile = prompt("Enter username:", getCookie("username"));
+	socket.emit('request profile info', curProfile);
+}
+
+function viewProfileByUsername(username) {
+	socket.emit('request profile info', username);
 }
 
 function goToLobby() {
@@ -117,24 +133,12 @@ function uploadProfilePic() {
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
-	
-	
-	
-	
-	/*var test = {"test":"hello, world!"};
-	
-	var toSend = {"image":reader.result, "ID":getCookie("ID")};
-	
-	$.ajax({
-	  type: "POST",
-	  url: "/profile",
-	  data: test,
-	  success: function(){},
-	  dataType: "json",
-	  contentType : "application/json"
-	});*/
-	
-	
+}
+
+function addFriend() {
+	if (confirm("Add " + curProfile + " to friends list?")) {
+		socket.emit('add friend', curProfile);
+	} 
 }
 		
 		

@@ -112,6 +112,7 @@ void loop()                     // run over and over again
     speed_Adjust();
     
   }
+  /*
   if(irrecv.decode(&results)) {
     //Serial.write('test');
     damage++;
@@ -127,11 +128,11 @@ void loop()                     // run over and over again
     else {
       speed = (100 - (damage * 5));
     }
-  delay(100);
+
   irrecv.resume();
-  delay(100);
+
   }
-  
+  */
   if(servo_A.getInc() != 0){
      servo_A.Update();
   }

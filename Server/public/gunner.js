@@ -1,3 +1,4 @@
+
 var socket_server = connectToUserSocket();
 
 if (getCookie("currentRobot") == "Cornelius"){

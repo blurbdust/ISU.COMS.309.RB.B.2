@@ -48,6 +48,10 @@ document.getElementById("operatorButton").addEventListener("click", function(){
     socket.emit("request-for-redirect", getCookie("username"));
 });
 
+document.getElementById("leaderboardButton").addEventListener("click", function(){
+    window.location.href = "http://proj-309-rb-b-2.cs.iastate.edu:3000/leaderboard";
+});
+
 //Display connected users
 socket.on('usernames', function(data) {
 

@@ -14,46 +14,85 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
+	  
+		body {
+			background-color: #E0E0E0;
+			font-family: Trebuchet MS;
+		}
+		
+		.button {
+			width:75px;
+			height:75px;
+			font-size:30px;
+			background-color: #0070C0;
+			color: white;
+		}
+		
+		.logo-wrapper {
+			position: absolute;
+			padding-left: 15px;
+		}
+		
+		.button-footer {
+			
+			background-color: #0070C0;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			cursor: pointer;
+			margin: 0 5px;
+			width: 210px;
+		}
+	  
+	  
     </style>
 </head>
 
 <body>
 
-<div class="feed" align="center">
-	<img id="video" src="" style="width:auto;height:70%">
-</div>
-<div id="bottom-wrapper" align="center" style="width: 100%; overflow: hidden;">
-	<!--Chat Box-->
-	<div id="chat-box" style="width:33%;height:230px;float: left;border:5px solid black; overflow: auto">
-		<ul id="messages" style="text-align: left"></ul>
-		<form id="msgform" action="">
-		  <input id="m" autocomplete="off" /><button>Send</button>
-		</form>
+	<div class='logo-wrapper'>
+		<img src="http://proj-309-rb-b-2.cs.iastate.edu:3000/logo.png" alt="CyBots Logo" style="width:20%;"/>
 	</div>
-	<div id="health-wrapper" style="width:33%;height:200px;float:right">
-		<label style="font-family:Trebuchet MS;font-size:28">HEALTH</label><br><br>
-		<svg id="svg2" width="75%" height="30%">
-			<rect id="health_container" x=0 y=0 height="100%" width="100%" fill="white" stroke-width=5 stroke="black" />
-			<rect id="health_bar" x=0 y=0 height="100%" width="100%" fill="red" stroke-width=5 stroke="black"/>
-		</svg>
+
+	<div class="feed" align="center">
+		<img id="video" src="" style="width:auto;height:70%; padding: 15px;">
 	</div>
-	<!--Buttons-->
-	<div id='button-wrapper' align="center" style="width:33%;height:230px;">
-		<button id="buttonUpLeft" type="button" style="width:75px;height:75px;font-size:30px">↖</button>
-		<button id="buttonUp" type="button" style="width:75px;height:75px;font-size:30px">↑</button>
-		<button id="buttonUpRight" type="button" style="width:75px;height:75px;font-size:30px">↗</button><br>
-		<button id="buttonLeft" type="button" style="width:75px;height:75px;font-size:30px">←</button><button id="buttonBoost" type="button" style="width:75px;height:75px;font-size:22px">Boost</button>
-		<button id="buttonRight" type="button" style="width:75px;height:75px;font-size:30px">→</button><br>
-		<button id="buttonDownLeft" type="button" style="width:75px;height:75px;font-size:30px">↙</button>
-		<button id="buttonDown" type="button" style="width:75px;height:75px;font-size:30px">↓</button>
-		<button id="buttonDownRight" type="button" style="width:75px;height:75px;font-size:30px">↘</button>
+	<div id="bottom-wrapper" align="center" style="width: 100%; overflow: hidden;">
+		<!--Chat Box-->
+		<div id="chat-box" style="width:33%;height:230px;float: left;border:5px solid black; overflow: auto; background-color:white;">
+			<ul id="messages" style="text-align: left"></ul>
+			<form id="msgform" action="">
+			  <input id="m" autocomplete="off" /><button>Send</button>
+			</form>
+		</div>
+		<div id="health-wrapper" style="width:33%;height:200px;float:right">
+			<label style="font-family:Trebuchet MS;font-size:28">HEALTH</label><br><br>
+			<svg id="svg2" width="75%" height="30%">
+				<rect id="health_container" x=0 y=0 height="100%" width="100%" fill="white" stroke-width=5 stroke="black" />
+				<rect id="health_bar" x=0 y=0 height="100%" width="100%" fill="red" stroke-width=5 stroke="black"/>
+			</svg>
+		</div>
+		<!--Buttons-->
+		<div id='button-wrapper' align="center" style="width:33%;height:230px;">
+			<button id="buttonUpLeft" type="button" class="button">↖</button>
+			<button id="buttonUp" type="button" class="button">↑</button>
+			<button id="buttonUpRight" type="button" class="button">↗</button><br>
+			<button id="buttonLeft" type="button" class="button">←</button><button id="buttonBoost" type="button" style="width:75px;height:75px;font-size:22px; background-color:white;">Boost</button>
+			<button id="buttonRight" type="button" class="button">→</button><br>
+			<button id="buttonDownLeft" type="button" class="button">↙</button>
+			<button id="buttonDown" type="button" class="button">↓</button>
+			<button id="buttonDownRight" type="button" class="button">↘</button>
+		</div>
+		
 	</div>
-	
-</div>
 
 </body>
 <footer>
-	<button id="lobby" type="button" style="float: right;">Return to Lobby</button>
-	<button id="logout" type="button" style="float: right;">Logout</button>
+	<button class='button-footer' id="lobby" type="button" style="float: right;">Return to Lobby</button>
+	<button class='button-footer' id="logout" type="button" style="float: right;">Logout</button>
 </footer>
 </html>
