@@ -163,10 +163,10 @@ window.addEventListener("load", function(){
   var webcam_host = $(".feed img");
   var cam_socket = io.connect('http://' + robot_ip + ':' + webcam_port);
   
-  /*if (robot_ip = "monmodenic.student.iastate.edu")
-	  document.getElementById('video').transform='scaleY(-1)';
+  if (robot_ip == "monmodenic.student.iastate.edu")
+	  document.getElementById('video').style.transform='scaleY(-1)';
   else
-	  document.getElementById('video').transform='scaleY(1)';*/
+	  document.getElementById('video').style.transform='scaleY(1)';
     
   cam_socket.on("connection", function(socket){
     console.log("Connected to camera");
