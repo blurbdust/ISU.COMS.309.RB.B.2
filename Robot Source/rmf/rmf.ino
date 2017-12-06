@@ -151,7 +151,10 @@ void loop()                     // run over and over again
     it = 0;
     beenASecond = 1;
   }
-  it++;
+  else {
+    beenASecond = 0;
+    it++;
+  }
 }
 
 
