@@ -67,6 +67,9 @@ int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
 
+int it = 0;
+int beenASecond = 1;
+
 int PIN_IR = 10;
 
 //number of times the IR thing has been hit
@@ -108,9 +111,9 @@ void setup()
 void loop()                     // run over and over again
 {
   
-  if (digitalRead(PIN_DETECT) == LOW) {
+  if ((beenASecond == 1) && (digitalRead(PIN_DETECT) == LOW)) {
 
-    if (((damage % 10) == 0)){
+    //if (((damage % 10) == 0)){
       sprintf(msg, "Damage: %d\n", damage);
       int bytesWritten = Serial.write(msg);
       if (damage > 1500){
@@ -122,7 +125,7 @@ void loop()                     // run over and over again
       else {
         speed = (75 - (damage * 0.05));
       }
-    }
+    //}
     damage++;
     
     
@@ -143,6 +146,12 @@ void loop()                     // run over and over again
   if(servo_B.getInc() != 0){
      servo_B.Update();
   }
+
+  if ((it % 100) == 0){
+    it = 0;
+    beenASecond = 1;
+  }
+  it++;
 }
 
 
