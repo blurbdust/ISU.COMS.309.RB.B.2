@@ -14,6 +14,38 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
+	  
+	    .button {
+			width:75px;
+			height:75px;
+			font-size:30px;
+			background-color: #0070C0;
+			color: white;
+			cursor: pointer;
+		}
+		
+		.button-footer {
+			
+			background-color: #0070C0;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			cursor: pointer;
+			margin: 0 5px;
+			width: 210px;
+			float: right;
+		}
+		
+		.logo-wrapper {
+			position: absolute;
+			padding-left: 15px;
+		}
+		
+		
     </style>
 </head>
 
@@ -23,8 +55,8 @@
 	<img id="video" src="" style="width:auto;height:70%">
 </div>
 
-<button id="leftRobotSwitch" style="float: left;"><</button>
-<button id="rightRobotSwitch" style="float: right;">></button>
+<button id="leftRobotSwitch" class='button' style="float: left;"><</button>
+<button id="rightRobotSwitch" class='button' style="float: right;">></button>
 
 <div id="bottom-wrapper" align="center" style="width: 100%; overflow: hidden;">
 	
@@ -39,7 +71,7 @@
 
 </body>
 <footer>
-	<button id="lobby" type="button" style="float: right;">Return to Lobby</button>
-	<button id="logout" type="button" style="float: right;">Logout</button>
+	<button class='button-footer' id="lobby" type="button">Return to Lobby</button>
+	<button class='button-footer' id="logout" type="button">Logout</button>
 </footer>
 </html>
