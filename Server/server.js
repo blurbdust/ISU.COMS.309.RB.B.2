@@ -783,27 +783,23 @@ io.on('connection', function(socket){
 					con.query(insert);
 				}
 				
-				con.end();
-			});
-		});
-		
-		//Update Robot leaderboard points
-		con.connect(function(err) {
-			if (err) throw err;
-			var sql = "SELECT * FROM leaderboardRobot WHERE robotName = " + robotToAward;
-			con.query(sql, function(err, result, fields)  {
-				if (err) return;	//Currently not throwing errors
+				//Update Robot leaderboard points
+				var sql2 = "SELECT * FROM leaderboardRobot WHERE robotName = " + robotToAward;
+				con.query(sql2, function(err, result1, fields)  {
+					if (err) return;	//Currently not throwing errors
+					
+					if (result1[0].robotName != null) {
+						var update = "UPDATE leaderboardRobot SET totalPoints = totalPoints + 10 WHERE robotName = '" + robotToAward + "';";
+						con.query(update);
+					}
+					else {
+						var insert = "INSERT INTO leaderboardRobot (robotName, totalPoints) values ('" + robotToAward + "', 10);";
+						con.query(insert);
+					}
 				
-				if (result[0].robotName != null) {
-					var update = "UPDATE leaderboardRobot SET totalPoints = totalPoints + 10 WHERE robotName = '" + robotToAward + "';";
-					con.query(update);
-				}
-				else {
-					var insert = "INSERT INTO leaderboardRobot (robotName, totalPoints) values ('" + robotToAward + "', 10);";
-					con.query(insert);
-				}
+					con.end();
+				});
 				
-				con.end();
 			});
 		});
 	});

@@ -80,6 +80,7 @@ SuperServo servo_B(15);
 IRsend irsend;
 IRrecv irrecv(4);
 decode_results results;
+char msg[20];
 
 void setup()
 {
@@ -107,21 +108,23 @@ void setup()
 void loop()                     // run over and over again
 {
   
-  if(digitalRead(PIN_DETECT) == LOW) {
+  if (digitalRead(PIN_DETECT) == LOW) {
 
+    if (((damage % 10) == 0)){
+      sprintf(msg, "Damage: %d\n", damage);
+      int bytesWritten = Serial.write(msg);
+      if (damage > 1500){
+        speed = 0;
+      }
+      if (damage > 1000){
+        speed = 10;
+      }
+      else {
+        speed = (75 - (damage * 0.05));
+      }
+    }
     damage++;
-    char msg[20];
-    sprintf(msg, "Damage: %d\n", damage);
-    int bytesWritten = Serial.write(msg);
-    if (damage > 150){
-      speed = 0;
-    }
-    if (damage > 100){
-      speed = 10;
-    }
-    else {
-      speed = (75 - (damage * 5));
-    }
+    
     
   }
   
