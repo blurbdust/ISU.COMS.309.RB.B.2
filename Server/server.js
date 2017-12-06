@@ -707,7 +707,7 @@ io.on('connection', function(socket){
 	socket.on('damage', function(data){
 		var inp = data.toString();
 		var bot = inp.substring(0, inp.indexOf(":"));
-		var amount = inp.substring(inp.indexOf(":") + 1);
+		var amount = inp.substring(inp.lastIndexOf(":") + 1);
 		console.log("Damage update requested. Robot: " + bot + " down to" + amount);
 
 	// Award points to other robot
@@ -730,14 +730,18 @@ io.on('connection', function(socket){
 			else{
 				gunnerToDamage = robotSocketList[i].gunner;
 				driverToDamage = robotSocketList[i].driver;
+				console.log("Gunner hit: " + gunnerToDamage);
+				console.log("Driver hit: " + driverToDamage);
 			}
 		}
 		
 		for(var i=0; i<userNameList; i++){
 			if(gunnerToDamage == userNameList[i]){
+				console.log("Emitting damage to gunner");
 				userSocketList[i].emit('damage update', amount);
 			}
 			if(driverToDamage == userNameList[i]){
+				console.log("Emitting damage to driver");
 				userSocketList[i].emit('damage update', amount);
 			}
 		}
