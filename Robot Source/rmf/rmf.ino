@@ -107,16 +107,10 @@ void setup()
 
 void loop()                     // run over and over again
 {
-  if(Serial.available() > 0){
-    InByte = Serial.read();
-    check_Movement(InByte);
-    check_Servo(InByte);
-    check_Fire(InByte);
-    speed_Adjust();
-    
-  }
-  /*
   if(irrecv.decode(&results)) {
+	  
+    Serial.println("IR recieved");
+
     
     damage++;
     char msg[20];
@@ -131,20 +125,25 @@ void loop()                     // run over and over again
     else {
       speed = (100 - (damage * 5));
     }
-
-  irrecv.resume();
-
+    
+    irrecv.resume();
   }
-  */
+  
+  if(Serial.available() > 0){
+    InByte = Serial.read();
+    check_Movement(InByte);
+    check_Servo(InByte);
+    check_Fire(InByte);
+    //speed_Adjust();
+    
+  }
+  
   if(servo_A.getInc() != 0){
      servo_A.Update();
   }
   if(servo_B.getInc() != 0){
      servo_B.Update();
   }
-  //IR Stuff  
-  //if the ir sensor goes off, increase damage
-  
 }
 
 
@@ -266,6 +265,7 @@ void check_Movement(char InByte){
     stop_B();
   }
 }
+/*
 void speed_Adjust(){
   if(InByte == '+'){
     speed = 225;
@@ -277,24 +277,19 @@ void speed_Adjust(){
     speed = 100;
   }
 }
-
+*/
 void check_Fire(char inByte){
   if (inByte == 'K'){
-    if (robotType == "C"){
-      //pin write mode
-      digitalWrite(PIN_IR, LOW);
+
+    
+    for (int i = 0; i < 3; i++) {
+      irsend.sendSony(0xa90, 12); // Sony TV power code
+      Serial.println("IR Sent");
+      delay(100);
     }
-    else {
-      for (int i = 0; i < 3; i++) {
-        irsend.sendSony(0xa90, 12); // Sony TV power code
-        delay(100);
-      }
-    }
-  }
-  if (inByte == 'K'){
-      if (robotType == "C"){
-        //pin write mode
-        digitalWrite(PIN_IR, HIGH);
-      }
+    irrecv.resume();
+    irrecv.enableIRIn();
+    delay(200);
+
   }
 }
