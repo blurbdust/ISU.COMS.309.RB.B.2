@@ -1,9 +1,4 @@
 #include <Servo.h>
-#include <IRremote.h>
-#include <IRremoteInt.h>
-
-
-
 /**
 *
 *@author Kevin Haan and Ryan Pals
@@ -66,20 +61,17 @@ int PWM_A = 3;
 int PWM_B = 11;
 int SERVO_PIN_A = 6;
 int SERVO_PIN_B = 5;
-
 int PIN_IR = 10;
+int PIN_FLAME_DIG = 4; 
+int PIN_FLAME_AN = A0; 
 
 //number of times the IR thing has been hit
 int damage = 0;
-
+int hitVal;
 char InByte;
 int speed; 
 SuperServo servo_A(15);
 SuperServo servo_B(15);
-
-IRsend irsend;
-IRrecv irrecv(4);
-decode_results results;
 
 void setup()
 {
@@ -280,16 +272,18 @@ void speed_Adjust(){
 */
 void check_Fire(char inByte){
   if (inByte == 'K'){
-
-    
-    for (int i = 0; i < 3; i++) {
-      irsend.sendSony(0xa90, 12); // Sony TV power code
-      Serial.println("IR Sent");
-      delay(100);
-    }
-    irrecv.resume();
-    irrecv.enableIRIn();
-    delay(200);
-
+    digitalWrite(PIN_IR, HIGH);
+    delay(1000);
+    digitalWrite(PIN_IR, LOW);
   }
 }
+
+void check_Hit(){
+    hitVal = digitalRead(PIN_FLAME_DIG);
+    if(hitVal== HIGH){
+      Serial.println("damage received");
+    }
+    delay(100)
+}
+
+
