@@ -5,6 +5,9 @@ socket.on('redirect', function(destination) {
 	window.location.href = destination;
 });
 
+socket.emit('request user leaderboard');
+socket.emit('request robot leaderboard');
+
 var bodySelect = d3.select("body").append("div");
 var svgSelect = bodySelect.append("svg")
 				.attr("preserveAspectRatio", "xMinYMin meet")
