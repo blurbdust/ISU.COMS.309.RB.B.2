@@ -240,7 +240,7 @@ window.addEventListener("load", function(){
 	  clearInterval(charge);
 	  charge_level = 0;
 	  charging = 0;
-	  socket_robot.emit('Serial Movement', { dir: 'k'});
+	  socket_robot.emit('Serial Movement', { dir: 'K'});
 	  
   }
    
