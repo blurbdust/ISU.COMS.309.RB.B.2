@@ -340,6 +340,33 @@ io.on('connection', function(socket){
 	socket.on('redirect leaderboard', function(data){
 		socket.emit('redirect', 'http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'leaderboard');
 	});
+	
+	socket.on('redirect back', function(data){
+		
+		var con = mysql.createConnection({
+			host: "mysql.cs.iastate.edu",
+			user: "dbu309rbb2",
+			password: "Ze3xcZG5",
+			database: "db309rbb2"
+		});
+		
+		con.connect(function(err) {
+		  if (err) throw err;
+		  con.query("SELECT * FROM users WHERE Username = '" + data + "'", function (err, result, fields) {
+			if (err){
+				throw err;
+			}
+
+		
+			else if (result[0].UserRole != null && result[0].UserRole == 1) {
+				res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'admin')
+			}
+			else {
+				res.redirect('http://proj-309-rb-b-2.cs.iastate.edu:' + port + '/' + 'lobby');
+			}
+			
+			con.end();
+	});
 	socket.on ('set user operator', function(data) {
 	
 		//If user previously chose one, remove it
